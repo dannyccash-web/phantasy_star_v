@@ -1,0 +1,2407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phantasy Star V: Children of the Great Light</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
+
+  :root {
+    --black: #080c14;
+    --dark: #0d1420;
+    --panel: #111b2e;
+    --panel2: #162035;
+    --border: #2a4a7a;
+    --border2: #3a6aaa;
+    --blue: #4488cc;
+    --blue2: #66aaee;
+    --gold: #e8c84a;
+    --gold2: #f0d86a;
+    --white: #dde8f8;
+    --gray: #88a0c0;
+    --red: #e04444;
+    --green: #44cc66;
+    --purple: #aa66ee;
+    --teal: #44ccaa;
+    --orange: #e88844;
+    --hp: #44cc66;
+    --tp: #4488ff;
+    --enemy-bg: #0a1828;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  #game-wrapper {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ── TITLE SCREEN ── */
+  #title-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: radial-gradient(ellipse at center, #0a1a35 0%, #080c14 70%);
+    position: relative;
+    overflow: hidden;
+  }
+  #title-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,40,80,0.12) 3px, rgba(0,40,80,0.12) 4px);
+    pointer-events: none;
+  }
+  .star-field { position: absolute; inset: 0; pointer-events: none; }
+  .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 2s infinite alternate; }
+
+  @keyframes twinkle { from { opacity: 0.2; } to { opacity: 1; } }
+  @keyframes pulse { from { opacity: 0.6; } to { opacity: 1; } }
+  @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes scanline { from { transform: translateY(-100%); } to { transform: translateY(100vh); } }
+  @keyframes flash { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+  @keyframes shakeX { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+  @keyframes comboBurst { 0%{transform:scale(0.5);opacity:1} 100%{transform:scale(2);opacity:0} }
+
+  .title-logo {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(16px, 4vw, 32px);
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(232,200,74,0.6), 0 0 40px rgba(232,200,74,0.3);
+    text-align: center;
+    letter-spacing: 4px;
+    margin-bottom: 8px;
+    animation: pulse 2s infinite alternate;
+  }
+  .title-sub {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(9px, 2vw, 14px);
+    color: var(--blue2);
+    text-align: center;
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+  }
+  .title-art {
+    font-family: 'VT323', monospace;
+    font-size: 13px;
+    color: #2a5a9a;
+    text-align: center;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    line-height: 1.3;
+  }
+  .press-start {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    color: var(--white);
+    animation: flash 1s infinite;
+    cursor: pointer;
+    padding: 12px 24px;
+    border: 2px solid var(--border2);
+    background: rgba(20,40,80,0.6);
+    transition: all 0.2s;
+  }
+  .press-start:hover { background: rgba(40,80,160,0.6); border-color: var(--gold); color: var(--gold); }
+
+  /* ── CUTSCENE ── */
+  #cutscene {
+    display: none;
+    min-height: 100vh;
+    flex-direction: column;
+    background: var(--dark);
+  }
+  .cutscene-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    border: 3px solid var(--border);
+    background: var(--border);
+    flex: 1;
+    min-height: 300px;
+  }
+  .cutscene-panel {
+    background: var(--enemy-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 140px;
+    overflow: hidden;
+    position: relative;
+  }
+  .cutscene-panel.wide { grid-column: 1 / -1; }
+  .cutscene-panel svg { width: 100%; height: 100%; max-height: 180px; }
+  .cutscene-text {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    padding: 16px 20px;
+    margin: 12px;
+    min-height: 80px;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--white);
+  }
+  .speaker-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--gold);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+  .cutscene-nav {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 12px;
+    gap: 12px;
+  }
+
+  /* ── MAIN GAME ── */
+  #main-game {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--dark);
+  }
+
+  /* Top bar */
+  #top-bar {
+    background: var(--panel);
+    border-bottom: 2px solid var(--border);
+    padding: 6px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .location-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+  .meseta-display {
+    font-size: 16px;
+    color: var(--gold);
+  }
+
+  /* Scene area */
+  #scene-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: 280px;
+    background: var(--enemy-bg);
+    overflow: hidden;
+  }
+  #scene-canvas {
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    position: relative;
+  }
+
+  /* Explore mode */
+  #explore-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 280px;
+  }
+  .world-bg {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+  }
+  .world-bg svg { width: 100%; height: 100%; position: absolute; inset: 0; }
+  .explore-msg {
+    background: var(--panel);
+    border-top: 2px solid var(--border);
+    padding: 10px 14px;
+    font-size: 17px;
+    min-height: 60px;
+    line-height: 1.5;
+  }
+
+  /* Battle area */
+  #battle-view {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    min-height: 280px;
+  }
+  .battle-bg {
+    flex: 1;
+    position: relative;
+    background: var(--enemy-bg);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 12px;
+    min-height: 160px;
+    overflow: hidden;
+  }
+  .enemy-sprite-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .enemy-sprite svg {
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 8px rgba(100,150,255,0.3));
+    transition: all 0.3s;
+  }
+  .enemy-sprite.hurt { animation: shakeX 0.3s; filter: brightness(3); }
+  .enemy-hp-bar {
+    width: 80px;
+    height: 6px;
+    background: #1a1a2a;
+    border: 1px solid #333;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .enemy-hp-fill {
+    height: 100%;
+    background: var(--hp);
+    transition: width 0.4s;
+    border-radius: 3px;
+  }
+  .enemy-name-label {
+    font-size: 13px;
+    color: var(--gray);
+    text-align: center;
+  }
+  .battle-log {
+    background: rgba(0,0,0,0.7);
+    border-top: 1px solid var(--border);
+    padding: 6px 12px;
+    font-size: 16px;
+    min-height: 50px;
+    line-height: 1.5;
+    color: var(--white);
+  }
+
+  /* Party HUD */
+  #party-hud {
+    background: var(--panel);
+    border-top: 2px solid var(--border);
+    padding: 6px 8px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 4px;
+  }
+  .char-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 4px 6px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+  }
+  .char-card.active-turn { border-color: var(--gold); }
+  .char-name-hud {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--gold2);
+    margin-bottom: 3px;
+  }
+  .bar-row { display: flex; align-items: center; gap: 4px; margin-bottom: 2px; }
+  .bar-label { color: var(--gray); font-size: 13px; width: 18px; }
+  .bar-track {
+    flex: 1;
+    height: 5px;
+    background: #0a0f1a;
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid #1a2a3a;
+  }
+  .bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+  .bar-fill.hp { background: var(--hp); }
+  .bar-fill.tp { background: var(--tp); }
+  .bar-nums { font-size: 13px; color: var(--gray); white-space: nowrap; min-width: 52px; text-align: right; }
+  .char-status { font-size: 12px; color: var(--red); min-height: 14px; }
+
+  /* Action area */
+  #action-area {
+    background: var(--panel);
+    border-top: 2px solid var(--border);
+  }
+  #command-menu {
+    display: flex;
+    flex-direction: column;
+  }
+  .menu-title-bar {
+    background: var(--border);
+    padding: 4px 12px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+  .command-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    padding: 6px;
+  }
+  .cmd-btn {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: 'VT323', monospace;
+    font-size: 17px;
+    padding: 8px 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    border-radius: 2px;
+  }
+  .cmd-btn:hover:not(:disabled) { background: var(--border); color: var(--gold); border-color: var(--gold); }
+  .cmd-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .cmd-btn.macro { border-color: var(--purple); color: var(--purple); }
+  .cmd-btn.macro:hover:not(:disabled) { background: rgba(170,102,238,0.2); }
+
+  /* Sub menus */
+  #sub-menu {
+    display: none;
+    flex-direction: column;
+    padding: 6px;
+    gap: 3px;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+  .sub-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 2px;
+    transition: all 0.1s;
+  }
+  .sub-item:hover { background: var(--border); color: var(--gold); }
+  .sub-item .cost { color: var(--tp); font-size: 14px; }
+  .sub-item .desc { color: var(--gray); font-size: 13px; font-style: italic; }
+
+  /* Explore commands */
+  #explore-menu {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    padding: 8px;
+  }
+  .exp-btn {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    border-radius: 2px;
+  }
+  .exp-btn:hover { background: var(--border); color: var(--gold); border-color: var(--gold); }
+
+  /* Menu screen */
+  #menu-screen {
+    display: none;
+    flex-direction: column;
+    background: var(--dark);
+    min-height: 100vh;
+    padding: 12px;
+    gap: 12px;
+  }
+  #menu-screen h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    letter-spacing: 2px;
+  }
+  .char-detail-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .char-portrait { width: 60px; }
+  .stat-block { font-size: 15px; line-height: 1.8; }
+  .stat-label { color: var(--gray); }
+  .skill-list { font-size: 14px; line-height: 1.9; }
+  .skill-item { color: var(--purple); }
+  .tech-item { color: var(--teal); }
+
+  /* Combo flash */
+  #combo-flash {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(18px, 5vw, 32px);
+    color: var(--gold);
+    text-shadow: 0 0 20px var(--gold);
+    pointer-events: none;
+    z-index: 1000;
+    display: none;
+    text-align: center;
+  }
+
+  /* Damage numbers */
+  .dmg-float {
+    position: absolute;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    pointer-events: none;
+    animation: floatUp 1.2s forwards;
+    z-index: 100;
+  }
+  @keyframes floatUp { 0%{transform:translateY(0);opacity:1} 100%{transform:translateY(-50px);opacity:0} }
+
+  /* Transition / game over */
+  #overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(12px, 3vw, 20px);
+    color: var(--gold);
+    text-align: center;
+    padding: 20px;
+  }
+  #overlay p { font-size: 13px; color: var(--gray); font-family: 'VT323', monospace; font-size: 18px; max-width: 400px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--panel); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  button { cursor: pointer; }
+
+  .btn-generic {
+    background: var(--panel2);
+    border: 1px solid var(--border2);
+    color: var(--white);
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 2px;
+  }
+  .btn-generic:hover { background: var(--border); color: var(--gold); }
+
+  /* Chapter title */
+  #chapter-title-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 990;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+  }
+  .chapter-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--border2);
+    letter-spacing: 4px;
+    animation: slideIn 0.5s;
+  }
+  .chapter-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(14px, 4vw, 22px);
+    color: var(--gold);
+    text-align: center;
+    animation: slideIn 0.7s;
+    text-shadow: 0 0 20px rgba(232,200,74,0.4);
+    padding: 0 20px;
+  }
+
+  .loot-popup {
+    background: var(--panel);
+    border: 2px solid var(--gold);
+    padding: 12px 20px;
+    font-size: 16px;
+    color: var(--gold2);
+    text-align: center;
+    margin: 6px 8px;
+  }
+</style>
+</head>
+<body>
+<div id="game-wrapper">
+
+<!-- ═══ TITLE SCREEN ═══ -->
+<div id="title-screen">
+  <div class="star-field" id="star-field"></div>
+  <div class="title-art" id="title-pixel-art"></div>
+  <div class="title-logo">PHANTASY STAR V</div>
+  <div class="title-sub">CHILDREN OF THE GREAT LIGHT</div>
+  <div style="color:var(--gray);font-size:15px;margin-bottom:30px;text-align:center;max-width:480px;padding:0 20px;">
+    In the age after evil, a new light falls on Algo —<br>and not all light is salvation.
+  </div>
+  <button class="press-start" id="btn-start">[ PRESS START ]</button>
+  <div style="margin-top:40px;color:var(--gray);font-size:13px;text-align:center;">
+    © FAN PROJECT · INSPIRED BY PHANTASY STAR IV (SEGA, 1993)<br>
+    <span style="color:#444;font-size:11px;">BROWSER RPG · NOT FOR COMMERCIAL USE</span>
+  </div>
+</div>
+
+<!-- ═══ CUTSCENE SCREEN ═══ -->
+<div id="cutscene">
+  <div id="cutscene-panels-area" class="cutscene-panels"></div>
+  <div class="cutscene-text">
+    <div class="speaker-name" id="cs-speaker"></div>
+    <div id="cs-text"></div>
+  </div>
+  <div class="cutscene-nav">
+    <button class="btn-generic" id="btn-cs-skip">SKIP</button>
+    <button class="btn-generic" id="btn-cs-next">NEXT ▶</button>
+  </div>
+</div>
+
+<!-- ═══ MAIN GAME ═══ -->
+<div id="main-game">
+  <div id="top-bar">
+    <div class="location-name" id="location-name">MOTAVIA OUTSKIRTS</div>
+    <div class="meseta-display" id="meseta-display">✦ 500 MESETA</div>
+  </div>
+
+  <div id="scene-area">
+    <!-- Explore view -->
+    <div id="explore-view">
+      <div class="world-bg" id="world-bg">
+        <svg id="world-svg" viewBox="0 0 640 240" preserveAspectRatio="xMidYMid slice"></svg>
+      </div>
+      <div class="explore-msg" id="explore-msg">
+        You stand on the sun-scorched plains of Motavia. The air shimmers with heat — and something else. 
+        Something ancient stirs in the ruins to the north.
+      </div>
+    </div>
+
+    <!-- Battle view -->
+    <div id="battle-view">
+      <div class="battle-bg" id="battle-bg">
+        <svg id="battle-bg-svg" style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 640 200" preserveAspectRatio="xMidYMid slice"></svg>
+        <div id="enemies-container" style="display:flex;gap:20px;align-items:flex-end;z-index:1;position:relative;flex-wrap:wrap;justify-content:center;"></div>
+      </div>
+      <div class="battle-log" id="battle-log">A wild enemy appears!</div>
+    </div>
+  </div>
+
+  <!-- Party HUD -->
+  <div id="party-hud"></div>
+
+  <!-- Action area -->
+  <div id="action-area">
+    <div id="command-menu">
+      <div class="menu-title-bar" id="cmd-title">— COMMAND —</div>
+      <div class="command-grid" id="cmd-grid"></div>
+    </div>
+    <div id="sub-menu"></div>
+    <div id="explore-menu" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- ═══ MENU SCREEN ═══ -->
+<div id="menu-screen">
+  <h2>— PARTY STATUS —</h2>
+  <div id="menu-chars"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+    <button class="btn-generic" id="btn-menu-close">▶ RETURN</button>
+  </div>
+</div>
+
+<!-- Overlays -->
+<div id="overlay" style="display:none;flex-direction:column;">
+  <div id="overlay-title" style="font-size:clamp(14px,4vw,24px);">VICTORY!</div>
+  <p id="overlay-text"></p>
+  <button class="btn-generic" id="btn-overlay-ok">CONTINUE</button>
+</div>
+
+<div id="chapter-title-overlay">
+  <div class="chapter-label">CHAPTER</div>
+  <div class="chapter-name" id="chapter-title-text"></div>
+</div>
+
+<div id="combo-flash"></div>
+
+</div><!-- /game-wrapper -->
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// PHANTASY STAR V: CHILDREN OF THE GREAT LIGHT
+// Full RPG Engine
+// ═══════════════════════════════════════════════════════════
+
+// ── STAR FIELD ──
+(function() {
+  const sf = document.getElementById('star-field');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${1.5+Math.random()*3}s`;
+    sf.appendChild(s);
+  }
+})();
+
+// ── GAME STATE ──
+const GS = {
+  meseta: 500,
+  location: 'MOTAVIA OUTSKIRTS',
+  chapter: 0,
+  scene: 'explore', // explore | battle | menu | cutscene
+  turn: 0,
+  battlePhase: 'command', // command | animate | enemy | result
+  selectedChar: 0,
+  selectedAction: null,
+  comboQueue: [], // [{char, action, target}]
+  enemies: [],
+  loot: [],
+  flags: {
+    metLyra: false,
+    metTarin: false,
+    metMira: false,
+    metSeth9: false,
+    metNeysa: false,
+    defeatedFirstBoss: false,
+    prologue_done: false,
+  },
+  party: []
+};
+
+// ── CHARACTER DEFINITIONS ──
+const CHAR_DEFS = {
+  aren: {
+    id: 'aren', name: 'Aren',
+    class: 'Salvager',
+    hp: 180, maxHp: 180,
+    tp: 40, maxTp: 40,
+    str: 28, men: 12, agi: 22, def: 16,
+    level: 1, exp: 0, nextExp: 100,
+    skills: [
+      { id: 'slash',     name: 'SLASH',     type: 'skill', cost: 1, target: 'enemy',  power: 1.6,  desc: 'Strong single sword strike' },
+      { id: 'crosscut',  name: 'CROSSCUT',  type: 'skill', cost: 1, target: 'enemy',  power: 2.0,  desc: 'Powerful double-blade cross' },
+      { id: 'burst',     name: 'BURST',     type: 'skill', cost: 1, target: 'all',    power: 1.2,  desc: 'Gunshot burst vs all foes' },
+    ],
+    techs: [],
+    portrait: 'aren',
+    comboTags: ['blade', 'gun'],
+    statusEffects: [],
+    color: '#66aaee',
+  },
+  lyra: {
+    id: 'lyra', name: 'Lyra',
+    class: 'Resonant',
+    hp: 130, maxHp: 130,
+    tp: 120, maxTp: 120,
+    str: 12, men: 36, agi: 28, def: 10,
+    level: 1, exp: 0, nextExp: 100,
+    skills: [
+      { id: 'harmonic',  name: 'HARMONIC',  type: 'skill', cost: 1, target: 'all_ally', power: 0, healPct: 0.25, desc: 'Resonant pulse heals party' },
+    ],
+    techs: [
+      { id: 'res',   name: 'RES',   type: 'tech', tp: 5,  target: 'ally',    healAmt: 50,   desc: 'Restore one ally HP' },
+      { id: 'sar',   name: 'SAR',   type: 'tech', tp: 12, target: 'all_ally',healAmt: 30,   desc: 'Restore all party HP' },
+      { id: 'foi',   name: 'FOI',   type: 'tech', tp: 6,  target: 'enemy',   power: 1.4,    element: 'fire', desc: 'Fire-element technique' },
+      { id: 'wat',   name: 'WAT',   type: 'tech', tp: 6,  target: 'enemy',   power: 1.4,    element: 'ice',  desc: 'Ice-element technique' },
+      { id: 'lumina',name: 'LUMINA',type: 'tech', tp: 14, target: 'enemy',   power: 2.2,    element: 'light',desc: 'Radiant light pierces darkness' },
+    ],
+    portrait: 'lyra',
+    comboTags: ['light', 'heal'],
+    statusEffects: [],
+    color: '#f0d86a',
+  },
+  tarin: {
+    id: 'tarin', name: 'Tarin',
+    class: 'Scholar',
+    hp: 150, maxHp: 150,
+    tp: 90, maxTp: 90,
+    str: 18, men: 30, agi: 18, def: 18,
+    level: 1, exp: 0, nextExp: 100,
+    skills: [
+      { id: 'ward',      name: 'WARD',      type: 'skill', cost: 1, target: 'all_ally', effect: 'deban', desc: 'Raise party defense' },
+      { id: 'exorcise',  name: 'EXORCISE',  type: 'skill', cost: 1, target: 'enemy', power: 1.8, element: 'holy', desc: 'Anti-possession attack' },
+    ],
+    techs: [
+      { id: 'res',   name: 'RES',   type: 'tech', tp: 5,  target: 'ally',    healAmt: 50,   desc: 'Restore one ally HP' },
+      { id: 'deban', name: 'DEBAN', type: 'tech', tp: 8,  target: 'all_ally',effect: 'def+', desc: 'Raise party defense' },
+      { id: 'githu', name: 'GITHU', type: 'tech', tp: 10, target: 'enemy',   power: 1.6,   element: 'wind', desc: 'Wind technique' },
+    ],
+    portrait: 'tarin',
+    comboTags: ['holy', 'wind'],
+    statusEffects: [],
+    color: '#aa66ee',
+  },
+  mira: {
+    id: 'mira', name: 'Mira',
+    class: 'Pilot',
+    hp: 160, maxHp: 160,
+    tp: 20, maxTp: 20,
+    str: 24, men: 16, agi: 32, def: 14,
+    level: 1, exp: 0, nextExp: 100,
+    skills: [
+      { id: 'railgun',   name: 'RAILGUN',   type: 'skill', cost: 1, target: 'enemy', power: 2.4, desc: 'High-power railgun shot' },
+      { id: 'drone',     name: 'DRONE',     type: 'skill', cost: 1, target: 'all',   power: 1.0, desc: 'Attack drone hits all foes' },
+      { id: 'smokescreen',name:'SMOKE',     type: 'skill', cost: 1, target: 'all_ally', effect: 'evade+', desc: 'Smokescreen raises evasion' },
+    ],
+    techs: [],
+    portrait: 'mira',
+    comboTags: ['gun', 'tech'],
+    statusEffects: [],
+    color: '#e88844',
+  },
+  seth9: {
+    id: 'seth9', name: 'Seth-9',
+    class: 'Android',
+    hp: 260, maxHp: 260,
+    tp: 0, maxTp: 0,
+    str: 30, men: 18, agi: 12, def: 32,
+    level: 1, exp: 0, nextExp: 100,
+    skills: [
+      { id: 'barrier',   name: 'BARRIER',   type: 'skill', cost: 1, target: 'all_ally', effect: 'def+', desc: 'Project energy barrier' },
+      { id: 'suppression',name:'SUPPRESS',  type: 'skill', cost: 1, target: 'all',   power: 1.3, desc: 'Area suppression cannon' },
+      { id: 'scan',      name: 'SCAN',      type: 'skill', cost: 0, target: 'enemy', effect: 'scan', desc: 'Analyze enemy weaknesses' },
+    ],
+    techs: [],
+    portrait: 'seth9',
+    comboTags: ['tech', 'heavy'],
+    statusEffects: [],
+    color: '#44ccaa',
+  },
+  neysa: {
+    id: 'neysa', name: 'Neysa',
+    class: 'Esper',
+    hp: 120, maxHp: 120,
+    tp: 160, maxTp: 160,
+    str: 10, men: 44, agi: 24, def: 8,
+    level: 1, exp: 0, nextExp: 100,
+    skills: [
+      { id: 'seal',      name: 'SEAL',      type: 'skill', cost: 1, target: 'enemy', effect: 'seal', desc: 'Seal enemy techniques' },
+      { id: 'ryuka',     name: 'RYUKA',     type: 'skill', cost: 1, target: 'all_ally', effect: 'warp', desc: 'Warp party to safety' },
+    ],
+    techs: [
+      { id: 'nagra',  name: 'NAGRA',  type: 'tech', tp: 20, target: 'all',   power: 2.0, element: 'gravity', desc: 'Gravity collapse all foes' },
+      { id: 'nafoi',  name: 'NAFOI',  type: 'tech', tp: 18, target: 'all',   power: 1.8, element: 'fire',    desc: 'Great fire storm' },
+      { id: 'efess',  name: 'EFESS',  type: 'tech', tp: 28, target: 'enemy', power: 3.0, element: 'holy',    desc: 'Sacred cross cleave' },
+      { id: 'sar',    name: 'SAR',    type: 'tech', tp: 12, target: 'all_ally',healAmt: 40, desc: 'Party heal' },
+    ],
+    portrait: 'neysa',
+    comboTags: ['blade', 'light', 'gravity'],
+    statusEffects: [],
+    color: '#ee66aa',
+  },
+};
+
+// Deep clone a character
+function cloneChar(id) {
+  const d = CHAR_DEFS[id];
+  const c = JSON.parse(JSON.stringify(d));
+  // Restore skill uses
+  c.skills.forEach(s => { s.uses = 3; s.maxUses = 3; });
+  return c;
+}
+
+// ── ENEMY DEFINITIONS ──
+const ENEMY_DEFS = {
+  sandworm: {
+    id: 'sandworm', name: 'Sand Worm',
+    hp: 80, maxHp: 80,
+    str: 18, men: 6, agi: 10, def: 8,
+    exp: 30, meseta: 20,
+    weaknesses: ['ice'],
+    attacks: ['bite', 'sandblast'],
+    svgFn: drawSandworm,
+    element: null,
+  },
+  luminant_drone: {
+    id: 'luminant_drone', name: 'Luminant Drone',
+    hp: 60, maxHp: 60,
+    str: 14, men: 20, agi: 24, def: 6,
+    exp: 40, meseta: 30,
+    weaknesses: ['gravity'],
+    attacks: ['lightbeam', 'scan'],
+    svgFn: drawLuminantDrone,
+    element: 'light',
+  },
+  purified_beast: {
+    id: 'purified_beast', name: 'Purified Beast',
+    hp: 120, maxHp: 120,
+    str: 24, men: 14, agi: 16, def: 12,
+    exp: 55, meseta: 40,
+    weaknesses: ['holy'],
+    attacks: ['claw', 'radiant_howl'],
+    svgFn: drawPurifiedBeast,
+    element: 'light',
+  },
+  creed_soldier: {
+    id: 'creed_soldier', name: 'Creed Soldier',
+    hp: 100, maxHp: 100,
+    str: 22, men: 18, agi: 20, def: 14,
+    exp: 60, meseta: 50,
+    weaknesses: [],
+    attacks: ['strike', 'lightbolt'],
+    svgFn: drawCreedSoldier,
+    element: 'light',
+  },
+  rykros_echo: {
+    id: 'rykros_echo', name: 'Rykros Echo',
+    hp: 180, maxHp: 180,
+    str: 30, men: 28, agi: 22, def: 18,
+    exp: 100, meseta: 80,
+    weaknesses: ['holy', 'gravity'],
+    attacks: ['memory_strike', 'dimension_tear'],
+    svgFn: drawRykrosEcho,
+    element: 'void',
+  },
+  // BOSSES
+  iglanova: {
+    id: 'iglanova', name: 'IGLANOVA',
+    hp: 400, maxHp: 400,
+    str: 32, men: 22, agi: 14, def: 20,
+    exp: 250, meseta: 200,
+    weaknesses: ['ice', 'holy'],
+    attacks: ['sandstorm', 'burrow', 'giant_fang'],
+    svgFn: drawIglanova,
+    isBoss: true,
+    element: null,
+  },
+  archon_seraphel: {
+    id: 'archon_seraphel', name: 'ARCHON SERAPHEL',
+    hp: 800, maxHp: 800,
+    str: 40, men: 50, agi: 28, def: 28,
+    exp: 600, meseta: 500,
+    weaknesses: ['gravity'],
+    attacks: ['divine_ray', 'illumination', 'mass_conversion'],
+    svgFn: drawSeraphel,
+    isBoss: true,
+    element: 'light',
+  },
+};
+
+// ── COMBO DEFINITIONS ──
+// Two characters using specific skill combos trigger a combo attack
+const COMBO_DEFS = [
+  {
+    name: 'LIGHTSHEAR', chars: ['aren','lyra'],
+    tags: ['blade','light'], needs: ['crosscut','lumina'],
+    power: 3.5, element: 'light', target: 'enemy',
+    desc: 'Aren\'s blade channels Lyra\'s resonance — a holy cross of light!',
+  },
+  {
+    name: 'VOIDBREAKER', chars: ['neysa','seth9'],
+    tags: ['gravity','tech'], needs: ['nagra','suppression'],
+    power: 4.0, element: 'gravity', target: 'all',
+    desc: 'Gravity collapse amplified by Seth-9\'s cannon — devastating!',
+  },
+  {
+    name: 'FIRESTORM', chars: ['lyra','tarin'],
+    tags: ['fire','wind'], needs: ['foi','githu'],
+    power: 3.0, element: 'fire', target: 'all',
+    desc: 'Fire and wind spiral into a scorching vortex!',
+  },
+  {
+    name: 'RAILFOI', chars: ['mira','lyra'],
+    tags: ['gun','fire'], needs: ['railgun','foi'],
+    power: 3.2, element: 'fire', target: 'enemy',
+    desc: 'Mira\'s railgun superheated by Lyra\'s fire technique!',
+  },
+  {
+    name: 'GRANDCROSS', chars: ['aren','neysa'],
+    tags: ['blade','light'], needs: ['crosscut','efess'],
+    power: 4.5, element: 'holy', target: 'enemy',
+    desc: 'The sacred Elsydeon tradition lives on — Holy Cross Strike!',
+  },
+];
+
+// ── ENCOUNTER TABLES per location ──
+const ENCOUNTERS = {
+  'MOTAVIA OUTSKIRTS': ['sandworm', 'sandworm', 'luminant_drone'],
+  'ANCIENT RUINS': ['luminant_drone', 'purified_beast', 'sandworm'],
+  'DEZOLIS TUNDRA': ['purified_beast', 'creed_soldier'],
+  'CREED ARK ELYON': ['creed_soldier', 'creed_soldier', 'luminant_drone'],
+  'RYKROS UNSTABLE': ['rykros_echo', 'rykros_echo'],
+  'BOSS_IGLANOVA': ['iglanova'],
+  'BOSS_SERAPHEL': ['archon_seraphel'],
+};
+
+// ── SVG SPRITE FUNCTIONS ──
+function drawSandworm(size=80) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 80 80">
+    <ellipse cx="40" cy="55" rx="30" ry="18" fill="#c8a840"/>
+    <ellipse cx="40" cy="40" rx="22" ry="16" fill="#d4b848"/>
+    <ellipse cx="40" cy="28" rx="16" ry="14" fill="#c8a840"/>
+    <ellipse cx="40" cy="20" rx="14" ry="12" fill="#e0b840" stroke="#a07820" stroke-width="1.5"/>
+    <circle cx="34" cy="17" r="3" fill="#1a0a00"/>
+    <circle cx="46" cy="17" r="3" fill="#1a0a00"/>
+    <circle cx="34" cy="17" r="1.5" fill="#ff4444"/>
+    <circle cx="46" cy="17" r="1.5" fill="#ff4444"/>
+    <path d="M34 26 Q40 30 46 26" stroke="#a07820" fill="none" stroke-width="1.5"/>
+    <line x1="28" y1="20" x2="20" y2="14" stroke="#a07820" stroke-width="1.5"/>
+    <line x1="52" y1="20" x2="60" y2="14" stroke="#a07820" stroke-width="1.5"/>
+    <ellipse cx="28" cy="50" rx="6" ry="3" fill="#b09030" opacity="0.5"/>
+    <ellipse cx="52" cy="50" rx="6" ry="3" fill="#b09030" opacity="0.5"/>
+  </svg>`;
+}
+
+function drawLuminantDrone(size=70) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 70 70">
+    <polygon points="35,8 55,25 55,45 35,62 15,45 15,25" fill="#1a2a4a" stroke="#4488cc" stroke-width="1.5"/>
+    <polygon points="35,16 50,28 50,42 35,54 20,42 20,28" fill="#0a1828" stroke="#6699dd" stroke-width="1"/>
+    <circle cx="35" cy="35" r="10" fill="#223355" stroke="#88bbff" stroke-width="1.5"/>
+    <circle cx="35" cy="35" r="5" fill="#4488ff" opacity="0.8"/>
+    <circle cx="35" cy="35" r="2" fill="#ffffff"/>
+    <line x1="35" y1="8" x2="35" y2="4" stroke="#4488cc" stroke-width="1.5"/>
+    <line x1="55" y1="25" x2="60" y2="22" stroke="#4488cc" stroke-width="1.5"/>
+    <line x1="55" y1="45" x2="60" y2="48" stroke="#4488cc" stroke-width="1.5"/>
+    <line x1="35" y1="62" x2="35" y2="66" stroke="#4488cc" stroke-width="1.5"/>
+    <line x1="15" y1="45" x2="10" y2="48" stroke="#4488cc" stroke-width="1.5"/>
+    <line x1="15" y1="25" x2="10" y2="22" stroke="#4488cc" stroke-width="1.5"/>
+    <circle cx="35" cy="4" r="2" fill="#88bbff"/>
+    <circle cx="62" cy="21" r="2" fill="#88bbff"/>
+    <circle cx="62" cy="49" r="2" fill="#88bbff"/>
+    <circle cx="35" cy="66" r="2" fill="#88bbff"/>
+    <circle cx="8" cy="49" r="2" fill="#88bbff"/>
+    <circle cx="8" cy="21" r="2" fill="#88bbff"/>
+  </svg>`;
+}
+
+function drawPurifiedBeast(size=80) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 80 80">
+    <ellipse cx="40" cy="55" rx="28" ry="16" fill="#e0c8f0"/>
+    <ellipse cx="40" cy="42" rx="22" ry="20" fill="#ead8ff"/>
+    <ellipse cx="40" cy="28" rx="18" ry="18" fill="#f0e0ff" stroke="#cc88ee" stroke-width="1"/>
+    <path d="M28 18 L22 6 L32 16" fill="#e8d0ff" stroke="#cc88ee" stroke-width="1"/>
+    <path d="M52 18 L58 6 L48 16" fill="#e8d0ff" stroke="#cc88ee" stroke-width="1"/>
+    <circle cx="34" cy="26" r="3.5" fill="#220033"/>
+    <circle cx="46" cy="26" r="3.5" fill="#220033"/>
+    <circle cx="35" cy="25" r="1.5" fill="#ffffff" opacity="0.9"/>
+    <circle cx="47" cy="25" r="1.5" fill="#ffffff" opacity="0.9"/>
+    <ellipse cx="40" cy="34" rx="8" ry="5" fill="#ddc0ff"/>
+    <path d="M34 38 Q40 42 46 38" stroke="#aa66cc" fill="none" stroke-width="1.5"/>
+    <path d="M14 55 Q10 70 18 72 Q22 60 28 58" fill="#e0c8f0" stroke="#cc88ee" stroke-width="1"/>
+    <path d="M66 55 Q70 70 62 72 Q58 60 52 58" fill="#e0c8f0" stroke="#cc88ee" stroke-width="1"/>
+    <path d="M26 64 Q22 76 28 78" stroke="#cc88ee" fill="none" stroke-width="1.5"/>
+    <path d="M54 64 Q58 76 52 78" stroke="#cc88ee" fill="none" stroke-width="1.5"/>
+    <circle cx="40" cy="40" r="4" fill="#ffffff" opacity="0.3"/>
+  </svg>`;
+}
+
+function drawCreedSoldier(size=72) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 72 72">
+    <rect x="26" y="10" width="20" height="20" rx="4" fill="#d0c0a0" stroke="#a09060" stroke-width="1.5"/>
+    <circle cx="36" cy="18" r="7" fill="#e0d0b0" stroke="#a09060" stroke-width="1"/>
+    <circle cx="33" cy="16" r="1.5" fill="#333"/>
+    <circle cx="39" cy="16" r="1.5" fill="#333"/>
+    <rect x="22" y="30" width="28" height="26" rx="2" fill="#c0a860" stroke="#a08840" stroke-width="1.5"/>
+    <rect x="28" y="30" width="16" height="8" fill="#d4bc70"/>
+    <rect x="30" y="32" width="12" height="4" fill="#ffe090" opacity="0.8"/>
+    <rect x="14" y="30" width="10" height="20" rx="2" fill="#c0a860" stroke="#a08840" stroke-width="1"/>
+    <rect x="48" y="30" width="10" height="20" rx="2" fill="#c0a860" stroke="#a08840" stroke-width="1"/>
+    <rect x="28" y="56" width="8" height="14" rx="1" fill="#b09050" stroke="#a08040" stroke-width="1"/>
+    <rect x="36" y="56" width="8" height="14" rx="1" fill="#b09050" stroke="#a08040" stroke-width="1"/>
+    <rect x="48" y="44" width="14" height="4" rx="1" fill="#8080a0" stroke="#606080" stroke-width="1"/>
+    <rect x="56" y="42" width="8" height="3" rx="1" fill="#606060"/>
+    <path d="M36 32 L36 52" stroke="#a08840" stroke-width="0.5" opacity="0.5"/>
+    <path d="M22 42 L50 42" stroke="#a08840" stroke-width="0.5" opacity="0.5"/>
+  </svg>`;
+}
+
+function drawRykrosEcho(size=80) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 80 80">
+    <circle cx="40" cy="40" r="30" fill="none" stroke="#4444aa" stroke-width="1" opacity="0.5"/>
+    <circle cx="40" cy="40" r="22" fill="#0a0a1a" stroke="#6666cc" stroke-width="1.5"/>
+    <circle cx="40" cy="40" r="14" fill="#0d0d22" stroke="#8888ee" stroke-width="1"/>
+    <circle cx="40" cy="40" r="6" fill="#2222aa" stroke="#aaaaff" stroke-width="1"/>
+    <line x1="40" y1="18" x2="40" y2="10" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
+    <line x1="55" y1="25" x2="62" y2="18" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
+    <line x1="62" y1="40" x2="70" y2="40" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
+    <line x1="55" y1="55" x2="62" y2="62" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
+    <line x1="40" y1="62" x2="40" y2="70" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
+    <line x1="25" y1="55" x2="18" y2="62" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
+    <line x1="18" y1="40" x2="10" y2="40" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
+    <line x1="25" y1="25" x2="18" y2="18" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
+    <path d="M34 36 Q40 30 46 36 Q40 42 34 36Z" fill="#4444ee" opacity="0.8"/>
+    <circle cx="40" cy="40" r="2" fill="#aaaaff"/>
+  </svg>`;
+}
+
+function drawIglanova(size=120) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 120 120">
+    <ellipse cx="60" cy="90" rx="50" ry="22" fill="#a06820"/>
+    <ellipse cx="60" cy="72" rx="42" ry="28" fill="#b87830"/>
+    <ellipse cx="60" cy="55" rx="35" ry="28" fill="#c88838"/>
+    <ellipse cx="60" cy="38" rx="28" ry="24" fill="#d89840" stroke="#a07020" stroke-width="2"/>
+    <ellipse cx="60" cy="24" rx="22" ry="18" fill="#e0a040" stroke="#b07820" stroke-width="2"/>
+    <circle cx="50" cy="20" r="5" fill="#1a0800"/>
+    <circle cx="70" cy="20" r="5" fill="#1a0800"/>
+    <circle cx="51" cy="19" r="2" fill="#ff2200"/>
+    <circle cx="71" cy="19" r="2" fill="#ff2200"/>
+    <path d="M46 32 Q60 40 74 32" stroke="#905010" fill="none" stroke-width="2.5"/>
+    <line x1="38" y1="26" x2="26" y2="16" stroke="#905010" stroke-width="2"/>
+    <line x1="82" y1="26" x2="94" y2="16" stroke="#905010" stroke-width="2"/>
+    <circle cx="26" cy="15" r="4" fill="#d07820"/>
+    <circle cx="94" cy="15" r="4" fill="#d07820"/>
+    <path d="M20 78 Q14 100 24 106 Q32 94 40 88" fill="#b07020" stroke="#a06010" stroke-width="1.5"/>
+    <path d="M100 78 Q106 100 96 106 Q88 94 80 88" fill="#b07020" stroke="#a06010" stroke-width="1.5"/>
+    <path d="M30 100 Q26 114 34 116" stroke="#a06010" fill="none" stroke-width="2"/>
+    <path d="M90 100 Q94 114 86 116" stroke="#a06010" fill="none" stroke-width="2"/>
+    <ellipse cx="60" cy="56" rx="12" ry="8" fill="#c87820" opacity="0.6"/>
+  </svg>`;
+}
+
+function drawSeraphel(size=110) {
+  return `<svg width="${size}" height="${size}" viewBox="0 0 110 110">
+    <ellipse cx="55" cy="98" rx="35" ry="10" fill="#f0e0c0" opacity="0.3"/>
+    <rect x="35" y="42" width="40" height="50" rx="4" fill="#f8f0e0" stroke="#d4c080" stroke-width="1.5"/>
+    <circle cx="55" cy="30" rx="18" ry="18" fill="#f8f0e0" stroke="#d4c080" stroke-width="2"/>
+    <circle cx="48" cy="28" r="3" fill="#8866aa"/>
+    <circle cx="62" cy="28" r="3" fill="#8866aa"/>
+    <circle cx="49" cy="27" r="1.5" fill="#ffffff"/>
+    <circle cx="63" cy="27" r="1.5" fill="#ffffff"/>
+    <path d="M47 36 Q55 42 63 36" stroke="#c4a060" fill="none" stroke-width="1.5"/>
+    <rect x="37" y="44" width="36" height="10" fill="#ffe890" opacity="0.6"/>
+    <path d="M32 46 L16 26 L28 38" fill="#fff0b0" stroke="#e0c040" stroke-width="1.5"/>
+    <path d="M78 46 L94 26 L82 38" fill="#fff0b0" stroke="#e0c040" stroke-width="1.5"/>
+    <path d="M22 24 L16 12 L28 20" fill="#fff0b0" stroke="#e0c040" stroke-width="1"/>
+    <path d="M88 24 L94 12 L82 20" fill="#fff0b0" stroke="#e0c040" stroke-width="1"/>
+    <rect x="43" y="56" width="24" height="32" fill="#ece0d0"/>
+    <path d="M46 62 L64 62 M46 68 L64 68 M46 74 L64 74 M46 80 L64 80" stroke="#c0a060" stroke-width="0.8" opacity="0.6"/>
+    <rect x="38" y="88" width="14" height="10" rx="2" fill="#e0d0b0"/>
+    <rect x="58" y="88" width="14" height="10" rx="2" fill="#e0d0b0"/>
+    <circle cx="55" cy="50" r="7" fill="none" stroke="#ffdd44" stroke-width="1.5" opacity="0.9"/>
+    <circle cx="55" cy="50" r="3" fill="#ffeeaa"/>
+    <path d="M55 20 L55 12 M47 22 L42 16 M63 22 L68 16" stroke="#ffdd44" stroke-width="1" opacity="0.8"/>
+  </svg>`;
+}
+
+function drawCharPortrait(charId, size=44) {
+  const portraits = {
+    aren: `<svg width="${size}" height="${size}" viewBox="0 0 44 44">
+      <rect x="8" y="6" width="28" height="28" rx="4" fill="#3a4a6a"/>
+      <circle cx="22" cy="18" r="10" fill="#c8a870"/>
+      <rect x="14" y="22" width="16" height="12" rx="2" fill="#3a4a6a"/>
+      <circle cx="19" cy="16" r="1.5" fill="#2a1a08"/>
+      <circle cx="25" cy="16" r="1.5" fill="#2a1a08"/>
+      <path d="M18 22 Q22 25 26 22" stroke="#a07840" fill="none" stroke-width="1"/>
+      <rect x="8" y="6" width="28" height="10" rx="4" fill="#2a3a5a"/>
+      <path d="M14 10 L30 10" stroke="#4a6a9a" stroke-width="1"/>
+    </svg>`,
+    lyra: `<svg width="${size}" height="${size}" viewBox="0 0 44 44">
+      <rect x="8" y="6" width="28" height="28" rx="4" fill="#2a3a5a"/>
+      <circle cx="22" cy="18" r="10" fill="#e8d8c0"/>
+      <path d="M14 12 Q22 4 30 12" fill="#f0e0a0" stroke="#d4c060" stroke-width="1"/>
+      <circle cx="19" cy="17" r="1.5" fill="#332211"/>
+      <circle cx="25" cy="17" r="1.5" fill="#332211"/>
+      <path d="M18 22 Q22 26 26 22" stroke="#c0a060" fill="none" stroke-width="1"/>
+      <circle cx="22" cy="18" r="5" fill="none" stroke="#f0e080" stroke-width="0.5" opacity="0.6"/>
+    </svg>`,
+    tarin: `<svg width="${size}" height="${size}" viewBox="0 0 44 44">
+      <rect x="8" y="6" width="28" height="28" rx="4" fill="#3a2a5a"/>
+      <circle cx="22" cy="18" r="10" fill="#d4b890"/>
+      <rect x="14" y="6" width="16" height="8" rx="2" fill="#5a3a8a"/>
+      <circle cx="19" cy="17" r="1.5" fill="#221108"/>
+      <circle cx="25" cy="17" r="1.5" fill="#221108"/>
+      <path d="M18 22 Q22 25 26 22" stroke="#b09060" fill="none" stroke-width="1"/>
+      <rect x="14" y="22" width="16" height="12" rx="2" fill="#5a3a8a"/>
+    </svg>`,
+    mira: `<svg width="${size}" height="${size}" viewBox="0 0 44 44">
+      <rect x="8" y="6" width="28" height="28" rx="4" fill="#3a4a2a"/>
+      <circle cx="22" cy="18" r="10" fill="#c8a870"/>
+      <rect x="14" y="22" width="16" height="12" rx="2" fill="#3a4a2a"/>
+      <circle cx="19" cy="16" r="1.5" fill="#1a0a04"/>
+      <circle cx="25" cy="16" r="1.5" fill="#1a0a04"/>
+      <path d="M18 22 Q22 25 26 22" stroke="#a07840" fill="none" stroke-width="1"/>
+      <rect x="8" y="14" width="8" height="6" rx="1" fill="#6a8a4a" opacity="0.8"/>
+    </svg>`,
+    seth9: `<svg width="${size}" height="${size}" viewBox="0 0 44 44">
+      <rect x="8" y="6" width="28" height="28" rx="2" fill="#2a4a4a"/>
+      <rect x="12" y="10" width="20" height="20" rx="2" fill="#1a3a3a" stroke="#44aaaa" stroke-width="1"/>
+      <rect x="15" y="13" width="6" height="5" rx="1" fill="#44ccaa" opacity="0.9"/>
+      <rect x="23" y="13" width="6" height="5" rx="1" fill="#44ccaa" opacity="0.9"/>
+      <rect x="15" y="21" width="14" height="3" rx="1" fill="#228866" opacity="0.7"/>
+      <rect x="8" y="30" width="28" height="6" rx="1" fill="#2a4a4a"/>
+    </svg>`,
+    neysa: `<svg width="${size}" height="${size}" viewBox="0 0 44 44">
+      <rect x="8" y="6" width="28" height="28" rx="4" fill="#2a1a4a"/>
+      <circle cx="22" cy="18" r="10" fill="#e0c8e8"/>
+      <path d="M14 10 Q22 2 30 10" fill="#cc88ee" stroke="#aa66cc" stroke-width="1"/>
+      <circle cx="19" cy="17" r="1.5" fill="#220044"/>
+      <circle cx="25" cy="17" r="1.5" fill="#220044"/>
+      <path d="M18 22 Q22 26 26 22" stroke="#aa66cc" fill="none" stroke-width="1"/>
+      <rect x="14" y="22" width="16" height="12" rx="2" fill="#3a1a6a"/>
+    </svg>`,
+  };
+  return portraits[charId] || `<svg width="${size}" height="${size}" viewBox="0 0 44 44"><rect x="4" y="4" width="36" height="36" rx="4" fill="#333"/><text x="22" y="28" text-anchor="middle" fill="#888" font-size="20">?</text></svg>`;
+}
+
+// ── BACKGROUND SCENES ──
+function drawWorldBg(location) {
+  const bgs = {
+    'MOTAVIA OUTSKIRTS': `
+      <rect width="640" height="240" fill="#1a1008"/>
+      <rect y="160" width="640" height="80" fill="#8a6020"/>
+      <rect y="180" width="640" height="60" fill="#9a7030"/>
+      ${[...Array(8)].map((_,i)=>`<ellipse cx="${60+i*82}" cy="175" rx="${18+Math.sin(i)*6}" ry="8" fill="#7a5010"/>`).join('')}
+      ${[...Array(5)].map((_,i)=>`<path d="M${80+i*110} 155 L${90+i*110} 145 L${100+i*110} 155" fill="#6a4808"/>`).join('')}
+      <rect y="0" width="640" height="160" fill="#0d1820"/>
+      <ellipse cx="160" cy="60" rx="90" ry="60" fill="#1a2838" opacity="0.6"/>
+      ${[...Array(40)].map((_,i)=>{
+        const x=Math.sin(i*137)*300+320, y=Math.sin(i*97)*60+50;
+        return `<circle cx="${x}" cy="${y}" r="${Math.sin(i*47)*1+1.2}" fill="#ffffff" opacity="${0.3+Math.sin(i*23)*0.4}"/>`;
+      }).join('')}
+      <ellipse cx="480" cy="90" rx="60" ry="55" fill="#0f1a2a" stroke="#1a2a4a" stroke-width="1"/>
+      <ellipse cx="480" cy="90" rx="45" ry="42" fill="#101828"/>
+    `,
+    'ANCIENT RUINS': `
+      <rect width="640" height="240" fill="#080d18"/>
+      <rect y="180" width="640" height="60" fill="#282020"/>
+      ${[...Array(6)].map((_,i)=>`
+        <rect x="${30+i*100}" y="${120+Math.sin(i)*20}" width="${20+i%3*10}" height="${60-i%3*10}" fill="#2a1a14" stroke="#3a2a1e" stroke-width="1"/>
+        <rect x="${32+i*100}" y="${118+Math.sin(i)*20}" width="${16+i%3*8}" height="10" fill="#3a2a1e"/>
+      `).join('')}
+      <rect y="0" width="640" height="180" fill="#0a0d18"/>
+      ${[...Array(50)].map((_,i)=>{
+        const x=Math.sin(i*123)*300+320, y=Math.sin(i*87)*70+50;
+        return `<circle cx="${x}" cy="${y}" r="${Math.sin(i*53)*1+0.8}" fill="#ffffff" opacity="${0.4+Math.sin(i*31)*0.3}"/>`;
+      }).join('')}
+      <circle cx="100" cy="50" r="30" fill="#1a1428" stroke="#4444aa" stroke-width="1" opacity="0.8"/>
+      <circle cx="100" cy="50" r="18" fill="#0d0d22" opacity="0.9"/>
+    `,
+    'DEZOLIS TUNDRA': `
+      <rect width="640" height="240" fill="#0a0e18"/>
+      <rect y="150" width="640" height="90" fill="#b4c8e0"/>
+      ${[...Array(9)].map((_,i)=>`
+        <polygon points="${50+i*70},150 ${70+i*70},100 ${90+i*70},150" fill="#c8ddf0" stroke="#a8b8d0" stroke-width="0.5"/>
+        <polygon points="${55+i*70},150 ${70+i*70},118 ${85+i*70},150" fill="#d8eeff"/>
+      `).join('')}
+      <rect y="0" width="640" height="150" fill="#080c18"/>
+      ${[...Array(35)].map((_,i)=>{
+        const x=i*19+5, y=Math.sin(i*29)*50+45;
+        return `<circle cx="${x}" cy="${y}" r="${0.8+Math.sin(i*67)*0.6}" fill="#aabbdd" opacity="${0.5+Math.sin(i*43)*0.3}"/>`;
+      }).join('')}
+      <ellipse cx="320" cy="70" rx="200" ry="50" fill="#0d1428" opacity="0.6"/>
+    `,
+    'CREED ARK ELYON': `
+      <rect width="640" height="240" fill="#100808"/>
+      <rect y="160" width="640" height="80" fill="#1a1410"/>
+      ${[...Array(4)].map((_,i)=>`
+        <rect x="${80+i*140}" y="${80-i%2*20}" width="60" height="100" fill="#2a2018" stroke="#6a5020" stroke-width="1.5"/>
+        <rect x="${90+i*140}" y="${70-i%2*20}" width="40" height="20" fill="#3a3020"/>
+        <rect x="${100+i*140}" y="${90-i%2*20}" width="20" height="50" rx="1" fill="#ffffff" opacity="0.1"/>
+      `).join('')}
+      <rect y="0" width="640" height="160" fill="#0d0808"/>
+      ${[...Array(30)].map((_,i)=>{
+        const x=Math.sin(i*147)*300+320, y=Math.sin(i*107)*55+45;
+        return `<circle cx="${x}" cy="${y}" r="${0.8+Math.sin(i*73)*0.8}" fill="#ffffaa" opacity="${0.4+Math.sin(i*61)*0.4}"/>`;
+      }).join('')}
+    `,
+    'RYKROS UNSTABLE': `
+      <rect width="640" height="240" fill="#04040c"/>
+      ${[...Array(12)].map((_,i)=>`
+        <line x1="${i*55}" y1="0" x2="${640-i*55}" y2="240" stroke="#222244" stroke-width="0.5" opacity="0.5"/>
+      `).join('')}
+      ${[...Array(8)].map((_,i)=>`
+        <circle cx="${80+i*70}" cy="${40+Math.sin(i*77)*80}" r="${15+i%3*8}" fill="none" stroke="#3333aa" stroke-width="${0.5+i%2*0.5}" opacity="${0.3+i%3*0.2}"/>
+      `).join('')}
+      ${[...Array(30)].map((_,i)=>{
+        const x=Math.sin(i*163)*300+320, y=Math.sin(i*123)*90+60;
+        return `<circle cx="${x}" cy="${y}" r="${1+Math.sin(i*83)*0.8}" fill="#8888ff" opacity="${0.3+Math.sin(i*61)*0.4}"/>`;
+      }).join('')}
+      <rect y="210" width="640" height="30" fill="#0a0820"/>
+    `,
+  };
+  return bgs[location] || bgs['MOTAVIA OUTSKIRTS'];
+}
+
+function drawBattleBg(location) {
+  if (location === 'MOTAVIA OUTSKIRTS' || location === 'ANCIENT RUINS' || location === 'BOSS_IGLANOVA') {
+    return `<rect width="640" height="200" fill="#0d1420"/>
+      <rect y="120" width="640" height="80" fill="#7a5010"/>
+      <rect y="135" width="640" height="65" fill="#8a6020"/>
+      ${[...Array(12)].map((_,i)=>`<ellipse cx="${30+i*56}" cy="128" rx="14" ry="6" fill="#6a4808"/>`).join('')}`;
+  }
+  if (location === 'DEZOLIS TUNDRA') {
+    return `<rect width="640" height="200" fill="#080c18"/>
+      <rect y="120" width="640" height="80" fill="#a4b8d0"/>
+      ${[...Array(10)].map((_,i)=>`<polygon points="${40+i*62},120 ${55+i*62},90 ${70+i*62},120" fill="#c8ddf0"/>`).join('')}`;
+  }
+  if (location === 'RYKROS UNSTABLE' || location === 'BOSS_SERAPHEL') {
+    return `<rect width="640" height="200" fill="#04040c"/>
+      ${[...Array(8)].map((_,i)=>`<circle cx="${80+i*70}" cy="${60+Math.sin(i*77)*40}" r="${10+i%3*5}" fill="none" stroke="#222266" stroke-width="0.5" opacity="0.6"/>`).join('')}
+      <rect y="160" width="640" height="40" fill="#0a0820"/>`;
+  }
+  return `<rect width="640" height="200" fill="#0d1420"/>
+    <rect y="120" width="640" height="80" fill="#1a1010"/>`;
+}
+
+// ── STORY DATA ──
+const STORY = [
+  // === CHAPTER 0: PROLOGUE ===
+  {
+    id: 'prologue_1',
+    chapter: 0,
+    panels: [
+      { type: 'wide', svgContent: `
+        <svg viewBox="0 0 640 160">
+          <rect width="640" height="160" fill="#0d1820"/>
+          <rect y="100" width="640" height="60" fill="#8a6020"/>
+          ${[...Array(40)].map((_,i)=>{ const x=Math.sin(i*137)*300+320,y=Math.sin(i*97)*40+40; return `<circle cx="${x}" cy="${y}" r="${Math.sin(i*47)*1+1}" fill="#fff" opacity="${0.3+Math.sin(i*23)*0.4}"/>`; }).join('')}
+          <text x="320" y="30" text-anchor="middle" font-family="monospace" font-size="12" fill="#888">YEAR 2374 — ALGO SOLAR SYSTEM</text>
+          <text x="320" y="50" text-anchor="middle" font-family="monospace" font-size="11" fill="#555">Forty years since Chaz Ashley ended the millennium cycle.</text>
+          <text x="320" y="70" text-anchor="middle" font-family="monospace" font-size="11" fill="#555">The Profound Darkness is destroyed. Algo is free — or so they believed.</text>
+          <text x="320" y="95" text-anchor="middle" font-family="monospace" font-size="13" fill="#aa8820">Now pale columns of light fall from a sky that should be empty.</text>
+        </svg>` },
+    ],
+    speaker: '', text: 'Motavia, the desert world. Forty years of slow recovery. The old systems of NURVUS still flicker in buried halls, tended by no one. In the ruins, salvagers eke out a living — and ask no questions about the new lights in the sky.',
+    next: 'prologue_2',
+  },
+  {
+    id: 'prologue_2',
+    chapter: 0,
+    panels: [
+      { svgContent: `
+        <svg viewBox="0 0 300 160">
+          <rect width="300" height="160" fill="#1a1008"/>
+          <rect y="100" width="300" height="60" fill="#8a6020"/>
+          ${drawSandworm(60).replace('<svg width="60"', '<svg width="60" x="120" y="60"')}
+          <text x="150" y="30" text-anchor="middle" font-family="monospace" font-size="11" fill="#aaa">MOTAVIA OUTSKIRTS</text>
+          <rect x="60" y="60" width="180" height="80" fill="none" stroke="#333" stroke-width="1"/>
+        </svg>` },
+      { svgContent: `
+        <svg viewBox="0 0 300 160">
+          <rect width="300" height="160" fill="#0a1020"/>
+          <rect x="10" y="20" width="130" height="120" rx="2" fill="#1a2030" stroke="#2a3a5a" stroke-width="1"/>
+          ${drawCharPortrait('aren', 110).replace('<svg width="110"', '<svg x="20" y="25" width="110"')}
+          <text x="240" y="70" text-anchor="middle" font-family="monospace" font-size="11" fill="#88aacc">"Another run to the</text>
+          <text x="240" y="88" text-anchor="middle" font-family="monospace" font-size="11" fill="#88aacc">old PASEO labs.</text>
+          <text x="240" y="106" text-anchor="middle" font-family="monospace" font-size="11" fill="#88aacc">Nothing out of the</text>
+          <text x="240" y="124" text-anchor="middle" font-family="monospace" font-size="11" fill="#88aacc">ordinary. Maybe."</text>
+        </svg>` },
+    ],
+    speaker: 'AREN', text: "My name's Aren Voss. I run salvage routes through the old ruins — it pays enough to keep my equipment charged. No destiny. No prophecy. Just work.\n\n...but the lights have been strange lately.",
+    next: 'prologue_3',
+  },
+  {
+    id: 'prologue_3',
+    chapter: 0,
+    panels: [
+      { type: 'wide', svgContent: `
+        <svg viewBox="0 0 640 160">
+          <rect width="640" height="160" fill="#e8f0ff"/>
+          <rect y="100" width="640" height="60" fill="#a09080"/>
+          ${[...Array(12)].map((_,i)=>`<line x1="${120+i*35}" y1="0" x2="${100+i*35}" y2="160" stroke="#ffffffaa" stroke-width="${3+i%3*2}" opacity="0.7"/>`).join('')}
+          <text x="320" y="50" text-anchor="middle" font-family="monospace" font-size="13" fill="#3a3020">A COLUMN OF LIGHT DESCENDS ON THE RUINS</text>
+          <text x="320" y="80" text-anchor="middle" font-family="monospace" font-size="11" fill="#5a5040">All nearby systems reactivate. The air hums with ancient frequencies.</text>
+        </svg>` },
+    ],
+    speaker: '', text: "The lightfall came without warning. One moment — desert silence. The next, a pillar of pale radiance, ancient machinery waking beneath the sand, and from a sealed vault deep underground... a voice.",
+    next: 'prologue_4',
+  },
+  {
+    id: 'prologue_4',
+    chapter: 0,
+    panels: [
+      { svgContent: `
+        <svg viewBox="0 0 300 160">
+          <rect width="300" height="160" fill="#e0f0ff"/>
+          ${[...Array(6)].map((_,i)=>`<line x1="${100+i*20}" y1="0" x2="${90+i*20}" y2="160" stroke="#ffffff" stroke-width="2" opacity="0.5"/>`).join('')}
+          <rect x="80" y="20" width="140" height="120" rx="4" fill="#f0f8ff" stroke="#aaccee" stroke-width="2"/>
+          ${drawCharPortrait('lyra', 110).replace('<svg width="110"', '<svg x="95" y="25" width="110"')}
+        </svg>` },
+      { svgContent: `
+        <svg viewBox="0 0 300 160">
+          <rect width="300" height="160" fill="#0a1020"/>
+          ${drawCharPortrait('aren', 100).replace('<svg width="100"', '<svg x="10" y="30" width="100"')}
+          <text x="200" y="55" text-anchor="middle" font-family="monospace" font-size="11" fill="#88aacc">"Who — what</text>
+          <text x="200" y="73" text-anchor="middle" font-family="monospace" font-size="11" fill="#88aacc">are you?"</text>
+        </svg>` },
+    ],
+    speaker: 'LYRA', text: "...I am Lyra. I was waiting. Not for you specifically — but for whoever the resonance would bring.\n\nI can hear the Great Light. It's speaking. And it is not asking.",
+    next: null, // triggers game start
+    startGame: true,
+  },
+];
+
+// ── GAME CHAPTER/SCENE FLOW ──
+const CHAPTERS = [
+  {
+    id: 0, title: 'A SKY THAT WILL NOT DARKEN',
+    intro: 'Strange lights fall across Motavia. In the ruins, a salvager named Aren discovers something that should not exist.',
+    startLocation: 'MOTAVIA OUTSKIRTS',
+    party: ['aren'],
+    scenes: [
+      {
+        type: 'explore',
+        location: 'MOTAVIA OUTSKIRTS',
+        msg: 'The lightfall has subsided, but the ruins glow faintly. Lyra stands at your side — fragile, luminous, and somehow the most dangerous thing in this desert.',
+        encounters: 2,
+        onComplete: 'add_lyra',
+        next: { type: 'boss', enemyId: 'iglanova', location: 'BOSS_IGLANOVA' },
+      },
+    ],
+  },
+  {
+    id: 1, title: 'THE AGE AFTER EVIL',
+    intro: 'Aren and Lyra flee to the frontier. They find an unlikely ally in a Dezolian scholar who believes Lyra may be something holy.',
+    startLocation: 'ANCIENT RUINS',
+    party: ['aren', 'lyra'],
+    addChar: 'tarin',
+    scenes: [
+      {
+        type: 'explore',
+        location: 'ANCIENT RUINS',
+        msg: 'The old PASEO research complex. Tarin the scholar-priest met you here, poring over fragments of Rykros records.\n\n"The light was supposed to be our salvation," he said. "I\'m beginning to wonder."',
+        encounters: 2,
+        next: { type: 'explore', location: 'DEZOLIS TUNDRA' },
+      },
+      {
+        type: 'explore',
+        location: 'DEZOLIS TUNDRA',
+        msg: 'Dezolis — spiritual heart of Algo. The Luminant Creed\'s presence is everywhere. White-robed figures move through the frozen streets, peaceful and empty-eyed.\n\nMira Dane found you at the starport, cursing at her grounded ship.',
+        encounters: 2,
+        addChar: 'mira',
+        next: { type: 'explore', location: 'CREED ARK ELYON' },
+      },
+    ],
+  },
+  {
+    id: 2, title: 'THE CHOIR OF LUMINOUS SOULS',
+    intro: 'The Luminant Creed\'s ark Elyon moves through high orbit. Inside, Archon Seraphel waits — not corrupted, but convinced.',
+    startLocation: 'CREED ARK ELYON',
+    party: ['aren', 'lyra', 'tarin', 'mira'],
+    addChar: 'seth9',
+    scenes: [
+      {
+        type: 'explore',
+        location: 'CREED ARK ELYON',
+        msg: 'The ark Elyon — a colossal orbital structure restored by the Great Light. Seth-9, an ancient android caretaker, reactivated as you breached the outer shell.\n\n"Observer directive: protect organic life. Current threat assessment: the light itself."',
+        encounters: 2,
+        addChar: 'neysa',
+        next: { type: 'boss', enemyId: 'archon_seraphel', location: 'BOSS_SERAPHEL' },
+      },
+    ],
+  },
+  {
+    id: 3, title: 'RYKROS UNBOUND',
+    intro: 'To find the Archive of Balance, the party must reach the flickering remains of Rykros — a world phasing in and out of reality.',
+    startLocation: 'RYKROS UNSTABLE',
+    party: ['aren', 'lyra', 'tarin', 'mira', 'seth9', 'neysa'],
+    scenes: [
+      {
+        type: 'explore',
+        location: 'RYKROS UNSTABLE',
+        msg: 'Rykros — the ancient world of revelation, now unstable, flickering between dimensions. Echoes of old heroes drift through the fractured geometry like memories the planet cannot release.\n\nThe Archive of Balance is close. The Great Light is closer.',
+        encounters: 3,
+        next: null, // triggers epilogue
+        isEnding: true,
+      },
+    ],
+  },
+];
+
+let currentChapter = 0;
+let currentSceneIdx = 0;
+let encountersCompleted = 0;
+let currentSceneData = null;
+
+// ── BATTLE STATE ──
+let battleState = {
+  enemies: [],
+  commandQueue: [],
+  currentCharIdx: 0,
+  phase: 'command',
+  pendingCombo: null,
+};
+
+// ── UI HELPERS ──
+function $(id) { return document.getElementById(id); }
+
+function showScreen(screenId) {
+  ['title-screen','cutscene','main-game','menu-screen'].forEach(id => {
+    const el = $(id);
+    if (el) el.style.display = 'none';
+  });
+  const target = $(screenId);
+  if (target) {
+    target.style.display = 'flex';
+    target.style.flexDirection = 'column';
+  }
+}
+
+function logBattle(msg, color='#dde8f8') {
+  const log = $('battle-log');
+  if (log) {
+    log.innerHTML = `<span style="color:${color}">${msg}</span>`;
+  }
+}
+
+function logExplore(msg) {
+  const el = $('explore-msg');
+  if (el) el.textContent = msg;
+}
+
+function showComboFlash(name) {
+  const el = $('combo-flash');
+  el.textContent = `⚡ ${name} ⚡`;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 1800);
+}
+
+function showChapterTitle(title) {
+  return new Promise(resolve => {
+    const ov = $('chapter-title-overlay');
+    $('chapter-title-text').textContent = title;
+    ov.style.display = 'flex';
+    setTimeout(() => {
+      ov.style.display = 'none';
+      resolve();
+    }, 2800);
+  });
+}
+
+function floatDamage(text, color, container) {
+  const el = document.createElement('div');
+  el.className = 'dmg-float';
+  el.style.color = color;
+  el.textContent = text;
+  el.style.left = `${20 + Math.random()*60}%`;
+  el.style.top = `${10 + Math.random()*40}%`;
+  (container || $('battle-bg')).appendChild(el);
+  setTimeout(() => el.remove(), 1200);
+}
+
+// ── PARTY MANAGEMENT ──
+function initParty(charIds) {
+  GS.party = charIds.map(id => cloneChar(id));
+}
+
+function addToParty(charId) {
+  if (!GS.party.find(c => c.id === charId) && GS.party.length < 5) {
+    GS.party.push(cloneChar(charId));
+  }
+}
+
+function getAliveParty() {
+  return GS.party.filter(c => c.hp > 0);
+}
+
+function restParty() {
+  GS.party.forEach(c => {
+    c.hp = c.maxHp;
+    c.tp = c.maxTp;
+    c.skills.forEach(s => { s.uses = s.maxUses; });
+    c.statusEffects = [];
+  });
+}
+
+// ── RENDER PARTY HUD ──
+function renderPartyHud() {
+  const hud = $('party-hud');
+  hud.innerHTML = GS.party.map(c => {
+    const hpPct = Math.max(0, c.hp / c.maxHp * 100);
+    const tpPct = c.maxTp > 0 ? Math.max(0, c.tp / c.maxTp * 100) : 0;
+    const hpColor = hpPct < 25 ? '#ff4444' : hpPct < 50 ? '#ffaa22' : '#44cc66';
+    const dead = c.hp <= 0;
+    return `<div class="char-card${dead ? '" style="opacity:0.4' : ''}" id="card-${c.id}">
+      <div class="char-name-hud" style="color:${c.color}">${c.name}${dead ? ' ✝' : ''}</div>
+      <div class="bar-row">
+        <span class="bar-label" style="color:${hpColor}">HP</span>
+        <div class="bar-track"><div class="bar-fill hp" style="width:${hpPct}%;background:${hpColor}"></div></div>
+        <span class="bar-nums" style="color:${hpColor}">${c.hp}/${c.maxHp}</span>
+      </div>
+      ${c.maxTp > 0 ? `<div class="bar-row">
+        <span class="bar-label">TP</span>
+        <div class="bar-track"><div class="bar-fill tp" style="width:${tpPct}%"></div></div>
+        <span class="bar-nums">${c.tp}/${c.maxTp}</span>
+      </div>` : ''}
+      <div class="char-status">${c.statusEffects && c.statusEffects.length ? c.statusEffects.join(' ') : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderMeseta() {
+  $('meseta-display').textContent = `✦ ${GS.meseta} MESETA`;
+}
+
+function renderLocation() {
+  $('location-name').textContent = GS.location;
+}
+
+// ── EXPLORE MODE ──
+function enterExplore(sceneData) {
+  currentSceneData = sceneData;
+  GS.location = sceneData.location;
+  GS.scene = 'explore';
+  encountersCompleted = 0;
+
+  renderLocation();
+  renderPartyHud();
+
+  $('explore-view').style.display = 'flex';
+  $('battle-view').style.display = 'none';
+  $('command-menu').style.display = 'flex';
+  $('sub-menu').style.display = 'none';
+  $('explore-menu').style.display = 'none';
+
+  // Draw world background
+  $('world-svg').innerHTML = drawWorldBg(sceneData.location);
+
+  logExplore(sceneData.msg);
+  renderExploreMenu(sceneData);
+}
+
+function renderExploreMenu(sceneData) {
+  const menu = $('explore-menu');
+  const cmdArea = $('command-menu');
+  cmdArea.style.display = 'none';
+  menu.style.display = 'grid';
+  menu.innerHTML = `
+    <button class="exp-btn" onclick="doExploreAction('advance')">▶ ADVANCE</button>
+    <button class="exp-btn" onclick="doExploreAction('check')">◉ CHECK</button>
+    <button class="exp-btn" onclick="doExploreAction('rest')">⊕ REST</button>
+    <button class="exp-btn" onclick="openMenuScreen()">≡ STATUS</button>
+    <button class="exp-btn" onclick="doExploreAction('talk')">✦ TALK</button>
+    <button class="exp-btn" id="btn-advance-next" style="display:none;" onclick="advanceChapter()">► CONTINUE</button>
+  `;
+}
+
+function doExploreAction(action) {
+  if (action === 'advance') {
+    // Random encounter check
+    const encounterList = ENCOUNTERS[currentSceneData.location] || ENCOUNTERS['MOTAVIA OUTSKIRTS'];
+    const needed = currentSceneData.encounters || 2;
+    if (encountersCompleted < needed) {
+      // Trigger random battle
+      const enemyId = encounterList[Math.floor(Math.random() * encounterList.length)];
+      const count = Math.random() < 0.4 ? 2 : 1;
+      const enemies = [];
+      for (let i = 0; i < count && i < 3; i++) {
+        const id = encounterList[Math.floor(Math.random() * encounterList.length)];
+        enemies.push(JSON.parse(JSON.stringify(ENEMY_DEFS[id])));
+      }
+      enterBattle(enemies);
+    } else {
+      // Check if next is boss
+      if (currentSceneData.next && currentSceneData.next.type === 'boss') {
+        logExplore('A powerful presence stirs ahead. The party steels itself...');
+        const bossId = currentSceneData.next.enemyId;
+        const bossLocation = currentSceneData.next.location;
+        GS.location = bossLocation;
+        renderLocation();
+        setTimeout(() => {
+          const boss = JSON.parse(JSON.stringify(ENEMY_DEFS[bossId]));
+          enterBattle([boss], true);
+        }, 1000);
+      } else if (currentSceneData.next && currentSceneData.next.type === 'explore') {
+        // Move to next sub-scene
+        const nextScene = CHAPTERS[currentChapter].scenes.find(s => s.location === currentSceneData.next.location);
+        if (nextScene) {
+          if (nextScene.addChar) addToParty(nextScene.addChar);
+          enterExplore(nextScene);
+        } else {
+          advanceChapter();
+        }
+      } else if (currentSceneData.isEnding) {
+        showEnding();
+      } else {
+        advanceChapter();
+      }
+    }
+  } else if (action === 'check') {
+    const msgs = [
+      'Ancient circuitry pulses with borrowed light. The NURVUS maintenance logs are decades out of date.',
+      'Fragments of old Rykros records scatter across the floor. The words shimmer, then vanish.',
+      'A faded memo from a CAST researcher: "The seal was never just a lock. It was insulation."',
+      '"I can still feel it," Lyra says quietly. "The frequency of the Great Light. Like a voice that never stops singing."',
+      'Tarin kneels by a collapsed altar. "The Creed built this. Three months ago this was empty ruins."',
+      'Mira examines old engine schematics. "Whoever built this was centuries ahead of us. And they hid it."',
+      'Seth-9 scans the area. "Observer records indicate this facility pre-dates Mother Brain. Pre-dates recorded history."',
+      'Neysa flips through an esper archive. "They knew. Every Lutz, every generation — they all knew and chose not to tell us."',
+    ];
+    logExplore(msgs[Math.floor(Math.random() * msgs.length)]);
+  } else if (action === 'rest') {
+    restParty();
+    renderPartyHud();
+    logExplore('The party rests. HP and TP restored. Skills refreshed. The silence of Algo surrounds you.');
+  } else if (action === 'talk') {
+    const talk = [
+      '[ AREN ]: "I\'m just a salvager. But I\'ve been doing this long enough to know when something is wrong with the world."',
+      '[ LYRA ]: "The Great Light doesn\'t think it\'s doing harm. That\'s what frightens me. It believes it is being kind."',
+      '[ TARIN ]: "I spent my whole life studying the Great Light as holy truth. I may have been studying a cage."',
+      '[ MIRA ]: "My family lived on a station for four generations, forgotten by everyone. We built something real with nothing. No one helped us. And we\'re fine with that."',
+      '[ SETH-9 ]: "Observer directive from primary record: \'Do not allow convergence event. Protect biological agency.\' I am 847 years past schedule."',
+      '[ NEYSA ]: "You want to know what the espers decided? They decided that ordinary people couldn\'t handle the truth. Every generation. Every time."',
+    ];
+    const availableChars = GS.party.map(c => c.name.toUpperCase());
+    const filtered = talk.filter(t => availableChars.some(n => t.startsWith(`[ ${n} ]`)));
+    const line = filtered.length ? filtered[Math.floor(Math.random()*filtered.length)] : talk[0];
+    logExplore(line);
+  }
+}
+
+// ── BATTLE ENGINE ──
+function enterBattle(enemies, isBoss=false) {
+  GS.scene = 'battle';
+  battleState.enemies = enemies.map((e,i) => ({ ...e, idx: i, maxHp: e.hp }));
+  battleState.commandQueue = [];
+  battleState.currentCharIdx = 0;
+  battleState.phase = 'command';
+
+  $('explore-view').style.display = 'none';
+  $('battle-view').style.display = 'flex';
+  $('explore-menu').style.display = 'none';
+  $('command-menu').style.display = 'flex';
+
+  // Draw battle background
+  $('battle-bg-svg').innerHTML = drawBattleBg(GS.location);
+
+  renderEnemies();
+  renderPartyHud();
+
+  if (isBoss) {
+    logBattle(`⚠ BOSS: ${enemies[0].name} ⚠  Prepare for battle!`, '#e8c84a');
+  } else {
+    const names = [...new Set(enemies.map(e=>e.name))].join(', ');
+    logBattle(`${names} appeared!`);
+  }
+
+  startCommandPhase();
+}
+
+function renderEnemies() {
+  const container = $('enemies-container');
+  container.innerHTML = battleState.enemies.filter(e=>e.hp>0).map(e => {
+    const hpPct = Math.max(0, e.hp / e.maxHp * 100);
+    return `<div class="enemy-sprite-container" id="enemy-${e.idx}">
+      <div class="enemy-sprite" id="esprite-${e.idx}">${ENEMY_DEFS[e.id].svgFn(e.isBoss ? 120 : 80)}</div>
+      <div class="enemy-name-label">${e.name}</div>
+      <div class="enemy-hp-bar"><div class="enemy-hp-fill" id="ehp-${e.idx}" style="width:${hpPct}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function updateEnemyHp(idx) {
+  const e = battleState.enemies[idx];
+  const fill = $(`ehp-${idx}`);
+  if (fill && e) {
+    const pct = Math.max(0, e.hp / e.maxHp * 100);
+    fill.style.width = pct + '%';
+    if (e.hp <= 0) {
+      const container = $(`enemy-${idx}`);
+      if (container) {
+        container.style.opacity = '0.2';
+        container.style.filter = 'grayscale(1)';
+      }
+    }
+  }
+}
+
+function startCommandPhase() {
+  battleState.commandQueue = [];
+  battleState.currentCharIdx = 0;
+  battleState.phase = 'command';
+
+  const alive = getAliveParty();
+  if (alive.length === 0) {
+    endBattle(false);
+    return;
+  }
+
+  promptNextCharacter();
+}
+
+function promptNextCharacter() {
+  const alive = getAliveParty();
+  if (battleState.currentCharIdx >= alive.length) {
+    executeTurn();
+    return;
+  }
+
+  const char = alive[battleState.currentCharIdx];
+  renderCommandMenu(char);
+  $('cmd-title').textContent = `— ${char.name.toUpperCase()}: COMMAND —`;
+
+  // Highlight active char
+  GS.party.forEach(c => {
+    const card = $(`card-${c.id}`);
+    if (card) card.classList.toggle('active-turn', c.id === char.id);
+  });
+}
+
+function renderCommandMenu(char) {
+  const grid = $('cmd-grid');
+  $('command-menu').style.display = 'flex';
+  $('sub-menu').style.display = 'none';
+
+  const hasEnemies = battleState.enemies.some(e=>e.hp>0);
+  const canCombo = checkPossibleCombo(char);
+
+  grid.innerHTML = `
+    <button class="cmd-btn" onclick="queueAction('attack','${char.id}')" ${!hasEnemies?'disabled':''}>⚔ ATTACK</button>
+    <button class="cmd-btn" onclick="showSkillMenu('${char.id}')" ${!char.skills.length?'disabled':''}>★ SKILL</button>
+    <button class="cmd-btn" onclick="showTechMenu('${char.id}')" ${!char.techs || !char.techs.length?'disabled':''}>✦ TECH</button>
+    <button class="cmd-btn" onclick="queueAction('defend','${char.id}')">◉ GUARD</button>
+    ${canCombo ? `<button class="cmd-btn macro" onclick="queueCombo('${char.id}')">⚡ COMBO</button>` : ''}
+    <button class="cmd-btn" onclick="queueAction('item','${char.id}')">⊕ ITEM</button>
+  `;
+}
+
+function checkPossibleCombo(char) {
+  const partyIds = GS.party.map(c=>c.id);
+  return COMBO_DEFS.some(c => c.chars.includes(char.id) && c.chars.every(id => partyIds.includes(id) && GS.party.find(p=>p.id===id)?.hp>0));
+}
+
+function showSkillMenu(charId) {
+  const char = GS.party.find(c=>c.id===charId);
+  if (!char) return;
+  const sub = $('sub-menu');
+  $('command-menu').style.display = 'none';
+  sub.style.display = 'flex';
+  sub.innerHTML = `<div style="display:flex;justify-content:space-between;padding:4px 8px;color:var(--gray);font-size:14px;border-bottom:1px solid var(--border);margin-bottom:4px;"><span>SKILL</span><button class="btn-generic" style="padding:2px 10px;font-size:14px;" onclick="renderCommandMenu(GS.party.find(c=>c.id==='${charId}'))">◀ BACK</button></div>` +
+    char.skills.map(s => `
+      <div class="sub-item" onclick="queueAction('skill','${charId}','${s.id}')">
+        <span>${s.name} <span style="color:var(--gray);font-size:13px;">${s.uses}/${s.maxUses}</span></span>
+        <span class="desc">${s.desc}</span>
+      </div>`).join('') +
+    `<div class="sub-item" onclick="renderCommandMenu(GS.party.find(c=>c.id==='${charId}'))"><span>◀ BACK</span></div>`;
+}
+
+function showTechMenu(charId) {
+  const char = GS.party.find(c=>c.id===charId);
+  if (!char || !char.techs) return;
+  const sub = $('sub-menu');
+  $('command-menu').style.display = 'none';
+  sub.style.display = 'flex';
+  sub.innerHTML = `<div style="display:flex;justify-content:space-between;padding:4px 8px;color:var(--gray);font-size:14px;border-bottom:1px solid var(--border);margin-bottom:4px;"><span>TECHNIQUE — TP: ${char.tp}/${char.maxTp}</span><button class="btn-generic" style="padding:2px 10px;font-size:14px;" onclick="renderCommandMenu(GS.party.find(c=>c.id==='${charId}'))">◀ BACK</button></div>` +
+    char.techs.map(t => {
+      const canUse = char.tp >= t.tp;
+      return `<div class="sub-item${canUse?'':'" style="opacity:0.4'}" onclick="${canUse?`queueAction('tech','${charId}','${t.id}')`:''}" >
+        <span style="color:var(--teal)">${t.name}</span>
+        <span class="cost">${t.tp} TP</span>
+        <span class="desc">${t.desc}</span>
+      </div>`;
+    }).join('') +
+    `<div class="sub-item" onclick="renderCommandMenu(GS.party.find(c=>c.id==='${charId}'))"><span>◀ BACK</span></div>`;
+}
+
+function queueAction(type, charId, abilityId) {
+  const alive = getAliveParty();
+  const char = GS.party.find(c=>c.id===charId);
+  const firstEnemy = battleState.enemies.find(e=>e.hp>0);
+
+  // target selection simplified — auto-target
+  let target = null;
+  if (type === 'attack' || type === 'skill' || type === 'tech') {
+    const ability = type === 'skill'
+      ? char.skills.find(s=>s.id===abilityId)
+      : char.techs && char.techs.find(t=>t.id===abilityId);
+
+    if (type === 'skill' && ability) {
+      if (ability.target === 'all_ally' || ability.target === 'ally') {
+        target = 'party';
+      } else if (ability.target === 'all') {
+        target = 'all_enemies';
+      } else {
+        target = firstEnemy;
+      }
+    } else if (type === 'tech' && ability) {
+      if (ability.target === 'all_ally' || ability.target === 'ally') {
+        target = 'party';
+      } else if (ability.target === 'all') {
+        target = 'all_enemies';
+      } else {
+        target = firstEnemy;
+      }
+    } else {
+      target = firstEnemy;
+    }
+  }
+
+  battleState.commandQueue.push({ type, charId, abilityId, target, char });
+  battleState.currentCharIdx++;
+  $('sub-menu').style.display = 'none';
+  promptNextCharacter();
+}
+
+function queueCombo(charId) {
+  const partyIds = GS.party.map(c=>c.id);
+  const possibleCombos = COMBO_DEFS.filter(c =>
+    c.chars.includes(charId) &&
+    c.chars.every(id => partyIds.includes(id) && GS.party.find(p=>p.id===id)?.hp>0)
+  );
+
+  if (!possibleCombos.length) { queueAction('defend', charId); return; }
+
+  // Show combo options
+  const sub = $('sub-menu');
+  $('command-menu').style.display = 'none';
+  sub.style.display = 'flex';
+  sub.innerHTML = `<div style="padding:4px 8px;color:var(--gold);font-size:14px;border-bottom:1px solid var(--border);margin-bottom:4px;">⚡ COMBINATION ATTACKS</div>` +
+    possibleCombos.map(combo => `
+      <div class="sub-item" onclick="confirmCombo('${combo.name}','${charId}')">
+        <span style="color:var(--gold)">⚡ ${combo.name}</span>
+        <span class="desc">${combo.desc}</span>
+      </div>`).join('') +
+    `<div class="sub-item" onclick="renderCommandMenu(GS.party.find(c=>c.id==='${charId}'))"><span>◀ BACK</span></div>`;
+}
+
+function confirmCombo(comboName, initiatorId) {
+  const combo = COMBO_DEFS.find(c=>c.name===comboName);
+  if (!combo) return;
+
+  battleState.pendingCombo = combo;
+
+  // Queue all combo participants
+  combo.chars.forEach(charId => {
+    const firstEnemy = battleState.enemies.find(e=>e.hp>0);
+    battleState.commandQueue.push({
+      type: 'combo_part',
+      charId,
+      comboName,
+      target: combo.target === 'all' ? 'all_enemies' : firstEnemy,
+    });
+  });
+
+  // Skip remaining characters
+  battleState.currentCharIdx = getAliveParty().length;
+  $('sub-menu').style.display = 'none';
+  promptNextCharacter();
+}
+
+// ── TURN EXECUTION ──
+async function executeTurn() {
+  battleState.phase = 'animate';
+  $('command-menu').style.display = 'none';
+  $('sub-menu').style.display = 'none';
+
+  // Sort by AGI (high AGI acts first)
+  const alive = getAliveParty();
+  const sortedQueue = [...battleState.commandQueue].sort((a,b) => {
+    const ca = GS.party.find(c=>c.id===a.charId);
+    const cb = GS.party.find(c=>c.id===b.charId);
+    return (cb?.agi || 0) - (ca?.agi || 0);
+  });
+
+  // Check if we have a combo queued
+  const comboInQueue = sortedQueue.find(q=>q.type==='combo_part');
+  let comboExecuted = false;
+
+  for (const action of sortedQueue) {
+    if (battleState.enemies.every(e=>e.hp<=0)) break;
+    if (action.type === 'combo_part' && !comboExecuted) {
+      await executeCombo(battleState.pendingCombo);
+      comboExecuted = true;
+      continue;
+    }
+    if (action.type === 'combo_part') continue; // already executed
+    await executeAction(action);
+    await sleep(400);
+  }
+
+  // Enemy turns
+  if (battleState.enemies.some(e=>e.hp>0) && getAliveParty().length > 0) {
+    await executeEnemyTurns();
+  }
+
+  // Check battle end
+  if (battleState.enemies.every(e=>e.hp<=0)) {
+    await sleep(400);
+    endBattle(true);
+  } else if (getAliveParty().length === 0) {
+    endBattle(false);
+  } else {
+    battleState.pendingCombo = null;
+    startCommandPhase();
+  }
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function executeAction(action) {
+  const char = GS.party.find(c=>c.id===action.charId);
+  if (!char || char.hp <= 0) return;
+
+  const firstEnemy = battleState.enemies.find(e=>e.hp>0);
+  if (!firstEnemy && action.type !== 'defend' && action.type !== 'item') return;
+
+  if (action.type === 'attack') {
+    const dmg = Math.max(1, Math.floor(char.str * 1.5 - (firstEnemy?.def || 0) * 0.5 + Math.random()*10));
+    applyDamageToEnemy(firstEnemy, dmg, char.name);
+  }
+  else if (action.type === 'skill') {
+    const skill = char.skills.find(s=>s.id===action.abilityId);
+    if (!skill || skill.uses <= 0) { logBattle(`${char.name} is out of ${action.abilityId} stock!`, '#ff8844'); return; }
+    skill.uses--;
+    await executeAbility(char, skill, action.target);
+  }
+  else if (action.type === 'tech') {
+    const tech = char.techs && char.techs.find(t=>t.id===action.abilityId);
+    if (!tech || char.tp < tech.tp) { logBattle(`${char.name} doesn't have enough TP!`, '#ff8844'); return; }
+    char.tp -= tech.tp;
+    renderPartyHud();
+    await executeAbility(char, tech, action.target);
+  }
+  else if (action.type === 'defend') {
+    logBattle(`${char.name} guards! Defense up this turn.`, '#44ccaa');
+    if (!char.statusEffects) char.statusEffects = [];
+    char.statusEffects.push('GUARD');
+    renderPartyHud();
+  }
+  else if (action.type === 'item') {
+    logBattle(`${char.name} uses a Sol Dew! (+80 HP)`, '#44cc66');
+    char.hp = Math.min(char.maxHp, char.hp + 80);
+    renderPartyHud();
+  }
+}
+
+async function executeAbility(char, ability, target) {
+  const firstEnemy = battleState.enemies.find(e=>e.hp>0);
+
+  if (ability.healAmt) {
+    // Heal ability
+    if (target === 'party' || ability.target === 'all_ally') {
+      const amt = ability.healAmt;
+      getAliveParty().forEach(c => { c.hp = Math.min(c.maxHp, c.hp + amt); });
+      logBattle(`${char.name} uses ${ability.name}! Party recovers ${amt} HP!`, '#44cc66');
+      renderPartyHud();
+    } else {
+      const target_c = GS.party[0]; // heal weakest
+      const amt = ability.healAmt;
+      target_c.hp = Math.min(target_c.maxHp, target_c.hp + amt);
+      logBattle(`${char.name} uses ${ability.name}! ${target_c.name} recovers ${amt} HP!`, '#44cc66');
+      renderPartyHud();
+    }
+  } else if (ability.power) {
+    // Damage ability
+    const elementColor = { fire:'#ff6622', ice:'#88ccff', light:'#ffffaa', holy:'#ffe060', gravity:'#aa66ff', wind:'#88ffaa' }[ability.element] || '#dde8f8';
+    if (target === 'all_enemies') {
+      const aliveEnemies = battleState.enemies.filter(e=>e.hp>0);
+      logBattle(`${char.name} uses ${ability.name}! ${ability.element ? `[${ability.element.toUpperCase()}]` : ''} Hits all enemies!`, elementColor);
+      for (const e of aliveEnemies) {
+        const multiplier = e.weaknesses && e.weaknesses.includes(ability.element) ? 1.5 : 1;
+        const dmg = Math.max(1, Math.floor(char.men * ability.power * multiplier - e.def * 0.4 + Math.random()*15));
+        applyDamageToEnemy(e, dmg, null);
+        await sleep(150);
+      }
+    } else {
+      const enemy = firstEnemy;
+      if (!enemy) return;
+      const multiplier = enemy.weaknesses && enemy.weaknesses.includes(ability.element) ? 1.5 : 1;
+      const isMental = ability.type === 'tech';
+      const stat = isMental ? char.men : char.str;
+      const dmg = Math.max(1, Math.floor(stat * ability.power * multiplier - enemy.def * 0.4 + Math.random()*12));
+      logBattle(`${char.name} → ${ability.name}!${multiplier > 1 ? ' WEAKNESS!' : ''} ${dmg} damage!`, elementColor);
+      applyDamageToEnemy(enemy, dmg, char.name);
+    }
+  } else if (ability.effect) {
+    logBattle(`${char.name} uses ${ability.name}! ${ability.effect === 'def+' ? 'Defense raised!' : 'Effect applied!'}`, '#44ccaa');
+    if (ability.effect === 'def+') {
+      getAliveParty().forEach(c => { if (!c.statusEffects) c.statusEffects = []; c.statusEffects.push('DEF+'); });
+      renderPartyHud();
+    }
+  }
+}
+
+async function executeCombo(combo) {
+  if (!combo) return;
+  showComboFlash(combo.name);
+  await sleep(600);
+
+  const elementColor = { fire:'#ff6622', ice:'#88ccff', light:'#ffffaa', holy:'#ffe060', gravity:'#aa66ff' }[combo.element] || '#e8c84a';
+  logBattle(`⚡ COMBINATION ATTACK: ${combo.name}! ⚡  ${combo.desc}`, '#e8c84a');
+  await sleep(500);
+
+  const casters = combo.chars.map(id => GS.party.find(c=>c.id===id)).filter(Boolean);
+  const totalPower = combo.power;
+  const baseStat = Math.max(...casters.map(c=>Math.max(c.str, c.men)));
+
+  if (combo.target === 'all') {
+    const aliveEnemies = battleState.enemies.filter(e=>e.hp>0);
+    for (const e of aliveEnemies) {
+      const multiplier = e.weaknesses && e.weaknesses.includes(combo.element) ? 1.8 : 1.2;
+      const dmg = Math.max(1, Math.floor(baseStat * totalPower * multiplier - e.def * 0.3 + Math.random()*20));
+      applyDamageToEnemy(e, dmg, null);
+      await sleep(200);
+    }
+  } else {
+    const target = battleState.enemies.find(e=>e.hp>0);
+    if (!target) return;
+    const multiplier = target.weaknesses && target.weaknesses.includes(combo.element) ? 1.8 : 1.2;
+    const dmg = Math.max(1, Math.floor(baseStat * totalPower * multiplier - target.def * 0.3 + Math.random()*20));
+    applyDamageToEnemy(target, dmg, null);
+  }
+}
+
+function applyDamageToEnemy(enemy, dmg, attackerName) {
+  enemy.hp = Math.max(0, enemy.hp - dmg);
+  updateEnemyHp(enemy.idx);
+
+  const sprite = $(`esprite-${enemy.idx}`);
+  if (sprite) { sprite.classList.add('hurt'); setTimeout(() => sprite.classList.remove('hurt'), 300); }
+  floatDamage(`-${dmg}`, '#ff6644', $('battle-bg'));
+
+  if (attackerName) {
+    // log already done in executeAbility
+  }
+
+  if (enemy.hp <= 0) {
+    logBattle(`${enemy.name} was defeated!`, '#e8c84a');
+  }
+}
+
+async function executeEnemyTurns() {
+  const alive = getAliveParty();
+  if (!alive.length) return;
+
+  for (const enemy of battleState.enemies.filter(e=>e.hp>0)) {
+    if (!alive.length) break;
+    await sleep(300);
+
+    const attackKey = enemy.attacks[Math.floor(Math.random()*enemy.attacks.length)];
+    const target = alive[Math.floor(Math.random()*alive.length)];
+
+    // Determine damage
+    let dmg = Math.max(1, Math.floor(enemy.str * 1.2 - target.def * 0.5 + Math.random()*8));
+    if (target.statusEffects && target.statusEffects.includes('GUARD')) dmg = Math.floor(dmg * 0.5);
+
+    target.hp = Math.max(0, target.hp - dmg);
+
+    const attackNames = {
+      bite: 'Bite', sandblast: 'Sand Blast', lightbeam: 'Light Beam',
+      claw: 'Claw', radiant_howl: 'Radiant Howl', scan: 'Scan',
+      strike: 'Strike', lightbolt: 'Light Bolt',
+      memory_strike: 'Memory Strike', dimension_tear: 'Dimension Tear',
+      sandstorm: 'Sandstorm', burrow: 'Burrow', giant_fang: 'Giant Fang',
+      divine_ray: 'Divine Ray', illumination: 'Illumination', mass_conversion: 'Mass Conversion',
+    };
+
+    const atkName = attackNames[attackKey] || 'Attack';
+    logBattle(`${enemy.name} uses ${atkName}! ${target.name} takes ${dmg} damage!`, '#ff8866');
+    floatDamage(`-${dmg}`, '#ee4444', null);
+    renderPartyHud();
+    await sleep(300);
+
+    // Clear status effects each round
+    target.statusEffects = (target.statusEffects || []).filter(s => s !== 'GUARD');
+  }
+}
+
+// ── END BATTLE ──
+async function endBattle(victory) {
+  if (victory) {
+    let totalExp = 0, totalMeseta = 0;
+    battleState.enemies.forEach(e => {
+      totalExp += e.exp || 0;
+      totalMeseta += e.meseta || 0;
+    });
+    GS.meseta += totalMeseta;
+    renderMeseta();
+
+    let levelUps = '';
+    GS.party.forEach(c => {
+      if (c.hp <= 0) return;
+      c.exp += totalExp;
+      if (c.exp >= c.nextExp) {
+        c.level++;
+        c.exp -= c.nextExp;
+        c.nextExp = Math.floor(c.nextExp * 1.5);
+        // Level up stats
+        c.maxHp = Math.floor(c.maxHp * 1.08);
+        c.hp = c.maxHp;
+        c.maxTp = Math.floor(c.maxTp * 1.06);
+        c.tp = c.maxTp;
+        c.str += 2; c.men += 2; c.agi += 1; c.def += 1;
+        c.skills.forEach(s => { s.maxUses = Math.min(s.maxUses + 1, 8); s.uses = s.maxUses; });
+        levelUps += `${c.name} reached Lv.${c.level}! `;
+      }
+    });
+
+    encountersCompleted++;
+    const needed = currentSceneData && currentSceneData.encounters || 2;
+    const isBossKill = battleState.enemies[0]?.isBoss;
+
+    const overlay = $('overlay');
+    overlay.style.display = 'flex';
+    $('overlay-title').textContent = isBossKill ? '⚡ BOSS DEFEATED! ⚡' : '✦ VICTORY! ✦';
+    $('overlay-title').style.color = isBossKill ? '#e8c84a' : '#44cc66';
+    $('overlay-text').innerHTML = `Gained ${totalExp} EXP — ${totalMeseta} Meseta${levelUps ? '<br><span style="color:#e8c84a">'+levelUps+'</span>' : ''}${encountersCompleted >= needed ? '<br><span style="color:#aaaaff">Path ahead is clear.</span>' : ''}`;
+
+    if (isBossKill) {
+      GS.flags.defeatedFirstBoss = true;
+    }
+
+    $('btn-overlay-ok').onclick = () => {
+      overlay.style.display = 'none';
+      returnToExplore();
+    };
+  } else {
+    // Game over — restore party
+    const overlay = $('overlay');
+    overlay.style.display = 'flex';
+    $('overlay-title').textContent = '✝ PARTY FALLEN ✝';
+    $('overlay-title').style.color = '#ee4444';
+    $('overlay-text').textContent = 'The party has fallen in battle. Algo still needs you. The struggle continues...';
+    restParty();
+    renderPartyHud();
+    $('btn-overlay-ok').onclick = () => {
+      overlay.style.display = 'none';
+      returnToExplore();
+    };
+  }
+}
+
+function returnToExplore() {
+  GS.scene = 'explore';
+  $('explore-view').style.display = 'flex';
+  $('battle-view').style.display = 'none';
+  $('command-menu').style.display = 'none';
+
+  if (currentSceneData) {
+    renderExploreMenu(currentSceneData);
+    const needed = currentSceneData.encounters || 2;
+    if (encountersCompleted >= needed) {
+      logExplore('The path ahead is clear. The party gathers strength before pressing on.');
+    } else {
+      logExplore(currentSceneData.msg);
+    }
+  }
+  renderPartyHud();
+}
+
+// ── CHAPTER ADVANCEMENT ──
+async function advanceChapter() {
+  currentChapter++;
+  currentSceneIdx = 0;
+
+  if (currentChapter >= CHAPTERS.length) {
+    showEnding();
+    return;
+  }
+
+  const chapter = CHAPTERS[currentChapter];
+  await showChapterTitle(chapter.title);
+
+  // Add new characters
+  chapter.party.forEach(id => addToParty(id));
+  if (chapter.addChar) addToParty(chapter.addChar);
+
+  // Show chapter intro
+  const overlay = $('overlay');
+  overlay.style.display = 'flex';
+  $('overlay-title').textContent = `CHAPTER ${currentChapter}`;
+  $('overlay-title').style.color = '#e8c84a';
+  $('overlay-text').textContent = chapter.intro;
+  $('btn-overlay-ok').onclick = () => {
+    overlay.style.display = 'none';
+    startChapterScene(chapter, 0);
+  };
+}
+
+function startChapterScene(chapter, sceneIdx) {
+  const scene = chapter.scenes[sceneIdx];
+  if (!scene) { advanceChapter(); return; }
+
+  currentSceneIdx = sceneIdx;
+  encountersCompleted = 0;
+
+  if (scene.addChar) addToParty(scene.addChar);
+
+  GS.location = scene.location;
+  renderLocation();
+  $('world-svg').innerHTML = drawWorldBg(scene.location);
+
+  enterExplore(scene);
+}
+
+// ── ENDING ──
+function showEnding() {
+  const overlay = $('overlay');
+  overlay.style.display = 'flex';
+  $('overlay-title').textContent = '✦ THE SEVERING ✦';
+  $('overlay-title').style.color = '#e8c84a';
+  $('overlay-text').innerHTML = `
+    The Great Light retreats. Lyra vanishes into the new autonomous barrier — not a prison, not a god, but a promise.<br><br>
+    For the first time in all of recorded history, <span style="color:#e8c84a">Algo belongs to its own people.</span><br><br>
+    Aren refuses every title offered and returns to the road.<br><br>
+    In the sky, a new star shines where it was never there before.
+    <br><br>
+    <span style="color:#888;font-size:14px;">— FIN —<br>PHANTASY STAR V: CHILDREN OF THE GREAT LIGHT</span>
+  `;
+  $('btn-overlay-ok').textContent = '▶ PLAY AGAIN';
+  $('btn-overlay-ok').onclick = () => {
+    overlay.style.display = 'none';
+    location.reload();
+  };
+}
+
+// ── CUTSCENE ENGINE ──
+let currentStoryIdx = 0;
+
+function showCutscene(storyId) {
+  const scene = STORY.find(s=>s.id===storyId) || STORY[currentStoryIdx];
+  if (!scene) {
+    startActualGame();
+    return;
+  }
+
+  showScreen('cutscene');
+
+  // Render panels
+  const panelArea = $('cutscene-panels-area');
+  panelArea.innerHTML = '';
+  if (scene.panels) {
+    scene.panels.forEach(p => {
+      const div = document.createElement('div');
+      div.className = `cutscene-panel${p.type==='wide'?' wide':''}`;
+      div.innerHTML = p.svgContent || '';
+      panelArea.appendChild(div);
+    });
+  }
+
+  $('cs-speaker').textContent = scene.speaker || '';
+  typeText('cs-text', scene.text);
+
+  $('btn-cs-next').onclick = () => {
+    if (scene.startGame) {
+      startActualGame();
+    } else if (scene.next) {
+      const nextIdx = STORY.findIndex(s=>s.id===scene.next);
+      currentStoryIdx = nextIdx >= 0 ? nextIdx : currentStoryIdx + 1;
+      showCutscene(null);
+    } else {
+      currentStoryIdx++;
+      if (currentStoryIdx < STORY.length) showCutscene(null);
+      else startActualGame();
+    }
+  };
+
+  $('btn-cs-skip').onclick = () => { startActualGame(); };
+}
+
+function typeText(elementId, text, speed=22) {
+  const el = $(elementId);
+  el.textContent = '';
+  let i = 0;
+  const chars = text.split('');
+  const interval = setInterval(() => {
+    if (i < chars.length) {
+      el.textContent += chars[i++];
+    } else {
+      clearInterval(interval);
+    }
+  }, speed);
+}
+
+// ── MENU SCREEN ──
+function openMenuScreen() {
+  const container = $('menu-chars');
+  container.innerHTML = GS.party.map(c => `
+    <div class="char-detail-card">
+      <div class="char-portrait">${drawCharPortrait(c.id, 60)}</div>
+      <div class="stat-block">
+        <div style="color:${c.color};font-family:'Press Start 2P',monospace;font-size:8px;margin-bottom:6px;">${c.name} · Lv.${c.level}</div>
+        <div><span class="stat-label">CLASS: </span>${c.class}</div>
+        <div><span class="stat-label">HP: </span><span style="color:#44cc66">${c.hp}/${c.maxHp}</span></div>
+        <div><span class="stat-label">TP: </span><span style="color:#4488ff">${c.tp}/${c.maxTp}</span></div>
+        <div><span class="stat-label">STR: </span>${c.str} <span class="stat-label">MEN: </span>${c.men}</div>
+        <div><span class="stat-label">AGI: </span>${c.agi} <span class="stat-label">DEF: </span>${c.def}</div>
+        <div><span class="stat-label">EXP: </span>${c.exp}/${c.nextExp}</div>
+      </div>
+      <div class="skill-list">
+        <div style="color:var(--gray);font-size:13px;margin-bottom:4px;">SKILLS/TECHS</div>
+        ${c.skills.map(s=>`<div class="skill-item">★ ${s.name} (${s.uses}/${s.maxUses})</div>`).join('')}
+        ${(c.techs||[]).map(t=>`<div class="tech-item">✦ ${t.name} (${t.tp}TP)</div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  showScreen('menu-screen');
+}
+
+$('btn-menu-close').onclick = () => {
+  showScreen('main-game');
+};
+
+// ── GAME STARTUP ──
+function startActualGame() {
+  showScreen('main-game');
+
+  // Init chapter 0
+  const ch = CHAPTERS[0];
+  initParty(ch.party);
+  addToParty('lyra'); // Lyra joins immediately after prologue
+
+  GS.meseta = 500;
+  GS.location = ch.startLocation;
+  renderMeseta();
+  renderLocation();
+  $('world-svg').innerHTML = drawWorldBg(ch.startLocation);
+
+  showChapterTitle(ch.title).then(() => {
+    // Small overlay for chapter intro
+    const overlay = $('overlay');
+    overlay.style.display = 'flex';
+    $('overlay-title').textContent = 'CHAPTER 0';
+    $('overlay-title').style.color = '#e8c84a';
+    $('overlay-text').textContent = ch.intro;
+    $('btn-overlay-ok').onclick = () => {
+      overlay.style.display = 'none';
+      startChapterScene(ch, 0);
+    };
+  });
+}
+
+// ── TITLE SCREEN ──
+$('btn-start').onclick = () => {
+  currentStoryIdx = 0;
+  showCutscene('prologue_1');
+};
+
+// Init visible state
+renderPartyHud();
+</script>
+</body>
+</html>
