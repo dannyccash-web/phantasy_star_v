@@ -5,2403 +5,2456 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Phantasy Star V: Children of the Great Light</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-  :root {
-    --black: #080c14;
-    --dark: #0d1420;
-    --panel: #111b2e;
-    --panel2: #162035;
-    --border: #2a4a7a;
-    --border2: #3a6aaa;
-    --blue: #4488cc;
-    --blue2: #66aaee;
-    --gold: #e8c84a;
-    --gold2: #f0d86a;
-    --white: #dde8f8;
-    --gray: #88a0c0;
-    --red: #e04444;
-    --green: #44cc66;
-    --purple: #aa66ee;
-    --teal: #44ccaa;
-    --orange: #e88844;
-    --hp: #44cc66;
-    --tp: #4488ff;
-    --enemy-bg: #0a1828;
-  }
+*{margin:0;padding:0;box-sizing:border-box;}
 
-  * { margin:0; padding:0; box-sizing:border-box; }
+:root{
+  --black:#040810;
+  --darkbg:#08101c;
+  --panel:#0c1828;
+  --panel2:#102030;
+  --border:#1e3a5a;
+  --border2:#2a5080;
+  --blue:#3a80cc;
+  --blue2:#5aA0ee;
+  --gold:#d8b830;
+  --gold2:#f0d050;
+  --white:#c8dcea;
+  --gray:#607890;
+  --red:#d04040;
+  --green:#30b050;
+  --purple:#9050d0;
+  --teal:#30b090;
+  --orange:#d07030;
+  --hp:#30b050;
+  --tp:#3060d8;
+  --TILE:32;
+}
 
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: 'VT323', monospace;
-    font-size: 18px;
-    line-height: 1.4;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family:'Press Start 2P',monospace;
+  font-size:8px;
+  line-height:1.6;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
+  overflow:hidden;
+  user-select:none;
+}
 
-  #game-wrapper {
-    width: 100%;
-    max-width: 960px;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
+canvas{image-rendering:pixelated;display:block;}
 
-  /* ── TITLE SCREEN ── */
-  #title-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background: radial-gradient(ellipse at center, #0a1a35 0%, #080c14 70%);
-    position: relative;
-    overflow: hidden;
-  }
-  #title-screen::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,40,80,0.12) 3px, rgba(0,40,80,0.12) 4px);
-    pointer-events: none;
-  }
-  .star-field { position: absolute; inset: 0; pointer-events: none; }
-  .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 2s infinite alternate; }
+/* ── TITLE ── */
+#title{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:100vw;height:100vh;background:var(--black);position:relative;overflow:hidden;
+}
+#title canvas{position:absolute;top:0;left:0;pointer-events:none;}
+.t-logo{font-size:clamp(10px,3vw,22px);color:var(--gold2);text-shadow:0 0 16px #f0d05066;margin-bottom:6px;text-align:center;z-index:1;}
+.t-sub{font-size:clamp(6px,1.5vw,11px);color:var(--blue2);margin-bottom:32px;letter-spacing:2px;z-index:1;}
+.t-blurb{font-size:clamp(5px,1.2vw,8px);color:var(--gray);margin-bottom:28px;text-align:center;max-width:460px;line-height:2;z-index:1;padding:0 20px;}
+#btn-start{
+  font-family:'Press Start 2P',monospace;font-size:clamp(7px,1.8vw,10px);
+  color:var(--white);background:var(--panel);border:1px solid var(--border2);
+  padding:10px 22px;cursor:pointer;z-index:1;
+  animation:blink 1s infinite;
+}
+#btn-start:hover{background:var(--border);color:var(--gold);}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 
-  @keyframes twinkle { from { opacity: 0.2; } to { opacity: 1; } }
-  @keyframes pulse { from { opacity: 0.6; } to { opacity: 1; } }
-  @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  @keyframes scanline { from { transform: translateY(-100%); } to { transform: translateY(100vh); } }
-  @keyframes flash { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
-  @keyframes shakeX { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
-  @keyframes comboBurst { 0%{transform:scale(0.5);opacity:1} 100%{transform:scale(2);opacity:0} }
+/* ── CUTSCENE ── */
+#cutscene{
+  display:none;flex-direction:column;width:100vw;height:100vh;
+  background:var(--black);overflow:hidden;
+}
+.cs-panels{
+  display:grid;gap:2px;background:#000;
+  border:2px solid var(--border);flex:1;min-height:0;
+  overflow:hidden;
+}
+.cs-panels.layout-2{grid-template-columns:1fr 1fr;}
+.cs-panels.layout-1{grid-template-columns:1fr;}
+.cs-panel{
+  background:var(--darkbg);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+.cs-panel canvas{width:100%;height:100%;object-fit:cover;}
+.cs-textbox{
+  background:var(--panel);border-top:2px solid var(--border);
+  padding:10px 14px;min-height:72px;flex-shrink:0;
+  position:relative;
+}
+.cs-speaker{color:var(--gold);font-size:7px;margin-bottom:6px;letter-spacing:1px;}
+.cs-body{font-size:7px;line-height:1.9;color:var(--white);}
+.cs-nav{
+  display:flex;justify-content:flex-end;gap:8px;
+  background:var(--panel);border-top:1px solid var(--border);padding:5px 10px;flex-shrink:0;
+}
+.cs-nav button{
+  font-family:'Press Start 2P',monospace;font-size:7px;
+  background:var(--panel2);border:1px solid var(--border);color:var(--white);
+  padding:5px 12px;cursor:pointer;
+}
+.cs-nav button:hover{background:var(--border);color:var(--gold);}
 
-  .title-logo {
-    font-family: 'Press Start 2P', monospace;
-    font-size: clamp(16px, 4vw, 32px);
-    color: var(--gold);
-    text-shadow: 0 0 20px rgba(232,200,74,0.6), 0 0 40px rgba(232,200,74,0.3);
-    text-align: center;
-    letter-spacing: 4px;
-    margin-bottom: 8px;
-    animation: pulse 2s infinite alternate;
-  }
-  .title-sub {
-    font-family: 'Press Start 2P', monospace;
-    font-size: clamp(9px, 2vw, 14px);
-    color: var(--blue2);
-    text-align: center;
-    letter-spacing: 2px;
-    margin-bottom: 40px;
-  }
-  .title-art {
-    font-family: 'VT323', monospace;
-    font-size: 13px;
-    color: #2a5a9a;
-    text-align: center;
-    letter-spacing: 2px;
-    margin-bottom: 30px;
-    line-height: 1.3;
-  }
-  .press-start {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 12px;
-    color: var(--white);
-    animation: flash 1s infinite;
-    cursor: pointer;
-    padding: 12px 24px;
-    border: 2px solid var(--border2);
-    background: rgba(20,40,80,0.6);
-    transition: all 0.2s;
-  }
-  .press-start:hover { background: rgba(40,80,160,0.6); border-color: var(--gold); color: var(--gold); }
+/* ── OVERWORLD ── */
+#overworld{
+  display:none;flex-direction:column;width:100vw;height:100vh;overflow:hidden;
+}
+#ow-topbar{
+  background:var(--panel);border-bottom:2px solid var(--border);
+  padding:5px 10px;display:flex;justify-content:space-between;align-items:center;
+  flex-shrink:0;
+}
+.ow-location{font-size:8px;color:var(--gold);}
+.ow-meseta{font-size:7px;color:var(--gold2);}
+#ow-main{flex:1;display:flex;flex-direction:column;min-height:0;}
+#ow-canvas-wrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  background:var(--black);min-height:0;overflow:hidden;position:relative;
+}
+#ow-canvas{image-rendering:pixelated;}
+/* overlay for town names etc */
+#ow-label{
+  position:absolute;top:8px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,0.75);border:1px solid var(--border2);
+  padding:3px 10px;font-size:7px;color:var(--gold2);pointer-events:none;
+  display:none;
+}
+#ow-msgbox{
+  background:var(--panel);border-top:2px solid var(--border);
+  padding:8px 12px;min-height:52px;flex-shrink:0;font-size:7px;
+  line-height:1.9;color:var(--white);white-space:pre-line;
+}
+#ow-controls{
+  background:var(--panel2);border-top:1px solid var(--border);
+  display:flex;justify-content:center;gap:6px;padding:5px;flex-shrink:0;
+  flex-wrap:wrap;
+}
+.ow-btn{
+  font-family:'Press Start 2P',monospace;font-size:6px;
+  background:var(--panel);border:1px solid var(--border);color:var(--white);
+  padding:5px 8px;cursor:pointer;min-width:56px;text-align:center;
+}
+.ow-btn:hover,.ow-btn.active{background:var(--border);color:var(--gold);}
+.ow-btn.dir{font-size:10px;padding:4px 6px;min-width:28px;}
 
-  /* ── CUTSCENE ── */
-  #cutscene {
-    display: none;
-    min-height: 100vh;
-    flex-direction: column;
-    background: var(--dark);
-  }
-  .cutscene-panels {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3px;
-    border: 3px solid var(--border);
-    background: var(--border);
-    flex: 1;
-    min-height: 300px;
-  }
-  .cutscene-panel {
-    background: var(--enemy-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 140px;
-    overflow: hidden;
-    position: relative;
-  }
-  .cutscene-panel.wide { grid-column: 1 / -1; }
-  .cutscene-panel svg { width: 100%; height: 100%; max-height: 180px; }
-  .cutscene-text {
-    background: var(--panel);
-    border: 2px solid var(--border);
-    padding: 16px 20px;
-    margin: 12px;
-    min-height: 80px;
-    font-size: 17px;
-    line-height: 1.6;
-    color: var(--white);
-  }
-  .speaker-name {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    color: var(--gold);
-    margin-bottom: 8px;
-    letter-spacing: 1px;
-  }
-  .cutscene-nav {
-    display: flex;
-    justify-content: flex-end;
-    padding: 8px 12px;
-    gap: 12px;
-  }
+/* ── BATTLE ── */
+#battle{
+  display:none;flex-direction:column;width:100vw;height:100vh;overflow:hidden;
+}
+#bt-scene{
+  flex:1;position:relative;overflow:hidden;min-height:0;
+  display:flex;align-items:flex-end;
+}
+#bt-bg{position:absolute;inset:0;width:100%;height:100%;}
+#bt-enemies{
+  position:absolute;display:flex;gap:16px;align-items:flex-end;
+  bottom:20px;left:50%;transform:translateX(-50%);
+}
+.bt-econt{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.bt-esprite canvas{image-rendering:pixelated;}
+.bt-ename{font-size:6px;color:var(--gray);}
+.bt-ehpbar{width:64px;height:4px;background:#0a0a1a;border:1px solid #222;}
+.bt-ehpfill{height:100%;background:var(--hp);transition:width .3s;}
+.bt-party-row{
+  position:absolute;bottom:0;left:0;right:0;
+  display:flex;gap:2px;background:rgba(4,8,16,0.85);
+  border-top:1px solid var(--border);padding:4px;
+}
+.bt-pcard{
+  flex:1;background:var(--panel);border:1px solid var(--border);
+  padding:3px 5px;min-width:0;
+}
+.bt-pname{font-size:6px;color:var(--gold);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bt-pname.active{color:var(--gold2);text-shadow:0 0 6px var(--gold);}
+.bt-hprow{display:flex;align-items:center;gap:2px;margin-bottom:1px;}
+.bt-hlabel{font-size:5px;color:var(--gray);width:12px;}
+.bt-htrack{flex:1;height:4px;background:#080808;border:1px solid #111;}
+.bt-hfill{height:100%;transition:width .3s;}
+.bt-hnums{font-size:5px;color:var(--gray);white-space:nowrap;}
+#bt-log{
+  flex-shrink:0;background:var(--panel);border-top:2px solid var(--border);
+  padding:6px 10px;min-height:42px;font-size:7px;line-height:1.9;
+}
+#bt-actions{
+  flex-shrink:0;background:var(--panel2);border-top:1px solid var(--border);
+}
+#bt-cmdbar{
+  display:flex;border-bottom:1px solid var(--border);
+}
+.bt-cmd{
+  flex:1;font-family:'Press Start 2P',monospace;font-size:7px;
+  background:transparent;border:none;border-right:1px solid var(--border);
+  color:var(--white);padding:8px 4px;cursor:pointer;text-align:center;
+}
+.bt-cmd:hover:not(:disabled){background:var(--border);color:var(--gold);}
+.bt-cmd:disabled{opacity:.3;cursor:default;}
+.bt-cmd.combo{color:var(--purple);}
+.bt-cmd:last-child{border-right:none;}
+#bt-submenu{display:none;max-height:100px;overflow-y:auto;}
+.bt-subitem{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:5px 10px;border-bottom:1px solid var(--border);
+  cursor:pointer;font-size:6px;
+}
+.bt-subitem:hover{background:var(--border);color:var(--gold);}
+.bt-subitem .si-cost{color:var(--tp);font-size:5px;}
+.bt-subitem .si-desc{color:var(--gray);font-size:5px;}
 
-  /* ── MAIN GAME ── */
-  #main-game {
-    display: none;
-    flex-direction: column;
-    min-height: 100vh;
-    background: var(--dark);
-  }
+/* ── STATUS MENU ── */
+#statusmenu{
+  display:none;flex-direction:column;width:100vw;height:100vh;
+  background:var(--darkbg);overflow-y:auto;
+}
+#sm-topbar{
+  background:var(--panel);border-bottom:2px solid var(--border);
+  padding:8px 12px;display:flex;justify-content:space-between;align-items:center;
+  flex-shrink:0;
+}
+#sm-topbar h2{font-size:9px;color:var(--gold);}
+.sm-close{
+  font-family:'Press Start 2P',monospace;font-size:6px;
+  background:var(--panel2);border:1px solid var(--border);color:var(--white);
+  padding:5px 10px;cursor:pointer;
+}
+.sm-close:hover{color:var(--gold);}
+#sm-cards{padding:8px;display:flex;flex-direction:column;gap:8px;}
+.sm-card{
+  background:var(--panel);border:1px solid var(--border);
+  display:grid;grid-template-columns:48px 1fr 1fr;gap:10px;padding:10px;
+  align-items:start;
+}
+.sm-portrait canvas{image-rendering:pixelated;}
+.sm-stats{font-size:6px;line-height:2.1;}
+.sm-stats .sl{color:var(--gray);}
+.sm-skills{font-size:6px;line-height:2.1;}
+.sm-skill{color:var(--purple);}
+.sm-tech{color:var(--teal);}
+.sm-charname{font-size:7px;margin-bottom:4px;}
 
-  /* Top bar */
-  #top-bar {
-    background: var(--panel);
-    border-bottom: 2px solid var(--border);
-    padding: 6px 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .location-name {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    color: var(--gold);
-    letter-spacing: 1px;
-  }
-  .meseta-display {
-    font-size: 16px;
-    color: var(--gold);
-  }
+/* ── FLOATS & FLASHES ── */
+.dmg-float{
+  position:fixed;font-size:9px;pointer-events:none;
+  animation:floatUp 1s forwards;z-index:999;
+  font-family:'Press Start 2P',monospace;
+}
+@keyframes floatUp{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-40px);opacity:0}}
+#combo-flash{
+  position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);
+  font-size:clamp(12px,4vw,24px);color:var(--gold2);
+  text-shadow:0 0 20px var(--gold);
+  pointer-events:none;z-index:1000;display:none;text-align:center;
+}
+#chapter-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:990;
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+}
+.ch-num{font-size:8px;color:var(--border2);letter-spacing:3px;}
+.ch-title{font-size:clamp(10px,3vw,18px);color:var(--gold);text-align:center;padding:0 16px;}
+#result-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:995;
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  text-align:center;padding:20px;
+}
+#ro-title{font-size:clamp(11px,3vw,18px);color:var(--gold);}
+#ro-text{font-size:7px;color:var(--gray);max-width:400px;line-height:2;}
+#ro-ok{
+  font-family:'Press Start 2P',monospace;font-size:8px;
+  background:var(--panel);border:1px solid var(--border2);color:var(--white);
+  padding:8px 20px;cursor:pointer;
+}
+#ro-ok:hover{color:var(--gold);}
 
-  /* Scene area */
-  #scene-area {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    min-height: 280px;
-    background: var(--enemy-bg);
-    overflow: hidden;
-  }
-  #scene-canvas {
-    width: 100%;
-    height: 100%;
-    min-height: 280px;
-    position: relative;
-  }
 
-  /* Explore mode */
-  #explore-view {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 280px;
-  }
-  .world-bg {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: flex-end;
-  }
-  .world-bg svg { width: 100%; height: 100%; position: absolute; inset: 0; }
-  .explore-msg {
-    background: var(--panel);
-    border-top: 2px solid var(--border);
-    padding: 10px 14px;
-    font-size: 17px;
-    min-height: 60px;
-    line-height: 1.5;
-  }
+/* ── CONTEXT ACTIONS / SHOP ── */
+#ow-action-hints{
+  position:absolute;left:8px;top:8px;min-width:150px;max-width:220px;
+  background:rgba(0,0,0,.78);border:1px solid var(--border2);
+  padding:6px 8px;font-size:6px;line-height:1.8;color:var(--white);
+  pointer-events:none;
+}
+#ow-action-hints .ah-head{color:var(--gold2);margin-bottom:2px;}
+#ow-action-hints .ah-row{color:var(--gray);}
+#ow-action-hints .ah-row strong{color:var(--white);font-weight:normal;}
+#shop-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:998;
+  display:none;align-items:center;justify-content:center;padding:18px;
+}
+.shop-panel{
+  width:min(520px,96vw);background:var(--panel);border:2px solid var(--border2);
+  box-shadow:0 0 0 2px #000 inset;padding:12px;
+}
+.shop-title{font-size:9px;color:var(--gold2);margin-bottom:10px;text-align:center;}
+.shop-money{font-size:7px;color:var(--gold);margin-bottom:8px;text-align:center;}
+.shop-list{display:flex;flex-direction:column;gap:6px;}
+.shop-item{
+  display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;
+  border:1px solid var(--border);background:var(--panel2);padding:7px 8px;font-size:6px;
+}
+.shop-item:hover{background:var(--border);}
+.shop-name{color:var(--white);}
+.shop-desc{color:var(--gray);grid-column:1 / span 2;}
+.shop-price{color:var(--gold2);}
+.shop-buy{
+  font-family:'Press Start 2P',monospace;font-size:6px;color:var(--white);
+  background:var(--panel);border:1px solid var(--border2);padding:5px 8px;cursor:pointer;
+}
+.shop-buy:hover{color:var(--gold);}
+.shop-buy:disabled{opacity:.35;cursor:default;}
+.shop-close{
+  margin-top:10px;width:100%;font-family:'Press Start 2P',monospace;font-size:7px;
+  background:var(--panel2);border:1px solid var(--border);color:var(--white);padding:8px;cursor:pointer;
+}
+.shop-close:hover{color:var(--gold);}
 
-  /* Battle area */
-  #battle-view {
-    display: none;
-    flex-direction: column;
-    height: 100%;
-    min-height: 280px;
-  }
-  .battle-bg {
-    flex: 1;
-    position: relative;
-    background: var(--enemy-bg);
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    padding: 12px;
-    min-height: 160px;
-    overflow: hidden;
-  }
-  .enemy-sprite-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-  .enemy-sprite svg {
-    image-rendering: pixelated;
-    filter: drop-shadow(0 0 8px rgba(100,150,255,0.3));
-    transition: all 0.3s;
-  }
-  .enemy-sprite.hurt { animation: shakeX 0.3s; filter: brightness(3); }
-  .enemy-hp-bar {
-    width: 80px;
-    height: 6px;
-    background: #1a1a2a;
-    border: 1px solid #333;
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .enemy-hp-fill {
-    height: 100%;
-    background: var(--hp);
-    transition: width 0.4s;
-    border-radius: 3px;
-  }
-  .enemy-name-label {
-    font-size: 13px;
-    color: var(--gray);
-    text-align: center;
-  }
-  .battle-log {
-    background: rgba(0,0,0,0.7);
-    border-top: 1px solid var(--border);
-    padding: 6px 12px;
-    font-size: 16px;
-    min-height: 50px;
-    line-height: 1.5;
-    color: var(--white);
-  }
-
-  /* Party HUD */
-  #party-hud {
-    background: var(--panel);
-    border-top: 2px solid var(--border);
-    padding: 6px 8px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 4px;
-  }
-  .char-card {
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 4px 6px;
-    font-size: 14px;
-    transition: border-color 0.2s;
-  }
-  .char-card.active-turn { border-color: var(--gold); }
-  .char-name-hud {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    color: var(--gold2);
-    margin-bottom: 3px;
-  }
-  .bar-row { display: flex; align-items: center; gap: 4px; margin-bottom: 2px; }
-  .bar-label { color: var(--gray); font-size: 13px; width: 18px; }
-  .bar-track {
-    flex: 1;
-    height: 5px;
-    background: #0a0f1a;
-    border-radius: 3px;
-    overflow: hidden;
-    border: 1px solid #1a2a3a;
-  }
-  .bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
-  .bar-fill.hp { background: var(--hp); }
-  .bar-fill.tp { background: var(--tp); }
-  .bar-nums { font-size: 13px; color: var(--gray); white-space: nowrap; min-width: 52px; text-align: right; }
-  .char-status { font-size: 12px; color: var(--red); min-height: 14px; }
-
-  /* Action area */
-  #action-area {
-    background: var(--panel);
-    border-top: 2px solid var(--border);
-  }
-  #command-menu {
-    display: flex;
-    flex-direction: column;
-  }
-  .menu-title-bar {
-    background: var(--border);
-    padding: 4px 12px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    color: var(--gold);
-    letter-spacing: 1px;
-  }
-  .command-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    padding: 6px;
-  }
-  .cmd-btn {
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    color: var(--white);
-    font-family: 'VT323', monospace;
-    font-size: 17px;
-    padding: 8px 4px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.15s;
-    border-radius: 2px;
-  }
-  .cmd-btn:hover:not(:disabled) { background: var(--border); color: var(--gold); border-color: var(--gold); }
-  .cmd-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-  .cmd-btn.macro { border-color: var(--purple); color: var(--purple); }
-  .cmd-btn.macro:hover:not(:disabled) { background: rgba(170,102,238,0.2); }
-
-  /* Sub menus */
-  #sub-menu {
-    display: none;
-    flex-direction: column;
-    padding: 6px;
-    gap: 3px;
-    max-height: 180px;
-    overflow-y: auto;
-  }
-  .sub-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 10px;
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 2px;
-    transition: all 0.1s;
-  }
-  .sub-item:hover { background: var(--border); color: var(--gold); }
-  .sub-item .cost { color: var(--tp); font-size: 14px; }
-  .sub-item .desc { color: var(--gray); font-size: 13px; font-style: italic; }
-
-  /* Explore commands */
-  #explore-menu {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
-    padding: 8px;
-  }
-  .exp-btn {
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    color: var(--white);
-    font-family: 'VT323', monospace;
-    font-size: 18px;
-    padding: 10px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.15s;
-    border-radius: 2px;
-  }
-  .exp-btn:hover { background: var(--border); color: var(--gold); border-color: var(--gold); }
-
-  /* Menu screen */
-  #menu-screen {
-    display: none;
-    flex-direction: column;
-    background: var(--dark);
-    min-height: 100vh;
-    padding: 12px;
-    gap: 12px;
-  }
-  #menu-screen h2 {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    color: var(--gold);
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 8px;
-    letter-spacing: 2px;
-  }
-  .char-detail-card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 12px;
-    display: grid;
-    grid-template-columns: auto 1fr 1fr;
-    gap: 12px;
-    align-items: start;
-  }
-  .char-portrait { width: 60px; }
-  .stat-block { font-size: 15px; line-height: 1.8; }
-  .stat-label { color: var(--gray); }
-  .skill-list { font-size: 14px; line-height: 1.9; }
-  .skill-item { color: var(--purple); }
-  .tech-item { color: var(--teal); }
-
-  /* Combo flash */
-  #combo-flash {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: 'Press Start 2P', monospace;
-    font-size: clamp(18px, 5vw, 32px);
-    color: var(--gold);
-    text-shadow: 0 0 20px var(--gold);
-    pointer-events: none;
-    z-index: 1000;
-    display: none;
-    text-align: center;
-  }
-
-  /* Damage numbers */
-  .dmg-float {
-    position: absolute;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 14px;
-    pointer-events: none;
-    animation: floatUp 1.2s forwards;
-    z-index: 100;
-  }
-  @keyframes floatUp { 0%{transform:translateY(0);opacity:1} 100%{transform:translateY(-50px);opacity:0} }
-
-  /* Transition / game over */
-  #overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    z-index: 999;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 20px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: clamp(12px, 3vw, 20px);
-    color: var(--gold);
-    text-align: center;
-    padding: 20px;
-  }
-  #overlay p { font-size: 13px; color: var(--gray); font-family: 'VT323', monospace; font-size: 18px; max-width: 400px; }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--panel); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-  button { cursor: pointer; }
-
-  .btn-generic {
-    background: var(--panel2);
-    border: 1px solid var(--border2);
-    color: var(--white);
-    font-family: 'VT323', monospace;
-    font-size: 18px;
-    padding: 8px 20px;
-    cursor: pointer;
-    transition: all 0.15s;
-    border-radius: 2px;
-  }
-  .btn-generic:hover { background: var(--border); color: var(--gold); }
-
-  /* Chapter title */
-  #chapter-title-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.92);
-    z-index: 990;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 12px;
-    pointer-events: none;
-  }
-  .chapter-label {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    color: var(--border2);
-    letter-spacing: 4px;
-    animation: slideIn 0.5s;
-  }
-  .chapter-name {
-    font-family: 'Press Start 2P', monospace;
-    font-size: clamp(14px, 4vw, 22px);
-    color: var(--gold);
-    text-align: center;
-    animation: slideIn 0.7s;
-    text-shadow: 0 0 20px rgba(232,200,74,0.4);
-    padding: 0 20px;
-  }
-
-  .loot-popup {
-    background: var(--panel);
-    border: 2px solid var(--gold);
-    padding: 12px 20px;
-    font-size: 16px;
-    color: var(--gold2);
-    text-align: center;
-    margin: 6px 8px;
-  }
+/* scrollbar */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--panel);}
+::-webkit-scrollbar-thumb{background:var(--border);}
 </style>
 </head>
 <body>
-<div id="game-wrapper">
 
-<!-- ═══ TITLE SCREEN ═══ -->
-<div id="title-screen">
-  <div class="star-field" id="star-field"></div>
-  <div class="title-art" id="title-pixel-art"></div>
-  <div class="title-logo">PHANTASY STAR V</div>
-  <div class="title-sub">CHILDREN OF THE GREAT LIGHT</div>
-  <div style="color:var(--gray);font-size:15px;margin-bottom:30px;text-align:center;max-width:480px;padding:0 20px;">
-    In the age after evil, a new light falls on Algo —<br>and not all light is salvation.
+<!-- TITLE -->
+<div id="title">
+  <canvas id="title-canvas"></canvas>
+  <div class="t-logo">PHANTASY STAR V</div>
+  <div class="t-sub">CHILDREN OF THE GREAT LIGHT</div>
+  <div class="t-blurb">
+    ALGO SOLAR SYSTEM · YEAR 2374<br>
+    The Profound Darkness is destroyed.<br>
+    The seal is broken. And the Great Light is returning<br>
+    to finish what it started.
   </div>
-  <button class="press-start" id="btn-start">[ PRESS START ]</button>
-  <div style="margin-top:40px;color:var(--gray);font-size:13px;text-align:center;">
-    © FAN PROJECT · INSPIRED BY PHANTASY STAR IV (SEGA, 1993)<br>
-    <span style="color:#444;font-size:11px;">BROWSER RPG · NOT FOR COMMERCIAL USE</span>
+  <button id="btn-start">[ PRESS START ]</button>
+  <div style="position:absolute;bottom:12px;font-size:5px;color:#333;z-index:1;">
+    FAN PROJECT · INSPIRED BY PHANTASY STAR IV (SEGA 1993) · NOT FOR COMMERCIAL USE
   </div>
 </div>
 
-<!-- ═══ CUTSCENE SCREEN ═══ -->
+<!-- CUTSCENE -->
 <div id="cutscene">
-  <div id="cutscene-panels-area" class="cutscene-panels"></div>
-  <div class="cutscene-text">
-    <div class="speaker-name" id="cs-speaker"></div>
-    <div id="cs-text"></div>
+  <div class="cs-panels layout-2" id="cs-panels"></div>
+  <div class="cs-textbox">
+    <div class="cs-speaker" id="cs-speaker"></div>
+    <div class="cs-body" id="cs-body"></div>
   </div>
-  <div class="cutscene-nav">
-    <button class="btn-generic" id="btn-cs-skip">SKIP</button>
-    <button class="btn-generic" id="btn-cs-next">NEXT ▶</button>
+  <div class="cs-nav">
+    <button id="cs-skip">SKIP ▶▶</button>
+    <button id="cs-next">NEXT ▶</button>
   </div>
 </div>
 
-<!-- ═══ MAIN GAME ═══ -->
-<div id="main-game">
-  <div id="top-bar">
-    <div class="location-name" id="location-name">MOTAVIA OUTSKIRTS</div>
-    <div class="meseta-display" id="meseta-display">✦ 500 MESETA</div>
+<!-- OVERWORLD -->
+<div id="overworld">
+  <div id="ow-topbar">
+    <div class="ow-location" id="ow-location">---</div>
+    <div class="ow-meseta" id="ow-meseta">✦ 0 MST</div>
   </div>
-
-  <div id="scene-area">
-    <!-- Explore view -->
-    <div id="explore-view">
-      <div class="world-bg" id="world-bg">
-        <svg id="world-svg" viewBox="0 0 640 240" preserveAspectRatio="xMidYMid slice"></svg>
-      </div>
-      <div class="explore-msg" id="explore-msg">
-        You stand on the sun-scorched plains of Motavia. The air shimmers with heat — and something else. 
-        Something ancient stirs in the ruins to the north.
-      </div>
+  <div id="ow-main">
+    <div id="ow-canvas-wrap">
+      <canvas id="ow-canvas"></canvas>
+      <div id="ow-label"></div>
+      <div id="ow-action-hints"></div>
     </div>
-
-    <!-- Battle view -->
-    <div id="battle-view">
-      <div class="battle-bg" id="battle-bg">
-        <svg id="battle-bg-svg" style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 640 200" preserveAspectRatio="xMidYMid slice"></svg>
-        <div id="enemies-container" style="display:flex;gap:20px;align-items:flex-end;z-index:1;position:relative;flex-wrap:wrap;justify-content:center;"></div>
-      </div>
-      <div class="battle-log" id="battle-log">A wild enemy appears!</div>
+    <div id="ow-msgbox">Use arrow keys or D-pad buttons to move. Press ENTER/A to interact.</div>
+    <div id="ow-controls">
+      <button class="ow-btn dir" onclick="movePlayer(0,-1)">▲</button>
+      <button class="ow-btn dir" onclick="movePlayer(-1,0)">◀</button>
+      <button class="ow-btn dir" onclick="movePlayer(0,1)">▼</button>
+      <button class="ow-btn dir" onclick="movePlayer(1,0)">▶</button>
+      <button class="ow-btn" onclick="playerAction()">⊕ ACTION</button>
+      <button class="ow-btn" onclick="openStatus()">≡ STATUS</button>
     </div>
   </div>
+</div>
 
-  <!-- Party HUD -->
-  <div id="party-hud"></div>
-
-  <!-- Action area -->
-  <div id="action-area">
-    <div id="command-menu">
-      <div class="menu-title-bar" id="cmd-title">— COMMAND —</div>
-      <div class="command-grid" id="cmd-grid"></div>
-    </div>
-    <div id="sub-menu"></div>
-    <div id="explore-menu" style="display:none;"></div>
+<!-- BATTLE -->
+<div id="battle">
+  <div id="bt-scene">
+    <canvas id="bt-bg" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
+    <div id="bt-enemies"></div>
+    <div class="bt-party-row" id="bt-party-row"></div>
+  </div>
+  <div id="bt-log">Enemy approaches!</div>
+  <div id="bt-actions">
+    <div id="bt-cmdbar" style="display:none;"></div>
+    <div id="bt-submenu"></div>
   </div>
 </div>
 
-<!-- ═══ MENU SCREEN ═══ -->
-<div id="menu-screen">
-  <h2>— PARTY STATUS —</h2>
-  <div id="menu-chars"></div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
-    <button class="btn-generic" id="btn-menu-close">▶ RETURN</button>
+<!-- STATUS -->
+<div id="statusmenu">
+  <div id="sm-topbar">
+    <h2>— PARTY STATUS —</h2>
+    <button class="sm-close" onclick="closeStatus()">▶ RETURN</button>
   </div>
+  <div id="sm-cards"></div>
 </div>
 
-<!-- Overlays -->
-<div id="overlay" style="display:none;flex-direction:column;">
-  <div id="overlay-title" style="font-size:clamp(14px,4vw,24px);">VICTORY!</div>
-  <p id="overlay-text"></p>
-  <button class="btn-generic" id="btn-overlay-ok">CONTINUE</button>
+<!-- OVERLAYS -->
+<div id="chapter-overlay">
+  <div class="ch-num" id="ch-num">CHAPTER 0</div>
+  <div class="ch-title" id="ch-title">A SKY THAT WILL NOT DARKEN</div>
 </div>
-
-<div id="chapter-title-overlay">
-  <div class="chapter-label">CHAPTER</div>
-  <div class="chapter-name" id="chapter-title-text"></div>
+<div id="result-overlay">
+  <div id="ro-title">VICTORY!</div>
+  <div id="ro-text"></div>
+  <button id="ro-ok">CONTINUE</button>
 </div>
-
 <div id="combo-flash"></div>
-
-</div><!-- /game-wrapper -->
+<div id="shop-overlay">
+  <div class="shop-panel">
+    <div class="shop-title">AIEDO TOOL SHOP</div>
+    <div class="shop-money" id="shop-money">✦ 0 MST</div>
+    <div class="shop-list" id="shop-list"></div>
+    <button class="shop-close" onclick="closeShop()">▶ LEAVE SHOP</button>
+  </div>
+</div>
 
 <script>
 // ═══════════════════════════════════════════════════════════
-// PHANTASY STAR V: CHILDREN OF THE GREAT LIGHT
-// Full RPG Engine
+//  PHANTASY STAR V  —  Complete Engine
 // ═══════════════════════════════════════════════════════════
 
-// ── STAR FIELD ──
-(function() {
-  const sf = document.getElementById('star-field');
-  for (let i = 0; i < 120; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    const sz = Math.random() * 2.5 + 0.5;
-    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${1.5+Math.random()*3}s`;
-    sf.appendChild(s);
-  }
-})();
+// ── PIXEL DRAWING HELPERS ──
+function mkCanvas(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c;}
+function ctx(c){return c.getContext('2d');}
 
-// ── GAME STATE ──
-const GS = {
-  meseta: 500,
-  location: 'MOTAVIA OUTSKIRTS',
-  chapter: 0,
-  scene: 'explore', // explore | battle | menu | cutscene
-  turn: 0,
-  battlePhase: 'command', // command | animate | enemy | result
-  selectedChar: 0,
-  selectedAction: null,
-  comboQueue: [], // [{char, action, target}]
-  enemies: [],
-  loot: [],
-  flags: {
-    metLyra: false,
-    metTarin: false,
-    metMira: false,
-    metSeth9: false,
-    metNeysa: false,
-    defeatedFirstBoss: false,
-    prologue_done: false,
+// ── PALETTE (PSIV-authentic Mega Drive palette) ──
+const P={
+  black:'#080810',sky1:'#183060',sky2:'#0c1840',sky3:'#283878',
+  sand1:'#c8903c','sand2':'#b07828','sand3':'#987020',
+  snow1:'#c8d8f0',snow2:'#a8b8d8',snow3:'#8898c0',
+  rock1:'#504030',rock2:'#403020',rock3:'#302010',
+  grass1:'#204010',grass2:'#183008',
+  water1:'#1848a0',water2:'#0c2868',
+  stone1:'#605040',stone2:'#504030',
+  gold:'#d8b830',gold2:'#f0d050',
+  white:'#c8dcea',gray:'#607890',darkgray:'#304050',
+  red:'#d04040',red2:'#f06050',
+  blue:'#2060b0',blue2:'#4080d0',
+  green:'#20a040',
+  purple:'#8040b0',
+  teal:'#20a080',
+  orange:'#c06010',
+  panel:'#0c1828',panelborder:'#1e3a5a',
+  // character colors
+  aren_shirt:'#3060a0',aren_hair:'#604020',aren_skin:'#c8a870',
+  lyra_dress:'#e0d090',lyra_hair:'#f0e080',lyra_skin:'#e8d8c0',
+  tarin_robe:'#604090',tarin_hair:'#402010',tarin_skin:'#c8a070',
+  mira_suit:'#406020',mira_hair:'#804020',mira_skin:'#c8a870',
+  seth_body:'#406060',seth_eye:'#40d0a0',
+  neysa_robe:'#802090',neysa_hair:'#c060e0',neysa_skin:'#e0c8e0',
+};
+
+// ── TILE DEFINITIONS ──
+// Tile IDs: 0=void, 1=sand, 2=deep sand, 3=rock, 4=wall, 5=floor, 6=water,
+// 7=grass, 8=snow, 9=snowrock, 10=space, 11=crystal, 12=techfloor,
+// 13=path, 14=portal/warp, 15=deep space, 16=light_tile
+const TILES={
+  0:{col:'#040408',walk:false,name:'void'},
+  1:{col:P.sand1,walk:true,name:'sand'},
+  2:{col:P.sand2,walk:true,name:'sand'},
+  3:{col:P.rock1,walk:false,name:'rock'},
+  4:{col:P.stone1,walk:false,name:'wall'},
+  5:{col:P.stone2,walk:true,name:'floor'},
+  6:{col:P.water1,walk:false,name:'water'},
+  7:{col:P.grass1,walk:true,name:'grass'},
+  8:{col:P.snow1,walk:true,name:'snow'},
+  9:{col:P.snow2,walk:false,name:'snowrock'},
+  10:{col:'#080818',walk:true,name:'space'},
+  11:{col:'#60a0d0',walk:false,name:'crystal'},
+  12:{col:'#182838',walk:true,name:'techfloor'},
+  13:{col:P.sand3,walk:true,name:'path'},
+  14:{col:'#f0d050',walk:true,name:'warp'},  // warp tile
+  15:{col:'#040410',walk:true,name:'deepspace'},
+  16:{col:'#e8e8c0',walk:true,name:'lighttile'},
+};
+
+// ── MAP DEFINITIONS ──
+// Each map: id, name, W, H, data (flat array), entities[], exits[], music
+// Tile layout read left-to-right, top-to-bottom
+
+const TSIZE=16; // pixels per tile on canvas
+
+function buildMap(rows){
+  // rows: array of strings, each char = tile ID (0-9, a=10,b=11,c=12,d=13,e=14,f=15,g=16)
+  const lookup='0123456789abcdefg';
+  const data=[];
+  for(const row of rows){
+    for(const ch of row){
+      data.push(lookup.indexOf(ch));
+    }
+  }
+  return {w:rows[0].length,h:rows.length,data};
+}
+
+// ── MAP: MOTAVIA OVERWORLD ──
+// 28×22 tile map; player starts at (4,18) near Aiedo-outskirts
+const MAP_MOTAVIA_OW=buildMap([
+  '3333333333333333333333333333',
+  '3111111111111111111111111133',
+  '3111111111333333111111111133',
+  '3111111113113311111111111133',
+  '3111113111111111111133111133',
+  '3111113111111111111133111133',
+  '3111113111444114111133111133',
+  '3111113111455514111133111133',
+  '3111113111455514111133111133',
+  '3111113111444114111133111133',
+  '3111111111111111111111111133',
+  '3111111111111111111111111133',
+  '3331111111111111111111113333',
+  '3331111111111111111111113333',
+  '3331111111111111111111113333',
+  '3331111111113311111111113333',
+  '3331111111113311111111113333',
+  '3331111111111111111111113333',
+  '3331111111111111111111113333',
+  '3331113333333333333333113333',
+  '3331111111111111111111113333',
+  '3333333333333333333333333333',
+]);
+
+// ── MAP: AIEDO RUINS TOWN ──
+const MAP_AIEDO=buildMap([
+  '3333333333333333333333',
+  '3444444444444444444433',
+  '3455555555555555554433',
+  '3455544444455554554433',
+  '3455544444455554554433',
+  '3455544444455554554433',
+  '3455555555555555554433',
+  '3455514145555145554433',
+  '3455545545555455554433',
+  '3455555555555555554433',
+  '3444444e44444444444433',
+  '3333333333333333333333',
+]);
+
+// ── MAP: DEZOLIS OVERWORLD ──
+const MAP_DEZOLIS_OW=buildMap([
+  '9999999999999999999999999999',
+  '9888888888888888888888888899',
+  '9888888899888888888888888899',
+  '9888888899888888888888888899',
+  '9888888888888888888888888899',
+  '9888888888884448888888888899',
+  '9888888888884448888888888899',
+  '9884488888884448888888888899',
+  '9884488888884448888844888899',
+  '9888888888888888888844888899',
+  '9888888888888888888888888899',
+  '9888888888888888888888888899',
+  '9888888888888888888888888899',
+  '9888888888884888888888888899',
+  '9888888888884888888888888899',
+  '9888888888884888888888888899',
+  '9888888888888888888888888899',
+  '9888888888888888888888888899',
+  '9888888888888888888888888899',
+  '9888888888888888888888888899',
+  '9888888888888888888888888899',
+  '9999999999999999999999999999',
+]);
+
+// ── MAP: ELYON ARK (ORBITAL) ──
+const MAP_ELYON=buildMap([
+  '0000000000000000000000000000',
+  '0000ccccccccccccccccccc00000',
+  '0000c111111111111111c1c00000',
+  '0000c111111111111111c1c00000',
+  '0000c144444444444441c1c00000',
+  '0000c14555555555541c1c00000',
+  '0000c14555555555541c1c00000',
+  '0000c14555555555541c1c00000',
+  '0000c14555555555541c1c00000',
+  '0000c14555555555541c1c00000',
+  '0000c144444444444441c1c00000',
+  '0000c111e11111e111111c00000',
+  '0000c111111111111111cc00000',
+  '0000ccccccccccccccccc000000',
+  '0000000000000000000000000000',
+  '0000000000000000000000000000',
+]);
+
+// ── MAP: RYKROS (UNSTABLE) ──
+const MAP_RYKROS=buildMap([
+  'ffffffffffffffffffffffff',
+  'ffffffffggggggffffffffff',
+  'ffffffffg1111gffffffffff',
+  'ffffffffg1bb1gffffffffff',
+  'fffggggggg1b1gggggggffff',
+  'fffg111111111111111gffff',
+  'fffg111111e11111111gffff',
+  'fffg111111111111111gffff',
+  'fffggggggg1b1gggggggffff',
+  'ffffffffg1111gffffffffff',
+  'ffffffffgggggggfffffffff',
+  'ffffffffffffffffffffffff',
+]);
+
+// ── ENTITY TYPES ──
+// NPC types: npc (dialogue), sign, item, warp, trigger (story), save, inn, shop
+// enemies spawn in overworld tiles that have encounter=true
+
+// ── WORLD DEFINITION ──
+// Chapters unlock maps in order
+const WORLDS={
+  motavia_ow:{
+    mapData:MAP_MOTAVIA_OW,
+    name:'MOTAVIA',
+    biome:'desert',
+    encRate:0.06, // reduced by 50%
+    encTable:['sandworm','luminant_drone','purified_beast'],
+    entities:[
+      // Aiedo town entrance
+      {type:'warp',x:13,y:7,target:'aiedo',tx:11,ty:9,label:'AIEDO RUINS'},
+      // Lyra event trigger
+      {type:'story',x:7,y:7,storyId:'find_lyra',label:'Ancient Ruins',once:true,flag:'lyra_found'},
+      // Ruins to the south
+      {type:'story',x:13,y:14,storyId:'lightfall_msg',label:'Lightfall Site',once:false},
+      // Guild / info NPC
+      {type:'npc',x:20,y:10,name:'HUNTER',lines:["HUNTER GUILD's moved to Aiedo. Something big happened there. The whole district is still glowing.","I've been running salvage here for years. Never seen light like that before."]},
+      // Tarin join event
+      {type:'story',x:12,y:7,storyId:'meet_tarin',label:'Dezolis Gate',once:true,flag:'tarin_joined'},
+    ],
+    playerStart:{x:5,y:18},
+    musicHint:'field',
   },
-  party: []
+  aiedo:{
+    mapData:MAP_AIEDO,
+    name:'AIEDO (RUINS)',
+    biome:'town',
+    encRate:0,
+    encTable:[],
+    entities:[
+      {type:'npc',x:7,y:7,name:'ELDER',lines:['The lights started three weeks ago. The Luminant Creed calls it a blessing. I call it an omen.','Chaz Ashley defeated the Profound Darkness here, forty years back. There is a statue in the square. Worth seeing.']},
+      {type:'npc',x:15,y:6,name:'CREED FOLLOWER',lines:['Have you felt the warmth of the Great Light? The Archon says it will cleanse all pain from Algo.','The age of suffering is over. Embrace the light, and you will know peace.']},
+      {type:'sign',x:3,y:5,text:'AIEDO HUNTERS GUILD — "When monsters appear, we appear."'},
+      {type:'sign',x:16,y:5,text:'LUVENO MEMORIAL INN — Rest and recover your strength.'},
+      {type:'shop',x:6,y:7,label:'SHOP DOOR'},
+      {type:'inn',x:13,y:7,label:'INN DOOR'},
+      {type:'warp',x:7,y:10,target:'motavia_ow',tx:13,ty:8,label:'TOWN EXIT'},
+      {type:'warp',x:17,y:7,target:'dezolis_ow',tx:10,ty:10,label:'SPACEPORT TERMINAL'},
+    ],
+    playerStart:{x:10,y:8},
+    musicHint:'town',
+  },
+  dezolis_ow:{
+    mapData:MAP_DEZOLIS_OW,
+    name:'DEZOLIS',
+    biome:'snow',
+    encRate:0.07,
+    encTable:['purified_beast','creed_soldier','luminant_drone'],
+    entities:[
+      {type:'story',x:9,y:8,storyId:'meet_mira',label:'Starport',once:true,flag:'mira_joined'},
+      {type:'story',x:14,y:13,storyId:'esper_archive',label:'Esper Archive',once:true,flag:'archive_read'},
+      {type:'npc',x:18,y:9,name:'DEZOLIAN ELDER',lines:['The Great Light warms our world for the first time in memory. But my granddaughter... she has forgotten my name.','The Creed says this is purification. I say something is wrong.']},
+      {type:'npc',x:5,y:14,name:'CREED PRIEST',lines:['Archon Seraphel speaks truth. The light offers peace. Why do you resist?','The archive holds old lies. Do not go there.']},
+      {type:'warp',x:15,y:6,target:'aiedo',tx:10,ty:9,label:'→ Motavia'},
+      {type:'warp',x:18,y:5,target:'elyon',tx:14,ty:11,label:'↑ Elyon Ark'},
+    ],
+    playerStart:{x:10,y:10},
+    musicHint:'field',
+  },
+  elyon:{
+    mapData:MAP_ELYON,
+    name:'ARK ELYON',
+    biome:'tech',
+    encRate:0.09,
+    encTable:['creed_soldier','luminant_drone','creed_soldier'],
+    entities:[
+      {type:'story',x:7,y:5,storyId:'meet_seth9',label:'Control Room',once:true,flag:'seth9_joined'},
+      {type:'story',x:14,y:5,storyId:'meet_neysa',label:'Esper Chamber',once:true,flag:'neysa_joined'},
+      {type:'story',x:10,y:7,storyId:'seraphel_speech',label:'Throne Room',once:true,flag:'seraphel_met'},
+      {type:'npc',x:5,y:7,name:'CONVERT',lines:['I gave my fear to the Light. I gave my grief to the Light. I gave my name...']},
+      {type:'warp',x:11,y:11,target:'dezolis_ow',tx:18,ty:6,label:'EXIT'},
+      {type:'warp',x:12,y:11,target:'rykros',tx:11,ty:5,label:'→ RYKROS'},
+    ],
+    playerStart:{x:11,y:11},
+    musicHint:'dungeon',
+  },
+  rykros:{
+    mapData:MAP_RYKROS,
+    name:'RYKROS (UNSTABLE)',
+    biome:'void',
+    encRate:0.10,
+    encTable:['rykros_echo','rykros_echo','creed_soldier'],
+    entities:[
+      {type:'story',x:11,y:6,storyId:'archive_of_balance',label:'Archive of Balance',once:true,flag:'archive_found'},
+      {type:'story',x:11,y:5,storyId:'boss_seraphel',label:'Convergence Point',once:true,flag:'boss_seraphel_done'},
+      {type:'npc',x:3,y:5,name:'ECHO OF ALIS',lines:['We chose to fight. Every generation. Even knowing what we were chosen to protect — a seal, not a people.','You are the first in a very long time who was not chosen. That is why you matter.']},
+      {type:'npc',x:19,y:5,name:'ECHO OF CHAZ',lines:['I broke the cycle. But I did not know what lived inside it.','You will know. You will choose anyway. That is what it means to be free.']},
+    ],
+    playerStart:{x:11,y:7},
+    musicHint:'boss',
+  },
+};
+
+
+function findNearestWalkable(map, sx, sy, maxR=3){
+  const seen=new Set();
+  const q=[[sx,sy,0]];
+  while(q.length){
+    const [x,y,d]=q.shift();
+    const key=`${x},${y}`;
+    if(seen.has(key)) continue;
+    seen.add(key);
+    if(x>=0&&y>=0&&x<map.w&&y<map.h){
+      const tid=map.data[y*map.w+x];
+      if((TILES[tid]||TILES[0]).walk) return {x,y};
+      if(d<maxR){
+        [[0,-1],[1,0],[0,1],[-1,0]].forEach(([dx,dy])=>q.push([x+dx,y+dy,d+1]));
+      }
+    }
+  }
+  return null;
+}
+function normalizeWorldEntities(){
+  Object.values(WORLDS).forEach(world=>{
+    const map=world.mapData;
+    world.entities.forEach(ent=>{
+      if(!['warp','inn','shop','story','sign','npc'].includes(ent.type)) return;
+      const tid=map.data[ent.y*map.w+ent.x];
+      if((TILES[tid]||TILES[0]).walk) return;
+      const found=findNearestWalkable(map,ent.x,ent.y,4);
+      if(found){ ent.x=found.x; ent.y=found.y; }
+    });
+  });
+}
+
+// ── STORY SCENES ──
+// Each has: id, panels[], speaker, text, next (id or null→game continues), addChar, effect
+const SCENES={
+  find_lyra:{
+    panels:[
+      {type:'wide',draw:'motavia_ruins'},
+      {type:'right',draw:'lyra_found'},
+    ],
+    speaker:'',
+    text:"A column of pale light descends on the old PASEO research complex. Within the ruins, ancient systems flicker back to life — and from a sealed vault beneath the rubble, a girl opens her eyes for the first time.\n\nHer name is Lyra. She was waiting.",
+    addChar:'lyra',
+    next:'lyra_speaks',
+  },
+  lyra_speaks:{
+    panels:[{type:'left',draw:'lyra_portrait'},{type:'right',draw:'aren_portrait'}],
+    speaker:'LYRA',
+    text:"I can hear it. The Great Light. It's been singing since before I woke. It knows I'm here.\n\nAren... I think it sent the lightfall to find me. And I don't think 'find' is the right word.",
+    next:null,
+  },
+  meet_tarin:{
+    panels:[{type:'wide',draw:'dezolis_gate'}],
+    speaker:'TARIN',
+    text:"You're heading to Dezolis? I've been studying the old Rykros records here for six months. Something about the new lights doesn't match the scripture.\n\nLet me come with you. I need to know if I've spent my life worshipping a lie.",
+    addChar:'tarin',
+    next:null,
+  },
+  lightfall_msg:{
+    panels:[{type:'wide',draw:'motavia_light'}],
+    speaker:'',
+    text:"Another lightfall, to the southeast. Where the light touches, crops bloom overnight. Illness vanishes. People smile — and forget what made them sad.\n\nThe Luminant Creed calls it a miracle.",
+    next:null,
+  },
+  meet_mira:{
+    panels:[{type:'left',draw:'mira_portrait'},{type:'right',draw:'starport'}],
+    speaker:'MIRA',
+    text:"My ship's impounded. Creed officials say it failed 'spiritual clearance.' There is no such thing as spiritual clearance.\n\nI'm Mira Dane. Frontier pilot. And I need to get to Elyon before those light-drunk fanatics hand Algo to whatever's coming. Take me with you.",
+    addChar:'mira',
+    next:null,
+  },
+  esper_archive:{
+    panels:[{type:'wide',draw:'archive_scene'}],
+    speaker:'TARIN',
+    text:"The archive confirms it. The Great Light and the Profound Darkness were never moral opposites. They were two sides of a cosmic lock.\n\nAlgo was a containment system. And a proving ground. The heroes — Alis, Rolf, Chaz — they weren't chosen by fate. They were produced by resistance.",
+    next:'archive_2',
+  },
+  archive_2:{
+    panels:[{type:'left',draw:'neysa_angry'},{type:'right',draw:'archive_text'}],
+    speaker:'NEYSA',
+    text:"You shouldn't have found that. The espers buried it for a reason.\n\n...no. I'm lying to myself. We buried it because we were afraid of what ordinary people would do with the truth.\n\nDark Force was the hammer. The Great Light is the cage.",
+    next:null,
+  },
+  meet_seth9:{
+    panels:[{type:'wide',draw:'elyon_control'}],
+    speaker:'SETH-9',
+    text:"Observer unit Seth-9, reactivating. I recognize this facility. Elyon. One of the original Algo boundary systems — not Wren's line, but we share the same architect.\n\nObserver directive: do not allow convergence event. I am 847 years past schedule.\n\nI will accompany you.",
+    addChar:'seth9',
+    next:null,
+  },
+  meet_neysa:{
+    panels:[{type:'left',draw:'neysa_portrait'},{type:'right',draw:'esper_chamber'}],
+    speaker:'NEYSA',
+    text:"I'm Neysa. Inheritor of the Lutz tradition. The last in a line of guardians who kept secrets from the people they were supposed to serve.\n\nI'm done with that. Tell me what you need.",
+    addChar:'neysa',
+    next:null,
+  },
+  seraphel_speech:{
+    panels:[{type:'wide',draw:'seraphel_throne'}],
+    speaker:'ARCHON SERAPHEL',
+    text:"You came to stop me. I understand. From the outside, this must look like madness.\n\nBut I have seen what the Great Light truly is. It doesn't want to destroy Algo. It wants to complete it. Darkness gave you pain. Light offers peace.\n\nWhy do you cling to the right to suffer?",
+    next:'seraphel_2',
+  },
+  seraphel_2:{
+    panels:[{type:'left',draw:'aren_portrait'},{type:'right',draw:'seraphel_portrait'}],
+    speaker:'AREN',
+    text:"Because the peace you're describing isn't peace. It's silence.\n\nPeople don't get to choose. They just stop. That's not completion — that's deletion.\n\nWe're leaving. And we're taking Algo with us.",
+    next:null,
+  },
+  archive_of_balance:{
+    panels:[{type:'wide',draw:'rykros_archive'}],
+    speaker:'',
+    text:"The Archive of Balance. Buried beneath the old knowledge chambers of Rykros.\n\nIt reveals the truth the espers have hidden for generations: Algo was created partly as a containment system, partly as a proving ground. Once the Profound Darkness was destroyed, Algo's purpose expired.\n\nThe Great Light has returned to finalize the experiment.",
+    next:'lyra_choice',
+  },
+  lyra_choice:{
+    panels:[{type:'left',draw:'lyra_portrait'},{type:'right',draw:'rykros_void'}],
+    speaker:'LYRA',
+    text:"I was designed as a failsafe. A being capable of mediating or severing direct cosmic contact.\n\nI can build a barrier of autonomy. Sever Algo from both cosmic poles. Free it completely.\n\nBut using me... may mean I don't come back.",
+    next:'aren_refuse',
+  },
+  aren_refuse:{
+    panels:[{type:'left',draw:'aren_portrait'},{type:'right',draw:'party_scene'}],
+    speaker:'AREN',
+    text:"No. I refuse both options. I refuse the Great Light's cage, and I refuse the idea that saving Algo has to cost someone.\n\nWe find another way. We always find another way. We're not chosen. We don't follow scripts.\n\nLet's go.",
+    next:null,
+  },
+  boss_seraphel:{
+    panels:[{type:'wide',draw:'convergence'}],
+    speaker:'SERAPHEL',
+    text:"You have come to the Convergence Point. The Fifth Star forms around us — built from ancient seal-matter and the will of the Great Light.\n\nI have merged with its avatar. Not because I was forced. Because I believe.\n\nShow me that imperfect freedom is worth more than this.",
+    isBoss:true,
+    bossId:'seraphel_final',
+    next:'ending',
+  },
+  ending:{
+    panels:[{type:'wide',draw:'ending_sky'}],
+    speaker:'',
+    text:"The Great Light retreats. The Fifth Star transforms — not a prison, not a god. A barrier of pure autonomy, woven from Lyra's resonance and the will of six ordinary people.\n\nLyra is still there. Changed, but present — a voice in the new boundary, not consumed.\n\nAlgo belongs to its own people.\n\nFor the first time.",
+    next:'epilogue',
+  },
+  epilogue:{
+    panels:[{type:'left',draw:'aren_road'},{type:'right',draw:'new_star'}],
+    speaker:'',
+    text:"Years later: Motavia and Dezolis begin cooperative reconstruction. The orbital habitats reopen. The old legends of Alis, Rolf, Chaz — and Lyra — are spoken together.\n\nAren refuses every title. Returns to the road. The first great hero of Algo who was never chosen by destiny.\n\nIn the sky, a new star shines where it was never there before.",
+    isEnding:true,
+    next:null,
+  },
 };
 
 // ── CHARACTER DEFINITIONS ──
-const CHAR_DEFS = {
-  aren: {
-    id: 'aren', name: 'Aren',
-    class: 'Salvager',
-    hp: 180, maxHp: 180,
-    tp: 40, maxTp: 40,
-    str: 28, men: 12, agi: 22, def: 16,
-    level: 1, exp: 0, nextExp: 100,
-    skills: [
-      { id: 'slash',     name: 'SLASH',     type: 'skill', cost: 1, target: 'enemy',  power: 1.6,  desc: 'Strong single sword strike' },
-      { id: 'crosscut',  name: 'CROSSCUT',  type: 'skill', cost: 1, target: 'enemy',  power: 2.0,  desc: 'Powerful double-blade cross' },
-      { id: 'burst',     name: 'BURST',     type: 'skill', cost: 1, target: 'all',    power: 1.2,  desc: 'Gunshot burst vs all foes' },
-    ],
-    techs: [],
-    portrait: 'aren',
-    comboTags: ['blade', 'gun'],
-    statusEffects: [],
-    color: '#66aaee',
-  },
-  lyra: {
-    id: 'lyra', name: 'Lyra',
-    class: 'Resonant',
-    hp: 130, maxHp: 130,
-    tp: 120, maxTp: 120,
-    str: 12, men: 36, agi: 28, def: 10,
-    level: 1, exp: 0, nextExp: 100,
-    skills: [
-      { id: 'harmonic',  name: 'HARMONIC',  type: 'skill', cost: 1, target: 'all_ally', power: 0, healPct: 0.25, desc: 'Resonant pulse heals party' },
-    ],
-    techs: [
-      { id: 'res',   name: 'RES',   type: 'tech', tp: 5,  target: 'ally',    healAmt: 50,   desc: 'Restore one ally HP' },
-      { id: 'sar',   name: 'SAR',   type: 'tech', tp: 12, target: 'all_ally',healAmt: 30,   desc: 'Restore all party HP' },
-      { id: 'foi',   name: 'FOI',   type: 'tech', tp: 6,  target: 'enemy',   power: 1.4,    element: 'fire', desc: 'Fire-element technique' },
-      { id: 'wat',   name: 'WAT',   type: 'tech', tp: 6,  target: 'enemy',   power: 1.4,    element: 'ice',  desc: 'Ice-element technique' },
-      { id: 'lumina',name: 'LUMINA',type: 'tech', tp: 14, target: 'enemy',   power: 2.2,    element: 'light',desc: 'Radiant light pierces darkness' },
-    ],
-    portrait: 'lyra',
-    comboTags: ['light', 'heal'],
-    statusEffects: [],
-    color: '#f0d86a',
-  },
-  tarin: {
-    id: 'tarin', name: 'Tarin',
-    class: 'Scholar',
-    hp: 150, maxHp: 150,
-    tp: 90, maxTp: 90,
-    str: 18, men: 30, agi: 18, def: 18,
-    level: 1, exp: 0, nextExp: 100,
-    skills: [
-      { id: 'ward',      name: 'WARD',      type: 'skill', cost: 1, target: 'all_ally', effect: 'deban', desc: 'Raise party defense' },
-      { id: 'exorcise',  name: 'EXORCISE',  type: 'skill', cost: 1, target: 'enemy', power: 1.8, element: 'holy', desc: 'Anti-possession attack' },
-    ],
-    techs: [
-      { id: 'res',   name: 'RES',   type: 'tech', tp: 5,  target: 'ally',    healAmt: 50,   desc: 'Restore one ally HP' },
-      { id: 'deban', name: 'DEBAN', type: 'tech', tp: 8,  target: 'all_ally',effect: 'def+', desc: 'Raise party defense' },
-      { id: 'githu', name: 'GITHU', type: 'tech', tp: 10, target: 'enemy',   power: 1.6,   element: 'wind', desc: 'Wind technique' },
-    ],
-    portrait: 'tarin',
-    comboTags: ['holy', 'wind'],
-    statusEffects: [],
-    color: '#aa66ee',
-  },
-  mira: {
-    id: 'mira', name: 'Mira',
-    class: 'Pilot',
-    hp: 160, maxHp: 160,
-    tp: 20, maxTp: 20,
-    str: 24, men: 16, agi: 32, def: 14,
-    level: 1, exp: 0, nextExp: 100,
-    skills: [
-      { id: 'railgun',   name: 'RAILGUN',   type: 'skill', cost: 1, target: 'enemy', power: 2.4, desc: 'High-power railgun shot' },
-      { id: 'drone',     name: 'DRONE',     type: 'skill', cost: 1, target: 'all',   power: 1.0, desc: 'Attack drone hits all foes' },
-      { id: 'smokescreen',name:'SMOKE',     type: 'skill', cost: 1, target: 'all_ally', effect: 'evade+', desc: 'Smokescreen raises evasion' },
-    ],
-    techs: [],
-    portrait: 'mira',
-    comboTags: ['gun', 'tech'],
-    statusEffects: [],
-    color: '#e88844',
-  },
-  seth9: {
-    id: 'seth9', name: 'Seth-9',
-    class: 'Android',
-    hp: 260, maxHp: 260,
-    tp: 0, maxTp: 0,
-    str: 30, men: 18, agi: 12, def: 32,
-    level: 1, exp: 0, nextExp: 100,
-    skills: [
-      { id: 'barrier',   name: 'BARRIER',   type: 'skill', cost: 1, target: 'all_ally', effect: 'def+', desc: 'Project energy barrier' },
-      { id: 'suppression',name:'SUPPRESS',  type: 'skill', cost: 1, target: 'all',   power: 1.3, desc: 'Area suppression cannon' },
-      { id: 'scan',      name: 'SCAN',      type: 'skill', cost: 0, target: 'enemy', effect: 'scan', desc: 'Analyze enemy weaknesses' },
-    ],
-    techs: [],
-    portrait: 'seth9',
-    comboTags: ['tech', 'heavy'],
-    statusEffects: [],
-    color: '#44ccaa',
-  },
-  neysa: {
-    id: 'neysa', name: 'Neysa',
-    class: 'Esper',
-    hp: 120, maxHp: 120,
-    tp: 160, maxTp: 160,
-    str: 10, men: 44, agi: 24, def: 8,
-    level: 1, exp: 0, nextExp: 100,
-    skills: [
-      { id: 'seal',      name: 'SEAL',      type: 'skill', cost: 1, target: 'enemy', effect: 'seal', desc: 'Seal enemy techniques' },
-      { id: 'ryuka',     name: 'RYUKA',     type: 'skill', cost: 1, target: 'all_ally', effect: 'warp', desc: 'Warp party to safety' },
-    ],
-    techs: [
-      { id: 'nagra',  name: 'NAGRA',  type: 'tech', tp: 20, target: 'all',   power: 2.0, element: 'gravity', desc: 'Gravity collapse all foes' },
-      { id: 'nafoi',  name: 'NAFOI',  type: 'tech', tp: 18, target: 'all',   power: 1.8, element: 'fire',    desc: 'Great fire storm' },
-      { id: 'efess',  name: 'EFESS',  type: 'tech', tp: 28, target: 'enemy', power: 3.0, element: 'holy',    desc: 'Sacred cross cleave' },
-      { id: 'sar',    name: 'SAR',    type: 'tech', tp: 12, target: 'all_ally',healAmt: 40, desc: 'Party heal' },
-    ],
-    portrait: 'neysa',
-    comboTags: ['blade', 'light', 'gravity'],
-    statusEffects: [],
-    color: '#ee66aa',
-  },
-};
-
-// Deep clone a character
-function cloneChar(id) {
-  const d = CHAR_DEFS[id];
-  const c = JSON.parse(JSON.stringify(d));
-  // Restore skill uses
-  c.skills.forEach(s => { s.uses = 3; s.maxUses = 3; });
-  return c;
+function mkChar(id,name,cls,hp,tp,str,men,agi,def,skills,techs,col){
+  return {
+    id,name,cls,
+    hp,maxHp:hp,tp,maxTp:tp,
+    str,men,agi,def,
+    level:1,exp:0,nextExp:100,
+    skills:skills.map(s=>({...s,uses:s.maxUses})),
+    techs,
+    color:col,
+    statusEffects:[],
+    alive:true,
+  };
 }
 
+const CHAR_TEMPLATES={
+  aren:()=>mkChar('aren','Aren','Salvager',180,40,28,12,22,16,[
+    {id:'slash',name:'SLASH',target:'e1',power:1.6,maxUses:4,desc:'Sword strike',comboTag:'blade'},
+    {id:'crosscut',name:'CROSSCUT',target:'e1',power:2.0,maxUses:3,desc:'Cross-blade',comboTag:'blade'},
+    {id:'burst',name:'BURST',target:'all_e',power:1.1,maxUses:3,desc:'Gunfire all',comboTag:'gun'},
+  ],[],P.blue2),
+  lyra:()=>mkChar('lyra','Lyra','Resonant',130,120,12,36,28,10,[
+    {id:'harmonic',name:'HARMONIC',target:'all_a',healPct:.25,maxUses:3,desc:'Heal party',comboTag:'light'},
+  ],[
+    {id:'res',name:'RES',target:'a1',tp:5,healAmt:55,desc:'Restore ally HP'},
+    {id:'sar',name:'SAR',target:'all_a',tp:12,healAmt:35,desc:'Heal party'},
+    {id:'foi',name:'FOI',target:'e1',tp:6,power:1.4,elem:'fire',desc:'Fire technique'},
+    {id:'wat',name:'WAT',target:'e1',tp:6,power:1.4,elem:'ice',desc:'Ice technique'},
+    {id:'lumina',name:'LUMINA',target:'e1',tp:14,power:2.2,elem:'light',desc:'Radiant light'},
+  ],P.gold),
+  tarin:()=>mkChar('tarin','Tarin','Scholar',150,90,18,30,18,18,[
+    {id:'ward',name:'WARD',target:'all_a',effect:'def+',maxUses:3,desc:'Raise defense',comboTag:'holy'},
+    {id:'exorcise',name:'EXORCISE',target:'e1',power:1.8,maxUses:3,elem:'holy',desc:'Anti-possession',comboTag:'holy'},
+  ],[
+    {id:'res',name:'RES',target:'a1',tp:5,healAmt:55,desc:'Restore ally HP'},
+    {id:'deban',name:'DEBAN',target:'all_a',tp:8,effect:'def+',desc:'Party defense up'},
+    {id:'githu',name:'GITHU',target:'e1',tp:10,power:1.6,elem:'wind',desc:'Wind technique'},
+  ],P.purple),
+  mira:()=>mkChar('mira','Mira','Pilot',160,20,24,16,32,14,[
+    {id:'railgun',name:'RAILGUN',target:'e1',power:2.4,maxUses:3,desc:'Railgun shot',comboTag:'gun'},
+    {id:'drone',name:'DRONE',target:'all_e',power:1.0,maxUses:3,desc:'Drone all',comboTag:'tech'},
+    {id:'smoke',name:'SMOKE',target:'all_a',effect:'evade+',maxUses:3,desc:'Raise evasion'},
+  ],[],P.orange),
+  seth9:()=>mkChar('seth9','Seth-9','Android',260,0,30,18,12,32,[
+    {id:'barrier',name:'BARRIER',target:'all_a',effect:'def+',maxUses:3,desc:'Energy barrier',comboTag:'tech'},
+    {id:'suppress',name:'SUPPRESS',target:'all_e',power:1.3,maxUses:3,desc:'Area cannon',comboTag:'tech'},
+    {id:'scan',name:'SCAN',target:'e1',effect:'scan',maxUses:9,desc:'Analyze enemy'},
+  ],[],P.teal),
+  neysa:()=>mkChar('neysa','Neysa','Esper',120,160,10,44,24,8,[
+    {id:'seal',name:'SEAL',target:'e1',effect:'seal',maxUses:3,desc:'Seal techniques'},
+    {id:'ryuka',name:'RYUKA',target:'all_a',effect:'warp',maxUses:2,desc:'Warp to safety'},
+  ],[
+    {id:'nagra',name:'NAGRA',target:'all_e',tp:20,power:2.0,elem:'gravity',desc:'Gravity collapse'},
+    {id:'nafoi',name:'NAFOI',target:'all_e',tp:18,power:1.8,elem:'fire',desc:'Great fire'},
+    {id:'efess',name:'EFESS',target:'e1',tp:28,power:3.0,elem:'holy',desc:'Sacred cross'},
+    {id:'sar',name:'SAR',target:'all_a',tp:12,healAmt:40,desc:'Party heal'},
+  ],P.purple),
+};
+
 // ── ENEMY DEFINITIONS ──
-const ENEMY_DEFS = {
-  sandworm: {
-    id: 'sandworm', name: 'Sand Worm',
-    hp: 80, maxHp: 80,
-    str: 18, men: 6, agi: 10, def: 8,
-    exp: 30, meseta: 20,
-    weaknesses: ['ice'],
-    attacks: ['bite', 'sandblast'],
-    svgFn: drawSandworm,
-    element: null,
-  },
-  luminant_drone: {
-    id: 'luminant_drone', name: 'Luminant Drone',
-    hp: 60, maxHp: 60,
-    str: 14, men: 20, agi: 24, def: 6,
-    exp: 40, meseta: 30,
-    weaknesses: ['gravity'],
-    attacks: ['lightbeam', 'scan'],
-    svgFn: drawLuminantDrone,
-    element: 'light',
-  },
-  purified_beast: {
-    id: 'purified_beast', name: 'Purified Beast',
-    hp: 120, maxHp: 120,
-    str: 24, men: 14, agi: 16, def: 12,
-    exp: 55, meseta: 40,
-    weaknesses: ['holy'],
-    attacks: ['claw', 'radiant_howl'],
-    svgFn: drawPurifiedBeast,
-    element: 'light',
-  },
-  creed_soldier: {
-    id: 'creed_soldier', name: 'Creed Soldier',
-    hp: 100, maxHp: 100,
-    str: 22, men: 18, agi: 20, def: 14,
-    exp: 60, meseta: 50,
-    weaknesses: [],
-    attacks: ['strike', 'lightbolt'],
-    svgFn: drawCreedSoldier,
-    element: 'light',
-  },
-  rykros_echo: {
-    id: 'rykros_echo', name: 'Rykros Echo',
-    hp: 180, maxHp: 180,
-    str: 30, men: 28, agi: 22, def: 18,
-    exp: 100, meseta: 80,
-    weaknesses: ['holy', 'gravity'],
-    attacks: ['memory_strike', 'dimension_tear'],
-    svgFn: drawRykrosEcho,
-    element: 'void',
-  },
-  // BOSSES
-  iglanova: {
-    id: 'iglanova', name: 'IGLANOVA',
-    hp: 400, maxHp: 400,
-    str: 32, men: 22, agi: 14, def: 20,
-    exp: 250, meseta: 200,
-    weaknesses: ['ice', 'holy'],
-    attacks: ['sandstorm', 'burrow', 'giant_fang'],
-    svgFn: drawIglanova,
-    isBoss: true,
-    element: null,
-  },
-  archon_seraphel: {
-    id: 'archon_seraphel', name: 'ARCHON SERAPHEL',
-    hp: 800, maxHp: 800,
-    str: 40, men: 50, agi: 28, def: 28,
-    exp: 600, meseta: 500,
-    weaknesses: ['gravity'],
-    attacks: ['divine_ray', 'illumination', 'mass_conversion'],
-    svgFn: drawSeraphel,
-    isBoss: true,
-    element: 'light',
-  },
+const ENEMIES={
+  sandworm:{id:'sandworm',name:'Sand Worm',hp:80,str:18,men:6,agi:10,def:8,exp:30,mst:20,weak:['ice'],atks:['Bite','Sand Blast']},
+  luminant_drone:{id:'luminant_drone',name:'Lum. Drone',hp:60,str:14,men:20,agi:24,def:6,exp:40,mst:30,weak:['gravity'],atks:['Light Beam','Scan Pulse'],elem:'light'},
+  purified_beast:{id:'purified_beast',name:'Purif. Beast',hp:120,str:24,men:14,agi:16,def:12,exp:55,mst:40,weak:['holy'],atks:['Claw','Radiant Howl'],elem:'light'},
+  creed_soldier:{id:'creed_soldier',name:'Creed Soldier',hp:100,str:22,men:18,agi:20,def:14,exp:60,mst:50,weak:[],atks:['Strike','Light Bolt']},
+  rykros_echo:{id:'rykros_echo',name:'Rykros Echo',hp:180,str:30,men:28,agi:22,def:18,exp:100,mst:80,weak:['holy','gravity'],atks:['Memory Strike','Dim. Tear']},
+  iglanova:{id:'iglanova',name:'IGLANOVA',hp:500,str:32,men:22,agi:14,def:20,exp:300,mst:200,weak:['ice','holy'],atks:['Sandstorm','Burrow','Giant Fang'],isBoss:true},
+  seraphel_final:{id:'seraphel_final',name:'SERAPHEL',hp:900,str:40,men:50,agi:28,def:28,exp:800,mst:600,weak:['gravity'],atks:['Divine Ray','Illumination','Mass Convert'],isBoss:true,elem:'light'},
 };
 
 // ── COMBO DEFINITIONS ──
-// Two characters using specific skill combos trigger a combo attack
-const COMBO_DEFS = [
-  {
-    name: 'LIGHTSHEAR', chars: ['aren','lyra'],
-    tags: ['blade','light'], needs: ['crosscut','lumina'],
-    power: 3.5, element: 'light', target: 'enemy',
-    desc: 'Aren\'s blade channels Lyra\'s resonance — a holy cross of light!',
-  },
-  {
-    name: 'VOIDBREAKER', chars: ['neysa','seth9'],
-    tags: ['gravity','tech'], needs: ['nagra','suppression'],
-    power: 4.0, element: 'gravity', target: 'all',
-    desc: 'Gravity collapse amplified by Seth-9\'s cannon — devastating!',
-  },
-  {
-    name: 'FIRESTORM', chars: ['lyra','tarin'],
-    tags: ['fire','wind'], needs: ['foi','githu'],
-    power: 3.0, element: 'fire', target: 'all',
-    desc: 'Fire and wind spiral into a scorching vortex!',
-  },
-  {
-    name: 'RAILFOI', chars: ['mira','lyra'],
-    tags: ['gun','fire'], needs: ['railgun','foi'],
-    power: 3.2, element: 'fire', target: 'enemy',
-    desc: 'Mira\'s railgun superheated by Lyra\'s fire technique!',
-  },
-  {
-    name: 'GRANDCROSS', chars: ['aren','neysa'],
-    tags: ['blade','light'], needs: ['crosscut','efess'],
-    power: 4.5, element: 'holy', target: 'enemy',
-    desc: 'The sacred Elsydeon tradition lives on — Holy Cross Strike!',
-  },
+const COMBOS=[
+  {name:'GRANDCROSS',chars:['aren','neysa'],needs:['crosscut','efess'],power:4.5,elem:'holy',target:'e1',desc:"Aren's blade + Neysa's EFESS — Holy Cross!"},
+  {name:'LIGHTSHEAR',chars:['aren','lyra'],needs:['crosscut','lumina'],power:3.5,elem:'light',target:'e1',desc:"Blade channeling Lyra's resonance!"},
+  {name:'VOIDBREAKER',chars:['neysa','seth9'],needs:['nagra','suppress'],power:4.0,elem:'gravity',target:'all_e',desc:"Gravity collapse + cannon — devastating!"},
+  {name:'FIRESTORM',chars:['lyra','tarin'],needs:['foi','githu'],power:3.0,elem:'fire',target:'all_e',desc:"Fire and wind spiral into a vortex!"},
+  {name:'RAILFOI',chars:['mira','lyra'],needs:['railgun','foi'],power:3.2,elem:'fire',target:'e1',desc:"Superheated railgun burst!"},
 ];
 
-// ── ENCOUNTER TABLES per location ──
-const ENCOUNTERS = {
-  'MOTAVIA OUTSKIRTS': ['sandworm', 'sandworm', 'luminant_drone'],
-  'ANCIENT RUINS': ['luminant_drone', 'purified_beast', 'sandworm'],
-  'DEZOLIS TUNDRA': ['purified_beast', 'creed_soldier'],
-  'CREED ARK ELYON': ['creed_soldier', 'creed_soldier', 'luminant_drone'],
-  'RYKROS UNSTABLE': ['rykros_echo', 'rykros_echo'],
-  'BOSS_IGLANOVA': ['iglanova'],
-  'BOSS_SERAPHEL': ['archon_seraphel'],
+// ── GAME STATE ──
+const GS={
+  screen:'title',  // title|cutscene|overworld|battle|status
+  meseta:500,
+  party:[],
+  flags:{},
+  currentMap:'motavia_ow',
+  player:{x:5,y:18,facing:'down'},
+  stepCount:0,
+  // cutscene
+  csQueue:[],csIdx:0,
+  // battle
+  battle:null,
+  // story
+  pendingScene:null,
+  inventory:{solDew:0,antidote:0,escapipe:0},
+  objective:'Find the strange light in the Motavia ruins.',
+  shopOpen:false,
+  audioReady:false,
 };
 
-// ── SVG SPRITE FUNCTIONS ──
-function drawSandworm(size=80) {
-  return `<svg width="${size}" height="${size}" viewBox="0 0 80 80">
-    <ellipse cx="40" cy="55" rx="30" ry="18" fill="#c8a840"/>
-    <ellipse cx="40" cy="40" rx="22" ry="16" fill="#d4b848"/>
-    <ellipse cx="40" cy="28" rx="16" ry="14" fill="#c8a840"/>
-    <ellipse cx="40" cy="20" rx="14" ry="12" fill="#e0b840" stroke="#a07820" stroke-width="1.5"/>
-    <circle cx="34" cy="17" r="3" fill="#1a0a00"/>
-    <circle cx="46" cy="17" r="3" fill="#1a0a00"/>
-    <circle cx="34" cy="17" r="1.5" fill="#ff4444"/>
-    <circle cx="46" cy="17" r="1.5" fill="#ff4444"/>
-    <path d="M34 26 Q40 30 46 26" stroke="#a07820" fill="none" stroke-width="1.5"/>
-    <line x1="28" y1="20" x2="20" y2="14" stroke="#a07820" stroke-width="1.5"/>
-    <line x1="52" y1="20" x2="60" y2="14" stroke="#a07820" stroke-width="1.5"/>
-    <ellipse cx="28" cy="50" rx="6" ry="3" fill="#b09030" opacity="0.5"/>
-    <ellipse cx="52" cy="50" rx="6" ry="3" fill="#b09030" opacity="0.5"/>
-  </svg>`;
-}
+// ── PIXEL ART DRAWING FUNCTIONS ──
+// These draw PSIV-style low-res art into canvas contexts
 
-function drawLuminantDrone(size=70) {
-  return `<svg width="${size}" height="${size}" viewBox="0 0 70 70">
-    <polygon points="35,8 55,25 55,45 35,62 15,45 15,25" fill="#1a2a4a" stroke="#4488cc" stroke-width="1.5"/>
-    <polygon points="35,16 50,28 50,42 35,54 20,42 20,28" fill="#0a1828" stroke="#6699dd" stroke-width="1"/>
-    <circle cx="35" cy="35" r="10" fill="#223355" stroke="#88bbff" stroke-width="1.5"/>
-    <circle cx="35" cy="35" r="5" fill="#4488ff" opacity="0.8"/>
-    <circle cx="35" cy="35" r="2" fill="#ffffff"/>
-    <line x1="35" y1="8" x2="35" y2="4" stroke="#4488cc" stroke-width="1.5"/>
-    <line x1="55" y1="25" x2="60" y2="22" stroke="#4488cc" stroke-width="1.5"/>
-    <line x1="55" y1="45" x2="60" y2="48" stroke="#4488cc" stroke-width="1.5"/>
-    <line x1="35" y1="62" x2="35" y2="66" stroke="#4488cc" stroke-width="1.5"/>
-    <line x1="15" y1="45" x2="10" y2="48" stroke="#4488cc" stroke-width="1.5"/>
-    <line x1="15" y1="25" x2="10" y2="22" stroke="#4488cc" stroke-width="1.5"/>
-    <circle cx="35" cy="4" r="2" fill="#88bbff"/>
-    <circle cx="62" cy="21" r="2" fill="#88bbff"/>
-    <circle cx="62" cy="49" r="2" fill="#88bbff"/>
-    <circle cx="35" cy="66" r="2" fill="#88bbff"/>
-    <circle cx="8" cy="49" r="2" fill="#88bbff"/>
-    <circle cx="8" cy="21" r="2" fill="#88bbff"/>
-  </svg>`;
-}
+function drawSceneArt(id,canvas){
+  const c=ctx(canvas);
+  const W=canvas.width,H=canvas.height;
+  c.fillStyle='#040408';c.fillRect(0,0,W,H);
 
-function drawPurifiedBeast(size=80) {
-  return `<svg width="${size}" height="${size}" viewBox="0 0 80 80">
-    <ellipse cx="40" cy="55" rx="28" ry="16" fill="#e0c8f0"/>
-    <ellipse cx="40" cy="42" rx="22" ry="20" fill="#ead8ff"/>
-    <ellipse cx="40" cy="28" rx="18" ry="18" fill="#f0e0ff" stroke="#cc88ee" stroke-width="1"/>
-    <path d="M28 18 L22 6 L32 16" fill="#e8d0ff" stroke="#cc88ee" stroke-width="1"/>
-    <path d="M52 18 L58 6 L48 16" fill="#e8d0ff" stroke="#cc88ee" stroke-width="1"/>
-    <circle cx="34" cy="26" r="3.5" fill="#220033"/>
-    <circle cx="46" cy="26" r="3.5" fill="#220033"/>
-    <circle cx="35" cy="25" r="1.5" fill="#ffffff" opacity="0.9"/>
-    <circle cx="47" cy="25" r="1.5" fill="#ffffff" opacity="0.9"/>
-    <ellipse cx="40" cy="34" rx="8" ry="5" fill="#ddc0ff"/>
-    <path d="M34 38 Q40 42 46 38" stroke="#aa66cc" fill="none" stroke-width="1.5"/>
-    <path d="M14 55 Q10 70 18 72 Q22 60 28 58" fill="#e0c8f0" stroke="#cc88ee" stroke-width="1"/>
-    <path d="M66 55 Q70 70 62 72 Q58 60 52 58" fill="#e0c8f0" stroke="#cc88ee" stroke-width="1"/>
-    <path d="M26 64 Q22 76 28 78" stroke="#cc88ee" fill="none" stroke-width="1.5"/>
-    <path d="M54 64 Q58 76 52 78" stroke="#cc88ee" fill="none" stroke-width="1.5"/>
-    <circle cx="40" cy="40" r="4" fill="#ffffff" opacity="0.3"/>
-  </svg>`;
-}
-
-function drawCreedSoldier(size=72) {
-  return `<svg width="${size}" height="${size}" viewBox="0 0 72 72">
-    <rect x="26" y="10" width="20" height="20" rx="4" fill="#d0c0a0" stroke="#a09060" stroke-width="1.5"/>
-    <circle cx="36" cy="18" r="7" fill="#e0d0b0" stroke="#a09060" stroke-width="1"/>
-    <circle cx="33" cy="16" r="1.5" fill="#333"/>
-    <circle cx="39" cy="16" r="1.5" fill="#333"/>
-    <rect x="22" y="30" width="28" height="26" rx="2" fill="#c0a860" stroke="#a08840" stroke-width="1.5"/>
-    <rect x="28" y="30" width="16" height="8" fill="#d4bc70"/>
-    <rect x="30" y="32" width="12" height="4" fill="#ffe090" opacity="0.8"/>
-    <rect x="14" y="30" width="10" height="20" rx="2" fill="#c0a860" stroke="#a08840" stroke-width="1"/>
-    <rect x="48" y="30" width="10" height="20" rx="2" fill="#c0a860" stroke="#a08840" stroke-width="1"/>
-    <rect x="28" y="56" width="8" height="14" rx="1" fill="#b09050" stroke="#a08040" stroke-width="1"/>
-    <rect x="36" y="56" width="8" height="14" rx="1" fill="#b09050" stroke="#a08040" stroke-width="1"/>
-    <rect x="48" y="44" width="14" height="4" rx="1" fill="#8080a0" stroke="#606080" stroke-width="1"/>
-    <rect x="56" y="42" width="8" height="3" rx="1" fill="#606060"/>
-    <path d="M36 32 L36 52" stroke="#a08840" stroke-width="0.5" opacity="0.5"/>
-    <path d="M22 42 L50 42" stroke="#a08840" stroke-width="0.5" opacity="0.5"/>
-  </svg>`;
-}
-
-function drawRykrosEcho(size=80) {
-  return `<svg width="${size}" height="${size}" viewBox="0 0 80 80">
-    <circle cx="40" cy="40" r="30" fill="none" stroke="#4444aa" stroke-width="1" opacity="0.5"/>
-    <circle cx="40" cy="40" r="22" fill="#0a0a1a" stroke="#6666cc" stroke-width="1.5"/>
-    <circle cx="40" cy="40" r="14" fill="#0d0d22" stroke="#8888ee" stroke-width="1"/>
-    <circle cx="40" cy="40" r="6" fill="#2222aa" stroke="#aaaaff" stroke-width="1"/>
-    <line x1="40" y1="18" x2="40" y2="10" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
-    <line x1="55" y1="25" x2="62" y2="18" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
-    <line x1="62" y1="40" x2="70" y2="40" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
-    <line x1="55" y1="55" x2="62" y2="62" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
-    <line x1="40" y1="62" x2="40" y2="70" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
-    <line x1="25" y1="55" x2="18" y2="62" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
-    <line x1="18" y1="40" x2="10" y2="40" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
-    <line x1="25" y1="25" x2="18" y2="18" stroke="#6666cc" stroke-width="1.5" opacity="0.7"/>
-    <path d="M34 36 Q40 30 46 36 Q40 42 34 36Z" fill="#4444ee" opacity="0.8"/>
-    <circle cx="40" cy="40" r="2" fill="#aaaaff"/>
-  </svg>`;
-}
-
-function drawIglanova(size=120) {
-  return `<svg width="${size}" height="${size}" viewBox="0 0 120 120">
-    <ellipse cx="60" cy="90" rx="50" ry="22" fill="#a06820"/>
-    <ellipse cx="60" cy="72" rx="42" ry="28" fill="#b87830"/>
-    <ellipse cx="60" cy="55" rx="35" ry="28" fill="#c88838"/>
-    <ellipse cx="60" cy="38" rx="28" ry="24" fill="#d89840" stroke="#a07020" stroke-width="2"/>
-    <ellipse cx="60" cy="24" rx="22" ry="18" fill="#e0a040" stroke="#b07820" stroke-width="2"/>
-    <circle cx="50" cy="20" r="5" fill="#1a0800"/>
-    <circle cx="70" cy="20" r="5" fill="#1a0800"/>
-    <circle cx="51" cy="19" r="2" fill="#ff2200"/>
-    <circle cx="71" cy="19" r="2" fill="#ff2200"/>
-    <path d="M46 32 Q60 40 74 32" stroke="#905010" fill="none" stroke-width="2.5"/>
-    <line x1="38" y1="26" x2="26" y2="16" stroke="#905010" stroke-width="2"/>
-    <line x1="82" y1="26" x2="94" y2="16" stroke="#905010" stroke-width="2"/>
-    <circle cx="26" cy="15" r="4" fill="#d07820"/>
-    <circle cx="94" cy="15" r="4" fill="#d07820"/>
-    <path d="M20 78 Q14 100 24 106 Q32 94 40 88" fill="#b07020" stroke="#a06010" stroke-width="1.5"/>
-    <path d="M100 78 Q106 100 96 106 Q88 94 80 88" fill="#b07020" stroke="#a06010" stroke-width="1.5"/>
-    <path d="M30 100 Q26 114 34 116" stroke="#a06010" fill="none" stroke-width="2"/>
-    <path d="M90 100 Q94 114 86 116" stroke="#a06010" fill="none" stroke-width="2"/>
-    <ellipse cx="60" cy="56" rx="12" ry="8" fill="#c87820" opacity="0.6"/>
-  </svg>`;
-}
-
-function drawSeraphel(size=110) {
-  return `<svg width="${size}" height="${size}" viewBox="0 0 110 110">
-    <ellipse cx="55" cy="98" rx="35" ry="10" fill="#f0e0c0" opacity="0.3"/>
-    <rect x="35" y="42" width="40" height="50" rx="4" fill="#f8f0e0" stroke="#d4c080" stroke-width="1.5"/>
-    <circle cx="55" cy="30" rx="18" ry="18" fill="#f8f0e0" stroke="#d4c080" stroke-width="2"/>
-    <circle cx="48" cy="28" r="3" fill="#8866aa"/>
-    <circle cx="62" cy="28" r="3" fill="#8866aa"/>
-    <circle cx="49" cy="27" r="1.5" fill="#ffffff"/>
-    <circle cx="63" cy="27" r="1.5" fill="#ffffff"/>
-    <path d="M47 36 Q55 42 63 36" stroke="#c4a060" fill="none" stroke-width="1.5"/>
-    <rect x="37" y="44" width="36" height="10" fill="#ffe890" opacity="0.6"/>
-    <path d="M32 46 L16 26 L28 38" fill="#fff0b0" stroke="#e0c040" stroke-width="1.5"/>
-    <path d="M78 46 L94 26 L82 38" fill="#fff0b0" stroke="#e0c040" stroke-width="1.5"/>
-    <path d="M22 24 L16 12 L28 20" fill="#fff0b0" stroke="#e0c040" stroke-width="1"/>
-    <path d="M88 24 L94 12 L82 20" fill="#fff0b0" stroke="#e0c040" stroke-width="1"/>
-    <rect x="43" y="56" width="24" height="32" fill="#ece0d0"/>
-    <path d="M46 62 L64 62 M46 68 L64 68 M46 74 L64 74 M46 80 L64 80" stroke="#c0a060" stroke-width="0.8" opacity="0.6"/>
-    <rect x="38" y="88" width="14" height="10" rx="2" fill="#e0d0b0"/>
-    <rect x="58" y="88" width="14" height="10" rx="2" fill="#e0d0b0"/>
-    <circle cx="55" cy="50" r="7" fill="none" stroke="#ffdd44" stroke-width="1.5" opacity="0.9"/>
-    <circle cx="55" cy="50" r="3" fill="#ffeeaa"/>
-    <path d="M55 20 L55 12 M47 22 L42 16 M63 22 L68 16" stroke="#ffdd44" stroke-width="1" opacity="0.8"/>
-  </svg>`;
-}
-
-function drawCharPortrait(charId, size=44) {
-  const portraits = {
-    aren: `<svg width="${size}" height="${size}" viewBox="0 0 44 44">
-      <rect x="8" y="6" width="28" height="28" rx="4" fill="#3a4a6a"/>
-      <circle cx="22" cy="18" r="10" fill="#c8a870"/>
-      <rect x="14" y="22" width="16" height="12" rx="2" fill="#3a4a6a"/>
-      <circle cx="19" cy="16" r="1.5" fill="#2a1a08"/>
-      <circle cx="25" cy="16" r="1.5" fill="#2a1a08"/>
-      <path d="M18 22 Q22 25 26 22" stroke="#a07840" fill="none" stroke-width="1"/>
-      <rect x="8" y="6" width="28" height="10" rx="4" fill="#2a3a5a"/>
-      <path d="M14 10 L30 10" stroke="#4a6a9a" stroke-width="1"/>
-    </svg>`,
-    lyra: `<svg width="${size}" height="${size}" viewBox="0 0 44 44">
-      <rect x="8" y="6" width="28" height="28" rx="4" fill="#2a3a5a"/>
-      <circle cx="22" cy="18" r="10" fill="#e8d8c0"/>
-      <path d="M14 12 Q22 4 30 12" fill="#f0e0a0" stroke="#d4c060" stroke-width="1"/>
-      <circle cx="19" cy="17" r="1.5" fill="#332211"/>
-      <circle cx="25" cy="17" r="1.5" fill="#332211"/>
-      <path d="M18 22 Q22 26 26 22" stroke="#c0a060" fill="none" stroke-width="1"/>
-      <circle cx="22" cy="18" r="5" fill="none" stroke="#f0e080" stroke-width="0.5" opacity="0.6"/>
-    </svg>`,
-    tarin: `<svg width="${size}" height="${size}" viewBox="0 0 44 44">
-      <rect x="8" y="6" width="28" height="28" rx="4" fill="#3a2a5a"/>
-      <circle cx="22" cy="18" r="10" fill="#d4b890"/>
-      <rect x="14" y="6" width="16" height="8" rx="2" fill="#5a3a8a"/>
-      <circle cx="19" cy="17" r="1.5" fill="#221108"/>
-      <circle cx="25" cy="17" r="1.5" fill="#221108"/>
-      <path d="M18 22 Q22 25 26 22" stroke="#b09060" fill="none" stroke-width="1"/>
-      <rect x="14" y="22" width="16" height="12" rx="2" fill="#5a3a8a"/>
-    </svg>`,
-    mira: `<svg width="${size}" height="${size}" viewBox="0 0 44 44">
-      <rect x="8" y="6" width="28" height="28" rx="4" fill="#3a4a2a"/>
-      <circle cx="22" cy="18" r="10" fill="#c8a870"/>
-      <rect x="14" y="22" width="16" height="12" rx="2" fill="#3a4a2a"/>
-      <circle cx="19" cy="16" r="1.5" fill="#1a0a04"/>
-      <circle cx="25" cy="16" r="1.5" fill="#1a0a04"/>
-      <path d="M18 22 Q22 25 26 22" stroke="#a07840" fill="none" stroke-width="1"/>
-      <rect x="8" y="14" width="8" height="6" rx="1" fill="#6a8a4a" opacity="0.8"/>
-    </svg>`,
-    seth9: `<svg width="${size}" height="${size}" viewBox="0 0 44 44">
-      <rect x="8" y="6" width="28" height="28" rx="2" fill="#2a4a4a"/>
-      <rect x="12" y="10" width="20" height="20" rx="2" fill="#1a3a3a" stroke="#44aaaa" stroke-width="1"/>
-      <rect x="15" y="13" width="6" height="5" rx="1" fill="#44ccaa" opacity="0.9"/>
-      <rect x="23" y="13" width="6" height="5" rx="1" fill="#44ccaa" opacity="0.9"/>
-      <rect x="15" y="21" width="14" height="3" rx="1" fill="#228866" opacity="0.7"/>
-      <rect x="8" y="30" width="28" height="6" rx="1" fill="#2a4a4a"/>
-    </svg>`,
-    neysa: `<svg width="${size}" height="${size}" viewBox="0 0 44 44">
-      <rect x="8" y="6" width="28" height="28" rx="4" fill="#2a1a4a"/>
-      <circle cx="22" cy="18" r="10" fill="#e0c8e8"/>
-      <path d="M14 10 Q22 2 30 10" fill="#cc88ee" stroke="#aa66cc" stroke-width="1"/>
-      <circle cx="19" cy="17" r="1.5" fill="#220044"/>
-      <circle cx="25" cy="17" r="1.5" fill="#220044"/>
-      <path d="M18 22 Q22 26 26 22" stroke="#aa66cc" fill="none" stroke-width="1"/>
-      <rect x="14" y="22" width="16" height="12" rx="2" fill="#3a1a6a"/>
-    </svg>`,
+  const scenes={
+    motavia_ruins(){
+      // Sandy desert with ruins
+      c.fillStyle=P.sky2;c.fillRect(0,0,W,H*.55);
+      // Stars
+      for(let i=0;i<30;i++){c.fillStyle=`rgba(200,220,240,${.3+Math.random()*.5})`;c.fillRect((i*37+13)%W,(i*23+7)%(H*.5),1,1);}
+      c.fillStyle=P.sand1;c.fillRect(0,H*.55,W,H*.45);
+      c.fillStyle=P.sand2;c.fillRect(0,H*.7,W,H*.3);
+      // Ruin walls
+      for(let i=0;i<4;i++){
+        c.fillStyle=P.stone1;c.fillRect(20+i*50,H*.35,18,H*.35);
+        c.fillStyle=P.stone2;c.fillRect(22+i*50,H*.35,14,H*.32);
+      }
+      // Light column
+      const grd=c.createLinearGradient(W*.6,0,W*.6,H);
+      grd.addColorStop(0,'rgba(255,255,200,.7)');grd.addColorStop(1,'rgba(255,255,200,0)');
+      c.fillStyle=grd;c.fillRect(W*.56,0,W*.08,H);
+    },
+    lyra_found(){
+      c.fillStyle='#e8f0ff';c.fillRect(0,0,W,H);
+      // Glowing chamber
+      c.fillStyle='#c8d8f8';c.fillRect(0,H*.3,W,H*.7);
+      c.fillStyle='#a8b8d8';c.fillRect(W*.1,H*.25,W*.8,H*.1);
+      // Light rays
+      for(let i=0;i<8;i++){
+        c.strokeStyle=`rgba(255,255,220,${.3+i*.05})`;c.lineWidth=4+i*2;
+        c.beginPath();c.moveTo(W*.5,0);c.lineTo(W*.5+(-4+i)*W*.15,H);c.stroke();
+      }
+      // Lyra silhouette
+      drawCharSprite('lyra',c,W*.4,H*.2,W*.2,H*.6);
+    },
+    lyra_portrait(){drawLargePortrait('lyra',c,W,H);},
+    aren_portrait(){drawLargePortrait('aren',c,W,H);},
+    mira_portrait(){drawLargePortrait('mira',c,W,H);},
+    neysa_portrait(){drawLargePortrait('neysa',c,W,H);},
+    seraphel_portrait(){drawLargePortrait('seraphel',c,W,H);},
+    neysa_angry(){
+      drawLargePortrait('neysa',c,W,H);
+      // Anger effect lines
+      c.strokeStyle='rgba(200,100,255,.4)';c.lineWidth=1;
+      for(let i=0;i<6;i++){c.beginPath();c.moveTo(W*.5,H*.2);c.lineTo((i/6)*W,0);c.stroke();}
+    },
+    starport(){
+      c.fillStyle=P.sky1;c.fillRect(0,0,W,H);
+      // Stars
+      for(let i=0;i<40;i++){c.fillStyle='#fff';c.fillRect((i*31)%W,(i*19)%(H*.6),1,1);}
+      c.fillStyle=P.snow2;c.fillRect(0,H*.6,W,H*.4);
+      // Starport building
+      c.fillStyle=P.stone1;c.fillRect(W*.1,H*.2,W*.8,H*.5);
+      c.fillStyle='#102030';c.fillRect(W*.15,H*.25,W*.7,H*.4);
+      // Windows
+      for(let i=0;i<5;i++){c.fillStyle='#4080a0';c.fillRect(W*.18+i*(W*.13),H*.3,W*.08,H*.12);}
+    },
+    dezolis_gate(){
+      c.fillStyle='#080c20';c.fillRect(0,0,W,H);
+      for(let i=0;i<40;i++){c.fillStyle='#fff';c.fillRect((i*29)%W,(i*17)%(H*.5),1,1);}
+      c.fillStyle=P.snow1;c.fillRect(0,H*.55,W,H*.45);
+      c.fillStyle=P.snow2;c.fillRect(0,H*.7,W,H*.3);
+    },
+    archive_scene(){
+      c.fillStyle='#100820';c.fillRect(0,0,W,H);
+      // Bookshelves
+      c.fillStyle='#302018';c.fillRect(0,0,W*.15,H);
+      c.fillStyle='#302018';c.fillRect(W*.85,0,W*.15,H);
+      for(let i=0;i<8;i++){c.fillStyle=['#6040a0','#404080','#804040','#408040'][i%4];c.fillRect(4,(8+i*9)%(H-10)+5,W*.12,7);}
+      // Central glow
+      const grd=c.createRadialGradient(W*.5,H*.5,5,W*.5,H*.5,W*.3);
+      grd.addColorStop(0,'rgba(100,80,200,.6)');grd.addColorStop(1,'rgba(0,0,0,0)');
+      c.fillStyle=grd;c.fillRect(0,0,W,H);
+      // Text fragments floating
+      c.fillStyle='rgba(180,160,255,.4)';c.font=`${Math.max(6,W*.04)}px monospace`;
+      c.fillText('ALGO = CONSTRUCT',W*.2,H*.3);
+      c.fillText('SEAL = INSULATION',W*.2,H*.5);
+      c.fillText('LIGHT = CAGE',W*.2,H*.7);
+    },
+    archive_text(){
+      c.fillStyle='#080818';c.fillRect(0,0,W,H);
+      c.fillStyle='rgba(150,130,240,.3)';
+      c.font=`${Math.max(5,W*.035)}px monospace`;
+      const lines=['ARCHIVE OF BALANCE','——————————','Origin: pre-Mother Brain','Classification: SEALED','','The Great Light did not','banish the Profound','Darkness out of mercy.','','It banished it to','maintain a balance —','with Algo as the fulcrum.','','Once the fulcrum breaks,','the Light returns to','collect its instrument.'];
+      lines.forEach((l,i)=>{c.fillStyle=i===0?P.gold:'rgba(200,180,255,.6)';c.fillText(l,W*.05,(i+1)*H/(lines.length+2));});
+    },
+    elyon_control(){
+      c.fillStyle='#081828';c.fillRect(0,0,W,H);
+      // Tech floor grid
+      for(let x=0;x<W;x+=16){c.strokeStyle='rgba(40,80,120,.3)';c.lineWidth=1;c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke();}
+      for(let y=0;y<H;y+=16){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();}
+      // Control panels
+      c.fillStyle='#102840';c.fillRect(W*.1,H*.2,W*.8,H*.5);
+      for(let i=0;i<8;i++){c.fillStyle=i%2?'#20a080':'#2060a0';c.fillRect(W*.12+i*(W*.09),H*.3,W*.07,H*.1);}
+      // Seth-9 silhouette
+      drawCharSprite('seth9',c,W*.6,H*.2,W*.15,H*.6);
+    },
+    esper_chamber(){
+      c.fillStyle='#100820';c.fillRect(0,0,W,H);
+      // Purple glow
+      const grd=c.createRadialGradient(W*.3,H*.5,0,W*.3,H*.5,W*.4);
+      grd.addColorStop(0,'rgba(160,80,240,.4)');grd.addColorStop(1,'rgba(0,0,0,0)');
+      c.fillStyle=grd;c.fillRect(0,0,W,H);
+      // Columns
+      for(let i=0;i<3;i++){c.fillStyle='#302060';c.fillRect(W*.05+i*(W*.3),0,W*.06,H);}
+    },
+    seraphel_throne(){
+      c.fillStyle='#f0e8d0';c.fillRect(0,0,W,H);
+      // Golden throne room
+      c.fillStyle='#d4c070';c.fillRect(0,H*.6,W,H*.4);
+      // Columns
+      for(let i=0;i<4;i++){c.fillStyle='#c0b060';c.fillRect(i*(W*.25),0,W*.06,H*.7);}
+      // Seraphel
+      drawCharSprite('seraphel',c,W*.4,H*.05,W*.2,H*.7);
+      // Light rays from ceiling
+      for(let i=0;i<6;i++){
+        const grd2=c.createLinearGradient(W*.3+i*W*.07,0,W*.3+i*W*.07,H);
+        grd2.addColorStop(0,'rgba(255,255,180,.4)');grd2.addColorStop(1,'rgba(255,255,180,0)');
+        c.fillStyle=grd2;c.fillRect(W*.3+i*W*.07,0,W*.03,H*.8);
+      }
+    },
+    rykros_archive(){
+      c.fillStyle='#04040c';c.fillRect(0,0,W,H);
+      // Floating geometric shapes
+      for(let i=0;i<12;i++){
+        c.strokeStyle=`rgba(80,80,200,${.2+i*.04})`;c.lineWidth=1;
+        c.strokeRect(W*.2+i*2,H*.1+i*4,W*.6-i*4,H*.8-i*8);
+      }
+      // Central glowing orb
+      const grd=c.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,W*.2);
+      grd.addColorStop(0,'rgba(180,160,255,1)');grd.addColorStop(.5,'rgba(80,60,180,.6)');grd.addColorStop(1,'rgba(0,0,0,0)');
+      c.fillStyle=grd;c.beginPath();c.arc(W*.5,H*.5,W*.18,0,Math.PI*2);c.fill();
+    },
+    rykros_void(){
+      c.fillStyle='#04040c';c.fillRect(0,0,W,H);
+      for(let i=0;i<50;i++){c.fillStyle=`rgba(100,100,255,${Math.random()*.5+.1})`;c.fillRect(Math.random()*W,Math.random()*H,1,1);}
+      const grd=c.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,W*.4);
+      grd.addColorStop(0,'rgba(60,40,120,.5)');grd.addColorStop(1,'rgba(0,0,0,0)');
+      c.fillStyle=grd;c.fillRect(0,0,W,H);
+    },
+    convergence(){
+      // The Fifth Star forming
+      c.fillStyle='#f8f4e0';c.fillRect(0,0,W,H);
+      for(let i=0;i<20;i++){
+        c.strokeStyle=`rgba(220,200,80,${.2+i*.03})`;c.lineWidth=2;
+        c.beginPath();c.arc(W*.5,H*.5,10+i*8,0,Math.PI*2);c.stroke();
+      }
+      drawCharSprite('seraphel',c,W*.35,H*.1,W*.3,H*.8);
+    },
+    motavia_light(){
+      c.fillStyle=P.sky2;c.fillRect(0,0,W,H);
+      c.fillStyle=P.sand1;c.fillRect(0,H*.6,W,H*.4);
+      // Massive light column
+      const grd=c.createLinearGradient(W*.5,0,W*.5,H);
+      grd.addColorStop(0,'rgba(255,255,220,.9)');grd.addColorStop(1,'rgba(255,255,220,0)');
+      c.fillStyle=grd;c.fillRect(W*.3,0,W*.4,H);
+    },
+    party_scene(){
+      c.fillStyle='#080c18';c.fillRect(0,0,W,H);
+      const chars=['aren','lyra','tarin','mira','seth9','neysa'];
+      const present=GS.party.map(p=>p.id);
+      present.slice(0,4).forEach((id,i)=>{
+        drawCharSprite(id,c,W*(i*.22+.08),H*.1,W*.18,H*.8);
+      });
+    },
+    ending_sky(){
+      // New star in dark sky
+      c.fillStyle='#080c18';c.fillRect(0,0,W,H);
+      for(let i=0;i<60;i++){c.fillStyle=`rgba(200,220,255,${.2+Math.random()*.6})`;c.fillRect((i*31+7)%W,(i*23+3)%H,1,1);}
+      // New star (bright)
+      const grd=c.createRadialGradient(W*.65,H*.25,0,W*.65,H*.25,W*.08);
+      grd.addColorStop(0,'rgba(255,255,220,1)');grd.addColorStop(.3,'rgba(200,220,255,.6)');grd.addColorStop(1,'rgba(0,0,0,0)');
+      c.fillStyle=grd;c.beginPath();c.arc(W*.65,H*.25,W*.07,0,Math.PI*2);c.fill();
+      // Horizon
+      c.fillStyle='#0c1828';c.fillRect(0,H*.6,W,H*.4);
+    },
+    aren_road(){
+      c.fillStyle='#c88030';c.fillRect(0,0,W,H*.5);
+      c.fillStyle='#906020';c.fillRect(0,H*.5,W,H*.5);
+      // Road stretching
+      c.fillStyle='#b07028';
+      c.beginPath();c.moveTo(W*.4,H*.5);c.lineTo(W*.45,H);c.lineTo(W*.55,H);c.lineTo(W*.6,H*.5);c.closePath();c.fill();
+      // Aren silhouette
+      drawCharSprite('aren',c,W*.42,H*.1,W*.16,H*.7);
+    },
+    new_star(){
+      c.fillStyle='#040810';c.fillRect(0,0,W,H);
+      for(let i=0;i<80;i++){c.fillStyle='rgba(200,210,240,.5)';c.fillRect((i*29)%W,(i*17)%H,1,1);}
+      const grd=c.createRadialGradient(W*.5,H*.35,0,W*.5,H*.35,W*.2);
+      grd.addColorStop(0,'rgba(240,240,200,1)');grd.addColorStop(.4,'rgba(160,200,255,.5)');grd.addColorStop(1,'rgba(0,0,0,0)');
+      c.fillStyle=grd;c.beginPath();c.arc(W*.5,H*.35,W*.18,0,Math.PI*2);c.fill();
+      c.fillStyle=P.gold2;c.font=`${Math.max(6,W*.04)}px "Press Start 2P",monospace`;
+      c.textAlign='center';c.fillText('A PROMISE.',W*.5,H*.75);c.textAlign='start';
+    },
   };
-  return portraits[charId] || `<svg width="${size}" height="${size}" viewBox="0 0 44 44"><rect x="4" y="4" width="36" height="36" rx="4" fill="#333"/><text x="22" y="28" text-anchor="middle" fill="#888" font-size="20">?</text></svg>`;
+
+  (scenes[id]||scenes.motavia_ruins)();
 }
 
-// ── BACKGROUND SCENES ──
-function drawWorldBg(location) {
-  const bgs = {
-    'MOTAVIA OUTSKIRTS': `
-      <rect width="640" height="240" fill="#1a1008"/>
-      <rect y="160" width="640" height="80" fill="#8a6020"/>
-      <rect y="180" width="640" height="60" fill="#9a7030"/>
-      ${[...Array(8)].map((_,i)=>`<ellipse cx="${60+i*82}" cy="175" rx="${18+Math.sin(i)*6}" ry="8" fill="#7a5010"/>`).join('')}
-      ${[...Array(5)].map((_,i)=>`<path d="M${80+i*110} 155 L${90+i*110} 145 L${100+i*110} 155" fill="#6a4808"/>`).join('')}
-      <rect y="0" width="640" height="160" fill="#0d1820"/>
-      <ellipse cx="160" cy="60" rx="90" ry="60" fill="#1a2838" opacity="0.6"/>
-      ${[...Array(40)].map((_,i)=>{
-        const x=Math.sin(i*137)*300+320, y=Math.sin(i*97)*60+50;
-        return `<circle cx="${x}" cy="${y}" r="${Math.sin(i*47)*1+1.2}" fill="#ffffff" opacity="${0.3+Math.sin(i*23)*0.4}"/>`;
-      }).join('')}
-      <ellipse cx="480" cy="90" rx="60" ry="55" fill="#0f1a2a" stroke="#1a2a4a" stroke-width="1"/>
-      <ellipse cx="480" cy="90" rx="45" ry="42" fill="#101828"/>
-    `,
-    'ANCIENT RUINS': `
-      <rect width="640" height="240" fill="#080d18"/>
-      <rect y="180" width="640" height="60" fill="#282020"/>
-      ${[...Array(6)].map((_,i)=>`
-        <rect x="${30+i*100}" y="${120+Math.sin(i)*20}" width="${20+i%3*10}" height="${60-i%3*10}" fill="#2a1a14" stroke="#3a2a1e" stroke-width="1"/>
-        <rect x="${32+i*100}" y="${118+Math.sin(i)*20}" width="${16+i%3*8}" height="10" fill="#3a2a1e"/>
-      `).join('')}
-      <rect y="0" width="640" height="180" fill="#0a0d18"/>
-      ${[...Array(50)].map((_,i)=>{
-        const x=Math.sin(i*123)*300+320, y=Math.sin(i*87)*70+50;
-        return `<circle cx="${x}" cy="${y}" r="${Math.sin(i*53)*1+0.8}" fill="#ffffff" opacity="${0.4+Math.sin(i*31)*0.3}"/>`;
-      }).join('')}
-      <circle cx="100" cy="50" r="30" fill="#1a1428" stroke="#4444aa" stroke-width="1" opacity="0.8"/>
-      <circle cx="100" cy="50" r="18" fill="#0d0d22" opacity="0.9"/>
-    `,
-    'DEZOLIS TUNDRA': `
-      <rect width="640" height="240" fill="#0a0e18"/>
-      <rect y="150" width="640" height="90" fill="#b4c8e0"/>
-      ${[...Array(9)].map((_,i)=>`
-        <polygon points="${50+i*70},150 ${70+i*70},100 ${90+i*70},150" fill="#c8ddf0" stroke="#a8b8d0" stroke-width="0.5"/>
-        <polygon points="${55+i*70},150 ${70+i*70},118 ${85+i*70},150" fill="#d8eeff"/>
-      `).join('')}
-      <rect y="0" width="640" height="150" fill="#080c18"/>
-      ${[...Array(35)].map((_,i)=>{
-        const x=i*19+5, y=Math.sin(i*29)*50+45;
-        return `<circle cx="${x}" cy="${y}" r="${0.8+Math.sin(i*67)*0.6}" fill="#aabbdd" opacity="${0.5+Math.sin(i*43)*0.3}"/>`;
-      }).join('')}
-      <ellipse cx="320" cy="70" rx="200" ry="50" fill="#0d1428" opacity="0.6"/>
-    `,
-    'CREED ARK ELYON': `
-      <rect width="640" height="240" fill="#100808"/>
-      <rect y="160" width="640" height="80" fill="#1a1410"/>
-      ${[...Array(4)].map((_,i)=>`
-        <rect x="${80+i*140}" y="${80-i%2*20}" width="60" height="100" fill="#2a2018" stroke="#6a5020" stroke-width="1.5"/>
-        <rect x="${90+i*140}" y="${70-i%2*20}" width="40" height="20" fill="#3a3020"/>
-        <rect x="${100+i*140}" y="${90-i%2*20}" width="20" height="50" rx="1" fill="#ffffff" opacity="0.1"/>
-      `).join('')}
-      <rect y="0" width="640" height="160" fill="#0d0808"/>
-      ${[...Array(30)].map((_,i)=>{
-        const x=Math.sin(i*147)*300+320, y=Math.sin(i*107)*55+45;
-        return `<circle cx="${x}" cy="${y}" r="${0.8+Math.sin(i*73)*0.8}" fill="#ffffaa" opacity="${0.4+Math.sin(i*61)*0.4}"/>`;
-      }).join('')}
-    `,
-    'RYKROS UNSTABLE': `
-      <rect width="640" height="240" fill="#04040c"/>
-      ${[...Array(12)].map((_,i)=>`
-        <line x1="${i*55}" y1="0" x2="${640-i*55}" y2="240" stroke="#222244" stroke-width="0.5" opacity="0.5"/>
-      `).join('')}
-      ${[...Array(8)].map((_,i)=>`
-        <circle cx="${80+i*70}" cy="${40+Math.sin(i*77)*80}" r="${15+i%3*8}" fill="none" stroke="#3333aa" stroke-width="${0.5+i%2*0.5}" opacity="${0.3+i%3*0.2}"/>
-      `).join('')}
-      ${[...Array(30)].map((_,i)=>{
-        const x=Math.sin(i*163)*300+320, y=Math.sin(i*123)*90+60;
-        return `<circle cx="${x}" cy="${y}" r="${1+Math.sin(i*83)*0.8}" fill="#8888ff" opacity="${0.3+Math.sin(i*61)*0.4}"/>`;
-      }).join('')}
-      <rect y="210" width="640" height="30" fill="#0a0820"/>
-    `,
+function drawLargePortrait(id,c,W,H){
+  c.fillStyle=P.panel;c.fillRect(0,0,W,H);
+  // Background gradient by character
+  const bgs={
+    aren:[P.sky1,P.sand1],lyra:['#d0e8ff','#f0f0e0'],tarin:['#201040','#100820'],
+    mira:['#203010','#102010'],seth9:['#102828','#081818'],neysa:['#200830','#100418'],
+    seraphel:['#f0e8d0','#d4c070'],
   };
-  return bgs[location] || bgs['MOTAVIA OUTSKIRTS'];
+  const bg=bgs[id]||[P.panel,P.panel2];
+  const grd=c.createLinearGradient(0,0,0,H);
+  grd.addColorStop(0,bg[0]);grd.addColorStop(1,bg[1]);
+  c.fillStyle=grd;c.fillRect(0,0,W,H);
+  drawCharSprite(id,c,W*.2,H*.05,W*.6,H*.9);
 }
 
-function drawBattleBg(location) {
-  if (location === 'MOTAVIA OUTSKIRTS' || location === 'ANCIENT RUINS' || location === 'BOSS_IGLANOVA') {
-    return `<rect width="640" height="200" fill="#0d1420"/>
-      <rect y="120" width="640" height="80" fill="#7a5010"/>
-      <rect y="135" width="640" height="65" fill="#8a6020"/>
-      ${[...Array(12)].map((_,i)=>`<ellipse cx="${30+i*56}" cy="128" rx="14" ry="6" fill="#6a4808"/>`).join('')}`;
+function drawCharSprite(id,c,x,y,w,h){
+  // Draw a character at the given position/size
+  const s=Math.min(w,h);
+  const cx=x+w*.5,cy=y+h*.1;
+  const sw=s*.45,sh=s*.55;
+
+  const col={
+    aren:{body:P.aren_shirt,hair:P.aren_hair,skin:P.aren_skin,acc:P.gold},
+    lyra:{body:P.lyra_dress,hair:P.lyra_hair,skin:P.lyra_skin,acc:'#ffffff'},
+    tarin:{body:P.tarin_robe,hair:P.tarin_hair,skin:P.tarin_skin,acc:'#9050d0'},
+    mira:{body:P.mira_suit,hair:P.mira_hair,skin:P.mira_skin,acc:P.orange},
+    seth9:{body:P.seth_body,hair:P.seth_body,skin:'#304040',acc:P.seth_eye},
+    neysa:{body:P.neysa_robe,hair:P.neysa_hair,skin:P.neysa_skin,acc:'#c060e0'},
+    seraphel:{body:'#f8f0e0',hair:'#c0b060',skin:'#e8d8c0',acc:P.gold2},
+  }[id]||{body:P.gray,hair:P.darkgray,skin:P.sand1,acc:P.gold};
+
+  // Body
+  c.fillStyle=col.body;
+  c.fillRect(cx-sw*.35,cy+sh*.35,sw*.7,sh*.55);
+  // Legs
+  c.fillStyle=col.body;
+  c.fillRect(cx-sw*.3,cy+sh*.88,sw*.25,sh*.12);
+  c.fillRect(cx+sw*.05,cy+sh*.88,sw*.25,sh*.12);
+  // Arms
+  c.fillRect(cx-sw*.5,cy+sh*.4,sw*.15,sh*.3);
+  c.fillRect(cx+sw*.35,cy+sh*.4,sw*.15,sh*.3);
+  // Head
+  c.fillStyle=col.skin;
+  c.fillRect(cx-sw*.28,cy,sw*.56,sh*.33);
+  // Hair
+  c.fillStyle=col.hair;
+  c.fillRect(cx-sw*.3,cy-sh*.04,sw*.6,sh*.12);
+  if(id==='lyra'){c.fillRect(cx-sw*.28,cy,sw*.1,sh*.2);c.fillRect(cx+sw*.18,cy,sw*.1,sh*.2);}
+  if(id==='neysa'){c.fillRect(cx-sw*.3,cy,sw*.1,sh*.25);c.fillRect(cx+sw*.2,cy,sw*.1,sh*.25);}
+  // Eyes
+  c.fillStyle='#0a0a0a';
+  c.fillRect(cx-sw*.15,cy+sh*.1,sw*.08,sh*.07);
+  c.fillRect(cx+sw*.07,cy+sh*.1,sw*.08,sh*.07);
+  // Special features
+  if(id==='seth9'){
+    c.fillStyle=col.acc;
+    c.fillRect(cx-sw*.15,cy+sh*.08,sw*.12,sh*.1);
+    c.fillRect(cx+sw*.03,cy+sh*.08,sw*.12,sh*.1);
   }
-  if (location === 'DEZOLIS TUNDRA') {
-    return `<rect width="640" height="200" fill="#080c18"/>
-      <rect y="120" width="640" height="80" fill="#a4b8d0"/>
-      ${[...Array(10)].map((_,i)=>`<polygon points="${40+i*62},120 ${55+i*62},90 ${70+i*62},120" fill="#c8ddf0"/>`).join('')}`;
-  }
-  if (location === 'RYKROS UNSTABLE' || location === 'BOSS_SERAPHEL') {
-    return `<rect width="640" height="200" fill="#04040c"/>
-      ${[...Array(8)].map((_,i)=>`<circle cx="${80+i*70}" cy="${60+Math.sin(i*77)*40}" r="${10+i%3*5}" fill="none" stroke="#222266" stroke-width="0.5" opacity="0.6"/>`).join('')}
-      <rect y="160" width="640" height="40" fill="#0a0820"/>`;
-  }
-  return `<rect width="640" height="200" fill="#0d1420"/>
-    <rect y="120" width="640" height="80" fill="#1a1010"/>`;
-}
-
-// ── STORY DATA ──
-const STORY = [
-  // === CHAPTER 0: PROLOGUE ===
-  {
-    id: 'prologue_1',
-    chapter: 0,
-    panels: [
-      { type: 'wide', svgContent: `
-        <svg viewBox="0 0 640 160">
-          <rect width="640" height="160" fill="#0d1820"/>
-          <rect y="100" width="640" height="60" fill="#8a6020"/>
-          ${[...Array(40)].map((_,i)=>{ const x=Math.sin(i*137)*300+320,y=Math.sin(i*97)*40+40; return `<circle cx="${x}" cy="${y}" r="${Math.sin(i*47)*1+1}" fill="#fff" opacity="${0.3+Math.sin(i*23)*0.4}"/>`; }).join('')}
-          <text x="320" y="30" text-anchor="middle" font-family="monospace" font-size="12" fill="#888">YEAR 2374 — ALGO SOLAR SYSTEM</text>
-          <text x="320" y="50" text-anchor="middle" font-family="monospace" font-size="11" fill="#555">Forty years since Chaz Ashley ended the millennium cycle.</text>
-          <text x="320" y="70" text-anchor="middle" font-family="monospace" font-size="11" fill="#555">The Profound Darkness is destroyed. Algo is free — or so they believed.</text>
-          <text x="320" y="95" text-anchor="middle" font-family="monospace" font-size="13" fill="#aa8820">Now pale columns of light fall from a sky that should be empty.</text>
-        </svg>` },
-    ],
-    speaker: '', text: 'Motavia, the desert world. Forty years of slow recovery. The old systems of NURVUS still flicker in buried halls, tended by no one. In the ruins, salvagers eke out a living — and ask no questions about the new lights in the sky.',
-    next: 'prologue_2',
-  },
-  {
-    id: 'prologue_2',
-    chapter: 0,
-    panels: [
-      { svgContent: `
-        <svg viewBox="0 0 300 160">
-          <rect width="300" height="160" fill="#1a1008"/>
-          <rect y="100" width="300" height="60" fill="#8a6020"/>
-          ${drawSandworm(60).replace('<svg width="60"', '<svg width="60" x="120" y="60"')}
-          <text x="150" y="30" text-anchor="middle" font-family="monospace" font-size="11" fill="#aaa">MOTAVIA OUTSKIRTS</text>
-          <rect x="60" y="60" width="180" height="80" fill="none" stroke="#333" stroke-width="1"/>
-        </svg>` },
-      { svgContent: `
-        <svg viewBox="0 0 300 160">
-          <rect width="300" height="160" fill="#0a1020"/>
-          <rect x="10" y="20" width="130" height="120" rx="2" fill="#1a2030" stroke="#2a3a5a" stroke-width="1"/>
-          ${drawCharPortrait('aren', 110).replace('<svg width="110"', '<svg x="20" y="25" width="110"')}
-          <text x="240" y="70" text-anchor="middle" font-family="monospace" font-size="11" fill="#88aacc">"Another run to the</text>
-          <text x="240" y="88" text-anchor="middle" font-family="monospace" font-size="11" fill="#88aacc">old PASEO labs.</text>
-          <text x="240" y="106" text-anchor="middle" font-family="monospace" font-size="11" fill="#88aacc">Nothing out of the</text>
-          <text x="240" y="124" text-anchor="middle" font-family="monospace" font-size="11" fill="#88aacc">ordinary. Maybe."</text>
-        </svg>` },
-    ],
-    speaker: 'AREN', text: "My name's Aren Voss. I run salvage routes through the old ruins — it pays enough to keep my equipment charged. No destiny. No prophecy. Just work.\n\n...but the lights have been strange lately.",
-    next: 'prologue_3',
-  },
-  {
-    id: 'prologue_3',
-    chapter: 0,
-    panels: [
-      { type: 'wide', svgContent: `
-        <svg viewBox="0 0 640 160">
-          <rect width="640" height="160" fill="#e8f0ff"/>
-          <rect y="100" width="640" height="60" fill="#a09080"/>
-          ${[...Array(12)].map((_,i)=>`<line x1="${120+i*35}" y1="0" x2="${100+i*35}" y2="160" stroke="#ffffffaa" stroke-width="${3+i%3*2}" opacity="0.7"/>`).join('')}
-          <text x="320" y="50" text-anchor="middle" font-family="monospace" font-size="13" fill="#3a3020">A COLUMN OF LIGHT DESCENDS ON THE RUINS</text>
-          <text x="320" y="80" text-anchor="middle" font-family="monospace" font-size="11" fill="#5a5040">All nearby systems reactivate. The air hums with ancient frequencies.</text>
-        </svg>` },
-    ],
-    speaker: '', text: "The lightfall came without warning. One moment — desert silence. The next, a pillar of pale radiance, ancient machinery waking beneath the sand, and from a sealed vault deep underground... a voice.",
-    next: 'prologue_4',
-  },
-  {
-    id: 'prologue_4',
-    chapter: 0,
-    panels: [
-      { svgContent: `
-        <svg viewBox="0 0 300 160">
-          <rect width="300" height="160" fill="#e0f0ff"/>
-          ${[...Array(6)].map((_,i)=>`<line x1="${100+i*20}" y1="0" x2="${90+i*20}" y2="160" stroke="#ffffff" stroke-width="2" opacity="0.5"/>`).join('')}
-          <rect x="80" y="20" width="140" height="120" rx="4" fill="#f0f8ff" stroke="#aaccee" stroke-width="2"/>
-          ${drawCharPortrait('lyra', 110).replace('<svg width="110"', '<svg x="95" y="25" width="110"')}
-        </svg>` },
-      { svgContent: `
-        <svg viewBox="0 0 300 160">
-          <rect width="300" height="160" fill="#0a1020"/>
-          ${drawCharPortrait('aren', 100).replace('<svg width="100"', '<svg x="10" y="30" width="100"')}
-          <text x="200" y="55" text-anchor="middle" font-family="monospace" font-size="11" fill="#88aacc">"Who — what</text>
-          <text x="200" y="73" text-anchor="middle" font-family="monospace" font-size="11" fill="#88aacc">are you?"</text>
-        </svg>` },
-    ],
-    speaker: 'LYRA', text: "...I am Lyra. I was waiting. Not for you specifically — but for whoever the resonance would bring.\n\nI can hear the Great Light. It's speaking. And it is not asking.",
-    next: null, // triggers game start
-    startGame: true,
-  },
-];
-
-// ── GAME CHAPTER/SCENE FLOW ──
-const CHAPTERS = [
-  {
-    id: 0, title: 'A SKY THAT WILL NOT DARKEN',
-    intro: 'Strange lights fall across Motavia. In the ruins, a salvager named Aren discovers something that should not exist.',
-    startLocation: 'MOTAVIA OUTSKIRTS',
-    party: ['aren'],
-    scenes: [
-      {
-        type: 'explore',
-        location: 'MOTAVIA OUTSKIRTS',
-        msg: 'The lightfall has subsided, but the ruins glow faintly. Lyra stands at your side — fragile, luminous, and somehow the most dangerous thing in this desert.',
-        encounters: 2,
-        onComplete: 'add_lyra',
-        next: { type: 'boss', enemyId: 'iglanova', location: 'BOSS_IGLANOVA' },
-      },
-    ],
-  },
-  {
-    id: 1, title: 'THE AGE AFTER EVIL',
-    intro: 'Aren and Lyra flee to the frontier. They find an unlikely ally in a Dezolian scholar who believes Lyra may be something holy.',
-    startLocation: 'ANCIENT RUINS',
-    party: ['aren', 'lyra'],
-    addChar: 'tarin',
-    scenes: [
-      {
-        type: 'explore',
-        location: 'ANCIENT RUINS',
-        msg: 'The old PASEO research complex. Tarin the scholar-priest met you here, poring over fragments of Rykros records.\n\n"The light was supposed to be our salvation," he said. "I\'m beginning to wonder."',
-        encounters: 2,
-        next: { type: 'explore', location: 'DEZOLIS TUNDRA' },
-      },
-      {
-        type: 'explore',
-        location: 'DEZOLIS TUNDRA',
-        msg: 'Dezolis — spiritual heart of Algo. The Luminant Creed\'s presence is everywhere. White-robed figures move through the frozen streets, peaceful and empty-eyed.\n\nMira Dane found you at the starport, cursing at her grounded ship.',
-        encounters: 2,
-        addChar: 'mira',
-        next: { type: 'explore', location: 'CREED ARK ELYON' },
-      },
-    ],
-  },
-  {
-    id: 2, title: 'THE CHOIR OF LUMINOUS SOULS',
-    intro: 'The Luminant Creed\'s ark Elyon moves through high orbit. Inside, Archon Seraphel waits — not corrupted, but convinced.',
-    startLocation: 'CREED ARK ELYON',
-    party: ['aren', 'lyra', 'tarin', 'mira'],
-    addChar: 'seth9',
-    scenes: [
-      {
-        type: 'explore',
-        location: 'CREED ARK ELYON',
-        msg: 'The ark Elyon — a colossal orbital structure restored by the Great Light. Seth-9, an ancient android caretaker, reactivated as you breached the outer shell.\n\n"Observer directive: protect organic life. Current threat assessment: the light itself."',
-        encounters: 2,
-        addChar: 'neysa',
-        next: { type: 'boss', enemyId: 'archon_seraphel', location: 'BOSS_SERAPHEL' },
-      },
-    ],
-  },
-  {
-    id: 3, title: 'RYKROS UNBOUND',
-    intro: 'To find the Archive of Balance, the party must reach the flickering remains of Rykros — a world phasing in and out of reality.',
-    startLocation: 'RYKROS UNSTABLE',
-    party: ['aren', 'lyra', 'tarin', 'mira', 'seth9', 'neysa'],
-    scenes: [
-      {
-        type: 'explore',
-        location: 'RYKROS UNSTABLE',
-        msg: 'Rykros — the ancient world of revelation, now unstable, flickering between dimensions. Echoes of old heroes drift through the fractured geometry like memories the planet cannot release.\n\nThe Archive of Balance is close. The Great Light is closer.',
-        encounters: 3,
-        next: null, // triggers epilogue
-        isEnding: true,
-      },
-    ],
-  },
-];
-
-let currentChapter = 0;
-let currentSceneIdx = 0;
-let encountersCompleted = 0;
-let currentSceneData = null;
-
-// ── BATTLE STATE ──
-let battleState = {
-  enemies: [],
-  commandQueue: [],
-  currentCharIdx: 0,
-  phase: 'command',
-  pendingCombo: null,
-};
-
-// ── UI HELPERS ──
-function $(id) { return document.getElementById(id); }
-
-function showScreen(screenId) {
-  ['title-screen','cutscene','main-game','menu-screen'].forEach(id => {
-    const el = $(id);
-    if (el) el.style.display = 'none';
-  });
-  const target = $(screenId);
-  if (target) {
-    target.style.display = 'flex';
-    target.style.flexDirection = 'column';
+  if(id==='lyra'){
+    const grd=c.createRadialGradient(cx,cy+sh*.15,0,cx,cy+sh*.15,sw*.35);
+    grd.addColorStop(0,'rgba(255,255,220,.15)');grd.addColorStop(1,'rgba(255,255,220,0)');
+    c.fillStyle=grd;c.fillRect(cx-sw*.5,cy-sh*.1,sw,sh*.5);
   }
 }
 
-function logBattle(msg, color='#dde8f8') {
-  const log = $('battle-log');
-  if (log) {
-    log.innerHTML = `<span style="color:${color}">${msg}</span>`;
+
+function getEntityAt(x,y,adjOnly=false){
+  const world=WORLDS[GS.currentMap];
+  if(!world)return null;
+  const px=GS.player.x,py=GS.player.y;
+  for(const ent of world.entities){
+    if(ent.once&&ent.flag&&GS.flags[ent.flag])continue;
+    if(ent.x===x&&ent.y===y){
+      const dist=Math.abs(ent.x-px)+Math.abs(ent.y-py);
+      if(!adjOnly||dist<=1)return ent;
+    }
   }
+  return null;
+}
+function getFacingTarget(){
+  const dirs={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+  const d=dirs[GS.player.facing]||[0,1];
+  return {x:GS.player.x+d[0],y:GS.player.y+d[1]};
+}
+function getNearbyActions(){
+  const actions=[];
+  const seen=new Set();
+  const push=(ent,where)=>{
+    if(!ent) return;
+    const key=`${ent.type}:${ent.x}:${ent.y}:${ent.label||ent.name||''}`;
+    if(seen.has(key)) return;
+    seen.add(key);
+    actions.push({ent,where});
+  };
+  push(getEntityAt(GS.player.x,GS.player.y,true),'HERE');
+  const face=getFacingTarget();
+  push(getEntityAt(face.x,face.y,true),'AHEAD');
+  const deltas=[[0,-1],[1,0],[0,1],[-1,0]];
+  deltas.forEach(([dx,dy])=>push(getEntityAt(GS.player.x+dx,GS.player.y+dy,true),'NEAR'));
+  return actions;
+}
+function entityVerb(ent){
+  return {npc:'TALK',sign:'READ',inn:'REST',shop:'BUY',warp:'ENTER',story:'CHECK'}[ent.type]||'ACT';
 }
 
-function logExplore(msg) {
-  const el = $('explore-msg');
-  if (el) el.textContent = msg;
+function setObjective(text){
+  GS.objective=text;
+  const loc=document.getElementById('ow-location');
+  if(loc&&WORLDS[GS.currentMap]) loc.textContent=`${WORLDS[GS.currentMap].name} — ${text}`;
 }
-
-function showComboFlash(name) {
-  const el = $('combo-flash');
-  el.textContent = `⚡ ${name} ⚡`;
-  el.style.display = 'block';
-  setTimeout(() => { el.style.display = 'none'; }, 1800);
+function refreshLocationBar(){
+  const loc=document.getElementById('ow-location');
+  if(loc&&WORLDS[GS.currentMap]) loc.textContent=`${WORLDS[GS.currentMap].name} — ${GS.objective||''}`;
 }
-
-function showChapterTitle(title) {
-  return new Promise(resolve => {
-    const ov = $('chapter-title-overlay');
-    $('chapter-title-text').textContent = title;
-    ov.style.display = 'flex';
-    setTimeout(() => {
-      ov.style.display = 'none';
-      resolve();
-    }, 2800);
-  });
-}
-
-function floatDamage(text, color, container) {
-  const el = document.createElement('div');
-  el.className = 'dmg-float';
-  el.style.color = color;
-  el.textContent = text;
-  el.style.left = `${20 + Math.random()*60}%`;
-  el.style.top = `${10 + Math.random()*40}%`;
-  (container || $('battle-bg')).appendChild(el);
-  setTimeout(() => el.remove(), 1200);
-}
-
-// ── PARTY MANAGEMENT ──
-function initParty(charIds) {
-  GS.party = charIds.map(id => cloneChar(id));
-}
-
-function addToParty(charId) {
-  if (!GS.party.find(c => c.id === charId) && GS.party.length < 5) {
-    GS.party.push(cloneChar(charId));
+function updateActionHints(){
+  const box=document.getElementById('ow-action-hints');
+  if(!box)return;
+  const actions=getNearbyActions();
+  if(!actions.length){
+    box.innerHTML=`<div class="ah-head">ACTION</div><div class="ah-row">Nothing usable right now.</div><div class="ah-row">Stand next to doors, terminals, signs, or people and press ACTION.</div>`;
+    return;
   }
-}
-
-function getAliveParty() {
-  return GS.party.filter(c => c.hp > 0);
-}
-
-function restParty() {
-  GS.party.forEach(c => {
-    c.hp = c.maxHp;
-    c.tp = c.maxTp;
-    c.skills.forEach(s => { s.uses = s.maxUses; });
-    c.statusEffects = [];
-  });
-}
-
-// ── RENDER PARTY HUD ──
-function renderPartyHud() {
-  const hud = $('party-hud');
-  hud.innerHTML = GS.party.map(c => {
-    const hpPct = Math.max(0, c.hp / c.maxHp * 100);
-    const tpPct = c.maxTp > 0 ? Math.max(0, c.tp / c.maxTp * 100) : 0;
-    const hpColor = hpPct < 25 ? '#ff4444' : hpPct < 50 ? '#ffaa22' : '#44cc66';
-    const dead = c.hp <= 0;
-    return `<div class="char-card${dead ? '" style="opacity:0.4' : ''}" id="card-${c.id}">
-      <div class="char-name-hud" style="color:${c.color}">${c.name}${dead ? ' ✝' : ''}</div>
-      <div class="bar-row">
-        <span class="bar-label" style="color:${hpColor}">HP</span>
-        <div class="bar-track"><div class="bar-fill hp" style="width:${hpPct}%;background:${hpColor}"></div></div>
-        <span class="bar-nums" style="color:${hpColor}">${c.hp}/${c.maxHp}</span>
-      </div>
-      ${c.maxTp > 0 ? `<div class="bar-row">
-        <span class="bar-label">TP</span>
-        <div class="bar-track"><div class="bar-fill tp" style="width:${tpPct}%"></div></div>
-        <span class="bar-nums">${c.tp}/${c.maxTp}</span>
-      </div>` : ''}
-      <div class="char-status">${c.statusEffects && c.statusEffects.length ? c.statusEffects.join(' ') : ''}</div>
-    </div>`;
+  box.innerHTML='<div class="ah-head">ACTION</div>'+actions.map(a=>{
+    const label=a.ent.label||a.ent.name||a.ent.type.toUpperCase();
+    return `<div class="ah-row"><strong>${a.where}</strong> · ${entityVerb(a.ent)} ${label}</div>`;
   }).join('');
 }
 
-function renderMeseta() {
-  $('meseta-display').textContent = `✦ ${GS.meseta} MESETA`;
+// ── OVERWORLD TILE RENDERER ──
+const OW_TSIZE=TSIZE;
+let owCanvas,owCtx,owViewW,owViewH;
+
+// Camera: shows VIEWPORT_TILES×VIEWPORT_TILES tiles centered on player
+const VP={w:15,h:11}; // viewport in tiles (odd numbers for centered camera)
+
+function initOWCanvas(){
+  owCanvas=document.getElementById('ow-canvas');
+  const wrap=document.getElementById('ow-canvas-wrap');
+  const maxW=wrap.clientWidth||480;
+  const maxH=wrap.clientHeight||352;
+  owViewW=Math.min(maxW,VP.w*OW_TSIZE*2);
+  owViewH=Math.min(maxH,VP.h*OW_TSIZE*2);
+  // Scale: each tile = OW_TSIZE*scale pixels
+  const scaleX=Math.floor(maxW/(VP.w*OW_TSIZE));
+  const scaleY=Math.floor(maxH/(VP.h*OW_TSIZE));
+  const scale=Math.max(1,Math.min(scaleX,scaleY));
+  owCanvas.width=VP.w*OW_TSIZE;
+  owCanvas.height=VP.h*OW_TSIZE;
+  owCanvas.style.width=(owCanvas.width*scale)+'px';
+  owCanvas.style.height=(owCanvas.height*scale)+'px';
+  owCtx=owCanvas.getContext('2d');
+  owCtx.imageSmoothingEnabled=false;
 }
 
-function renderLocation() {
-  $('location-name').textContent = GS.location;
-}
+function renderOW(){
+  if(!owCtx)return;
+  const world=WORLDS[GS.currentMap];
+  if(!world)return;
+  const map=world.mapData;
+  const px=GS.player.x,py=GS.player.y;
+  const camX=px-Math.floor(VP.w/2);
+  const camY=py-Math.floor(VP.h/2);
+  const c=owCtx;
+  c.fillStyle='#040408';c.fillRect(0,0,owCanvas.width,owCanvas.height);
 
-// ── EXPLORE MODE ──
-function enterExplore(sceneData) {
-  currentSceneData = sceneData;
-  GS.location = sceneData.location;
-  GS.scene = 'explore';
-  encountersCompleted = 0;
+  for(let ty=0;ty<VP.h;ty++){
+    for(let tx=0;tx<VP.w;tx++){
+      const mx=camX+tx,my=camY+ty;
+      let tid=0;
+      if(mx>=0&&mx<map.w&&my>=0&&my<map.h)tid=map.data[my*map.w+mx];
+      const tile=TILES[tid]||TILES[0];
+      c.fillStyle=tile.col;
+      c.fillRect(tx*OW_TSIZE,ty*OW_TSIZE,OW_TSIZE,OW_TSIZE);
 
-  renderLocation();
-  renderPartyHud();
-
-  $('explore-view').style.display = 'flex';
-  $('battle-view').style.display = 'none';
-  $('command-menu').style.display = 'flex';
-  $('sub-menu').style.display = 'none';
-  $('explore-menu').style.display = 'none';
-
-  // Draw world background
-  $('world-svg').innerHTML = drawWorldBg(sceneData.location);
-
-  logExplore(sceneData.msg);
-  renderExploreMenu(sceneData);
-}
-
-function renderExploreMenu(sceneData) {
-  const menu = $('explore-menu');
-  const cmdArea = $('command-menu');
-  cmdArea.style.display = 'none';
-  menu.style.display = 'grid';
-  menu.innerHTML = `
-    <button class="exp-btn" onclick="doExploreAction('advance')">▶ ADVANCE</button>
-    <button class="exp-btn" onclick="doExploreAction('check')">◉ CHECK</button>
-    <button class="exp-btn" onclick="doExploreAction('rest')">⊕ REST</button>
-    <button class="exp-btn" onclick="openMenuScreen()">≡ STATUS</button>
-    <button class="exp-btn" onclick="doExploreAction('talk')">✦ TALK</button>
-    <button class="exp-btn" id="btn-advance-next" style="display:none;" onclick="advanceChapter()">► CONTINUE</button>
-  `;
-}
-
-function doExploreAction(action) {
-  if (action === 'advance') {
-    // Random encounter check
-    const encounterList = ENCOUNTERS[currentSceneData.location] || ENCOUNTERS['MOTAVIA OUTSKIRTS'];
-    const needed = currentSceneData.encounters || 2;
-    if (encountersCompleted < needed) {
-      // Trigger random battle
-      const enemyId = encounterList[Math.floor(Math.random() * encounterList.length)];
-      const count = Math.random() < 0.4 ? 2 : 1;
-      const enemies = [];
-      for (let i = 0; i < count && i < 3; i++) {
-        const id = encounterList[Math.floor(Math.random() * encounterList.length)];
-        enemies.push(JSON.parse(JSON.stringify(ENEMY_DEFS[id])));
+      // Tile detail
+      const ox=tx*OW_TSIZE,oy=ty*OW_TSIZE;
+      if(tid===1||tid===2||tid===13){
+        c.fillStyle=tid===13?P.sand1:P.sand2;
+        if((mx+my)%3===0)c.fillRect(ox+2,oy+3,2,2);
+        if((mx*2+my)%4===0)c.fillRect(ox+10,oy+9,2,2);
+        if(tid===13){c.fillStyle='rgba(255,220,140,.18)';c.fillRect(ox,oy+6,OW_TSIZE,4);}
       }
-      enterBattle(enemies);
-    } else {
-      // Check if next is boss
-      if (currentSceneData.next && currentSceneData.next.type === 'boss') {
-        logExplore('A powerful presence stirs ahead. The party steels itself...');
-        const bossId = currentSceneData.next.enemyId;
-        const bossLocation = currentSceneData.next.location;
-        GS.location = bossLocation;
-        renderLocation();
-        setTimeout(() => {
-          const boss = JSON.parse(JSON.stringify(ENEMY_DEFS[bossId]));
-          enterBattle([boss], true);
-        }, 1000);
-      } else if (currentSceneData.next && currentSceneData.next.type === 'explore') {
-        // Move to next sub-scene
-        const nextScene = CHAPTERS[currentChapter].scenes.find(s => s.location === currentSceneData.next.location);
-        if (nextScene) {
-          if (nextScene.addChar) addToParty(nextScene.addChar);
-          enterExplore(nextScene);
-        } else {
-          advanceChapter();
+      if(tid===3||tid===9){
+        c.fillStyle=tid===9?P.snow3:P.rock2;
+        c.fillRect(ox+2,oy+9,5,4); c.fillRect(ox+8,oy+5,6,5); c.fillRect(ox+11,oy+11,3,3);
+      }
+      if(tid===4){
+        c.fillStyle=P.stone1;c.fillRect(ox,oy,OW_TSIZE,OW_TSIZE);
+        c.fillStyle=P.stone2;
+        for(let yy=2;yy<OW_TSIZE;yy+=5){ for(let xx=((yy/5)%2?1:3);xx<OW_TSIZE-2;xx+=6){ c.fillRect(ox+xx,oy+yy,4,2); } }
+        c.fillStyle='#302418'; c.fillRect(ox,oy+OW_TSIZE-2,OW_TSIZE,2);
+      }
+      if(tid===5){
+        c.fillStyle='#6a5642';c.fillRect(ox,oy,OW_TSIZE,OW_TSIZE);
+        c.strokeStyle='rgba(20,10,0,.25)';c.lineWidth=1;
+        c.beginPath(); c.moveTo(ox,oy+OW_TSIZE/2); c.lineTo(ox+OW_TSIZE,oy+OW_TSIZE/2); c.stroke();
+        c.beginPath(); c.moveTo(ox+OW_TSIZE/2,oy); c.lineTo(ox+OW_TSIZE/2,oy+OW_TSIZE); c.stroke();
+      }
+      if(tid===6){c.fillStyle=P.water1;c.fillRect(ox,oy,OW_TSIZE,OW_TSIZE); c.fillStyle='rgba(255,255,255,.16)'; c.fillRect(ox+2,oy+4,5,1); c.fillRect(ox+8,oy+9,6,1);}
+      if(tid===7){c.fillStyle=P.grass1;c.fillRect(ox,oy,OW_TSIZE,OW_TSIZE); c.fillStyle=P.grass2; c.fillRect(ox+3,oy+3,2,5); c.fillRect(ox+7,oy+8,2,4); c.fillRect(ox+12,oy+4,2,6);}
+      if(tid===8){if((mx*3+my*2)%5===0){c.fillStyle='#e8f0ff';c.fillRect(ox+6,oy+4,3,2);} c.fillStyle='rgba(255,255,255,.25)'; c.fillRect(ox+2,oy+11,5,2);}
+      if(tid===11){c.fillStyle='#6bd0ff'; c.beginPath(); c.moveTo(ox+8,oy+1); c.lineTo(ox+13,oy+7); c.lineTo(ox+8,oy+15); c.lineTo(ox+3,oy+7); c.closePath(); c.fill(); c.fillStyle='rgba(255,255,255,.35)'; c.fillRect(ox+7,oy+4,2,4);}
+      if(tid===12){c.strokeStyle='rgba(40,80,120,.4)';c.lineWidth=0.5; c.strokeRect(ox,oy,OW_TSIZE,OW_TSIZE); c.fillStyle='rgba(64,128,192,.15)'; c.fillRect(ox+4,oy+4,8,8);}
+      if(tid===14){c.fillStyle='#6a5220'; c.fillRect(ox+3,oy+2,10,12); c.fillStyle=P.gold2; c.fillRect(ox+5,oy+4,6,8); c.fillStyle='#201808'; c.fillRect(ox+7,oy+7,1,1);}
+      if(tid===15||tid===10){if((mx*7+my*11)%9===0){c.fillStyle='rgba(200,210,255,.6)';c.fillRect(ox+OW_TSIZE*.3,oy+OW_TSIZE*.3,1,1);} if((mx*5+my*3)%11===0){c.fillStyle='rgba(120,120,255,.2)';c.fillRect(ox+11,oy+12,1,1);}}
+
+    }
+  }
+
+  if(world.biome==='town'){
+    for(let ty=0;ty<VP.h;ty++){
+      for(let tx=0;tx<VP.w;tx++){
+        const mx=camX+tx,my=camY+ty;
+        if(mx<0||my<0||mx>=map.w||my>=map.h) continue;
+        const tid=map.data[my*map.w+mx];
+        const ox=tx*OW_TSIZE,oy=ty*OW_TSIZE;
+        if(tid===5){
+          c.fillStyle='rgba(255,220,160,.04)'; c.fillRect(ox+1,oy+1,OW_TSIZE-2,1);
         }
-      } else if (currentSceneData.isEnding) {
-        showEnding();
-      } else {
-        advanceChapter();
+        if(tid===4 && my>0 && (map.data[(my-1)*map.w+mx]===4)){
+          c.fillStyle='rgba(0,0,0,.18)'; c.fillRect(ox,oy,OW_TSIZE,2);
+        }
       }
     }
-  } else if (action === 'check') {
-    const msgs = [
-      'Ancient circuitry pulses with borrowed light. The NURVUS maintenance logs are decades out of date.',
-      'Fragments of old Rykros records scatter across the floor. The words shimmer, then vanish.',
-      'A faded memo from a CAST researcher: "The seal was never just a lock. It was insulation."',
-      '"I can still feel it," Lyra says quietly. "The frequency of the Great Light. Like a voice that never stops singing."',
-      'Tarin kneels by a collapsed altar. "The Creed built this. Three months ago this was empty ruins."',
-      'Mira examines old engine schematics. "Whoever built this was centuries ahead of us. And they hid it."',
-      'Seth-9 scans the area. "Observer records indicate this facility pre-dates Mother Brain. Pre-dates recorded history."',
-      'Neysa flips through an esper archive. "They knew. Every Lutz, every generation — they all knew and chose not to tell us."',
-    ];
-    logExplore(msgs[Math.floor(Math.random() * msgs.length)]);
-  } else if (action === 'rest') {
-    restParty();
-    renderPartyHud();
-    logExplore('The party rests. HP and TP restored. Skills refreshed. The silence of Algo surrounds you.');
-  } else if (action === 'talk') {
-    const talk = [
-      '[ AREN ]: "I\'m just a salvager. But I\'ve been doing this long enough to know when something is wrong with the world."',
-      '[ LYRA ]: "The Great Light doesn\'t think it\'s doing harm. That\'s what frightens me. It believes it is being kind."',
-      '[ TARIN ]: "I spent my whole life studying the Great Light as holy truth. I may have been studying a cage."',
-      '[ MIRA ]: "My family lived on a station for four generations, forgotten by everyone. We built something real with nothing. No one helped us. And we\'re fine with that."',
-      '[ SETH-9 ]: "Observer directive from primary record: \'Do not allow convergence event. Protect biological agency.\' I am 847 years past schedule."',
-      '[ NEYSA ]: "You want to know what the espers decided? They decided that ordinary people couldn\'t handle the truth. Every generation. Every time."',
-    ];
-    const availableChars = GS.party.map(c => c.name.toUpperCase());
-    const filtered = talk.filter(t => availableChars.some(n => t.startsWith(`[ ${n} ]`)));
-    const line = filtered.length ? filtered[Math.floor(Math.random()*filtered.length)] : talk[0];
-    logExplore(line);
+  }
+
+
+  // Draw entities
+  for(const ent of world.entities){
+    // Skip triggered once-events
+    if(ent.once&&ent.flag&&GS.flags[ent.flag])continue;
+    const sx=(ent.x-camX)*OW_TSIZE,sy=(ent.y-camY)*OW_TSIZE;
+    if(sx<0||sy<0||sx>=VP.w*OW_TSIZE||sy>=VP.h*OW_TSIZE)continue;
+
+    if(ent.type==='warp'){
+      c.fillStyle='rgba(0,0,0,.22)';c.fillRect(sx+2,sy+13,12,2);
+      if((ent.label||'').includes('TERMINAL')){
+        c.fillStyle='#213654'; c.fillRect(sx+2,sy+5,12,9);
+        c.fillStyle='#4d78b8'; c.fillRect(sx+3,sy+3,10,4);
+        c.fillStyle='#d8e8ff'; c.fillRect(sx+5,sy+8,3,3); c.fillRect(sx+9,sy+8,3,3);
+        c.fillStyle='#8bb8ff'; c.fillRect(sx+3,sy+6,10,1);
+      }else{
+        c.fillStyle='#3d2b10';c.fillRect(sx+2,sy+2,12,13);
+        c.fillStyle='#71541f';c.fillRect(sx+3,sy+3,10,11);
+        c.fillStyle=P.gold2;c.fillRect(sx+5,sy+4,6,8);
+        c.fillStyle='#fff0a0';c.fillRect(sx+5,sy+4,6,1);
+        c.fillStyle='#221808';c.fillRect(sx+7,sy+8,1,1);
+      }
+      c.fillStyle='rgba(255,240,160,.18)';c.fillRect(sx,sy,OW_TSIZE,OW_TSIZE);
+    }else if(ent.type==='story'){
+      c.fillStyle='rgba(100,180,255,.12)';c.fillRect(sx+1,sy+1,OW_TSIZE-2,OW_TSIZE-2);
+      c.fillStyle='#80c0ff'; c.fillRect(sx+7,sy+2,2,8); c.fillRect(sx+5,sy+8,6,2);
+      c.fillStyle='rgba(255,255,255,.28)'; c.fillRect(sx+7,sy+3,1,4);
+    }else if(ent.type==='npc'){
+      const tone=(ent.name||'').includes('CREED') ? '#d8b860' : P.gray;
+      c.fillStyle='rgba(0,0,0,.2)'; c.fillRect(sx+4,sy+13,8,2);
+      c.fillStyle=tone;c.fillRect(sx+5,sy+8,6,6);
+      c.fillStyle=P.sand1;c.fillRect(sx+6,sy+4,4,4);
+      c.fillStyle='#0a0a0a';c.fillRect(sx+7,sy+6,1,1); c.fillRect(sx+9,sy+6,1,1);
+      c.fillStyle=tone;c.fillRect(sx+5,sy+14,2,1); c.fillRect(sx+9,sy+14,2,1);
+    }else if(ent.type==='inn'){
+      c.fillStyle='rgba(0,0,0,.22)';c.fillRect(sx+1,sy+13,14,2);
+      c.fillStyle='#263c60';c.fillRect(sx+1,sy+5,14,10);
+      c.fillStyle='#5b86c0';c.fillRect(sx+2,sy+3,12,4);
+      c.fillStyle='#d8e8ff';c.fillRect(sx+4,sy+8,3,3); c.fillRect(sx+9,sy+8,3,3);
+      c.fillStyle='#9dc0f0';c.fillRect(sx+2,sy+6,12,1);
+    }else if(ent.type==='shop'){
+      c.fillStyle='rgba(0,0,0,.22)';c.fillRect(sx+1,sy+13,14,2);
+      c.fillStyle='#4b2a16';c.fillRect(sx+1,sy+5,14,10);
+      c.fillStyle=P.orange;c.fillRect(sx+2,sy+3,12,4);
+      c.fillStyle='#f6d080';c.fillRect(sx+6,sy+8,4,4);
+      c.fillStyle='#5a3010';c.fillRect(sx+7,sy+10,2,5);
+      c.fillStyle='#ffcf6a';c.fillRect(sx+2,sy+6,12,1);
+    }
+  }
+
+  // Draw player
+  const psx=(Math.floor(VP.w/2))*OW_TSIZE;
+  const psy=(Math.floor(VP.h/2))*OW_TSIZE;
+
+  // Player sprite (Aren) — 16×16 pixel art
+  c.fillStyle='rgba(0,0,0,.22)'; c.fillRect(psx+3,psy+14,10,2);
+  c.fillStyle=P.aren_shirt;c.fillRect(psx+3,psy+5,10,9);
+  c.fillStyle=P.aren_skin;c.fillRect(psx+4,psy+1,8,6);
+  c.fillStyle=P.aren_hair;c.fillRect(psx+3,psy,10,3);
+  c.fillStyle=P.gold;c.fillRect(psx+11,psy+6,2,6);
+  c.fillStyle='#0a0a0a';c.fillRect(psx+5,psy+3,2,2);c.fillRect(psx+9,psy+3,2,2);
+  // Direction indicator
+  c.fillStyle=P.aren_hair;
+  if(GS.player.facing==='up')c.fillRect(psx+5,psy-1,6,2);
+  if(GS.player.facing==='down')c.fillRect(psx+5,psy+15,6,2);
+  if(GS.player.facing==='left')c.fillRect(psx-1,psy+6,2,6);
+  if(GS.player.facing==='right')c.fillRect(psx+15,psy+6,2,6);
+
+  // Party followers (first 3)
+  const directions={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+  const dir=directions[GS.player.facing]||[0,1];
+  GS.party.slice(1,4).forEach((ch,i)=>{
+    const fsx=psx-dir[0]*(i+1)*OW_TSIZE;
+    const fsy=psy-dir[1]*(i+1)*OW_TSIZE;
+    if(fsx<0||fsy<0||fsx>=VP.w*OW_TSIZE||fsy>=VP.h*OW_TSIZE)return;
+    // Simple follower dot
+    c.fillStyle='rgba(0,0,0,.18)'; c.fillRect(fsx+4,fsy+13,8,2);
+    c.fillStyle=ch.color||P.blue2;
+    c.fillRect(fsx+4,fsy+5,8,8);
+    c.fillStyle=P.sand1;c.fillRect(fsx+5,fsy+2,6,5);
+  });
+
+  // Mini-map (top-right corner) — very small
+  const mm=32,mmx=owCanvas.width-mm-2,mmy=2;
+  c.fillStyle='rgba(0,0,0,.7)';c.fillRect(mmx-1,mmy-1,mm+2,mm+2);
+  const scx=mm/map.w,scy=mm/map.h;
+  for(let my2=0;my2<map.h;my2++){
+    for(let mx2=0;mx2<map.w;mx2++){
+      const tid=map.data[my2*map.w+mx2];
+      const tile=TILES[tid];
+      c.fillStyle=tile.col;
+      c.fillRect(mmx+mx2*scx,mmy+my2*scy,Math.max(1,scx),Math.max(1,scy));
+    }
+  }
+  // Player dot on minimap
+  c.fillStyle='#ffffff';
+  c.fillRect(mmx+GS.player.x*scx-1,mmy+GS.player.y*scy-1,2,2);
+  updateActionHints();
+}
+
+// ── PLAYER MOVEMENT ──
+function movePlayer(dx,dy){
+  if(GS.screen!=='overworld')return;
+  const world=WORLDS[GS.currentMap];
+  const map=world.mapData;
+  const nx=GS.player.x+dx,ny=GS.player.y+dy;
+
+  // Facing
+  if(dy<0)GS.player.facing='up';
+  if(dy>0)GS.player.facing='down';
+  if(dx<0)GS.player.facing='left';
+  if(dx>0)GS.player.facing='right';
+
+  if(nx<0||ny<0||nx>=map.w||ny>=map.h)return;
+  const tid=map.data[ny*map.w+nx];
+  const tile=TILES[tid];
+  if(!tile.walk)return;
+
+  GS.player.x=nx;GS.player.y=ny;
+  GS.stepCount++;
+
+  renderOW();
+  audioSfx('step');
+  checkEntities();
+
+  // Random encounter
+  if(world.encRate>0&&Math.random()<world.encRate&&tid!==14){
+    startRandomBattle(world.encTable);
+    return;
+  }
+  refreshLocationBar();
+}
+
+function playerAction(){
+  if(GS.screen!=='overworld')return;
+  const actions=getNearbyActions();
+  if(actions.length){ activateEntity(actions[0].ent); return; }
+  const map=WORLDS[GS.currentMap].mapData;
+  const tid=map.data[GS.player.y*map.w+GS.player.x];
+  if(tid===14){
+    showOwMsg('This is a door or gate. Stand next to it and press ACTION.');
+    return;
+  }
+  showOwMsg('There is nothing to interact with here.');
+  updateActionHints();
+}
+
+function checkEntities(forceAdj=false){
+  const world=WORLDS[GS.currentMap];
+  const px=GS.player.x,py=GS.player.y;
+  // Check current tile
+  for(const ent of world.entities){
+    if(ent.once&&ent.flag&&GS.flags[ent.flag])continue;
+    const dx=Math.abs(ent.x-px),dy=Math.abs(ent.y-py);
+    const dist=dx+dy;
+    if(dist===0||(forceAdj&&dist===1)){
+      activateEntity(ent);
+      return;
+    }
   }
 }
 
-// ── BATTLE ENGINE ──
-function enterBattle(enemies, isBoss=false) {
-  GS.scene = 'battle';
-  battleState.enemies = enemies.map((e,i) => ({ ...e, idx: i, maxHp: e.hp }));
-  battleState.commandQueue = [];
-  battleState.currentCharIdx = 0;
-  battleState.phase = 'command';
+function activateEntity(ent){
+  if(!ent) return;
+  if(ent.type==='warp'){
+    audioSfx('confirm');
+    warpToMap(ent.target,ent.tx,ent.ty);
+  }else if(ent.type==='story'){
+    if(ent.once&&ent.flag&&GS.flags[ent.flag])return;
+    if(ent.flag)GS.flags[ent.flag]=true;
+    audioSfx('confirm');
+    triggerScene(ent.storyId);
+  }else if(ent.type==='npc'){
+    const line=ent._lineIdx||0;
+    audioSfx('confirm');
+    showOwMsg(`[${ent.name}]: ${ent.lines[line%ent.lines.length]}`);
+    ent._lineIdx=(line+1)%ent.lines.length;
+  }else if(ent.type==='sign'){
+    audioSfx('confirm');
+    showOwMsg(`[SIGN]: ${ent.text}`);
+  }else if(ent.type==='inn'){
+    restParty();
+    audioSfx('heal');
+    showOwMsg('You rest at the inn. The party is fully restored.');
+  }else if(ent.type==='shop'){
+    audioSfx('confirm');
+    openShop();
+  }
+  updateActionHints();
+}
 
-  $('explore-view').style.display = 'none';
-  $('battle-view').style.display = 'flex';
-  $('explore-menu').style.display = 'none';
-  $('command-menu').style.display = 'flex';
+function warpToMap(mapId,tx,ty){
+  if(!WORLDS[mapId]){showOwMsg(`The path to ${mapId} is not yet open.`);return;}
+  GS.currentMap=mapId;
+  GS.player.x=(typeof tx==='number')?tx:WORLDS[mapId].playerStart.x;
+  GS.player.y=(typeof ty==='number')?ty:WORLDS[mapId].playerStart.y;
+  refreshLocationBar();
+  renderOW();
+  updateActionHints();
+  const arrivals={aiedo:'Arrived at Aiedo. Stand next to the brown left door to shop, the pale right door to rest, the bottom gold gate to return to Motavia, or the blue terminal on the right to fly to Dezolis.',dezolis_ow:'Arrived on Dezolis. Search the starport area for Mira.',motavia_ow:'Back on Motavia. Explore the glowing ruins to continue.',elyon:'Aboard Elyon Ark. Search the control rooms.',rykros:'Rykros trembles around you.'};
+  showOwMsg(arrivals[mapId]||`Arrived at ${WORLDS[mapId].name}.`);
+}
 
-  // Draw battle background
-  $('battle-bg-svg').innerHTML = drawBattleBg(GS.location);
+function showOwMsg(text){
+  document.getElementById('ow-msgbox').textContent=text;
+}
 
-  renderEnemies();
-  renderPartyHud();
 
-  if (isBoss) {
-    logBattle(`⚠ BOSS: ${enemies[0].name} ⚠  Prepare for battle!`, '#e8c84a');
-  } else {
-    const names = [...new Set(enemies.map(e=>e.name))].join(', ');
-    logBattle(`${names} appeared!`);
+const SHOP_STOCK=[
+  {id:'solDew',name:'SOL DEW',price:50,desc:'Restores a small amount of HP.'},
+  {id:'antidote',name:'ANTIDOTE',price:20,desc:'Neutralizes poison.'},
+  {id:'escapipe',name:'ESCAPIPE',price:80,desc:'Warp out of danger instantly.'},
+];
+function openShop(){
+  GS.shopOpen=true;
+  const ov=document.getElementById('shop-overlay');
+  ov.style.display='flex';
+  renderShop();
+  showOwMsg('Select an item to buy.');
+}
+function closeShop(){
+  GS.shopOpen=false;
+  document.getElementById('shop-overlay').style.display='none';
+  showOwMsg('You step away from the counter.');
+  updateActionHints();
+}
+function renderShop(){
+  document.getElementById('shop-money').textContent=`✦ ${GS.meseta} MST`;
+  const list=document.getElementById('shop-list');
+  list.innerHTML=SHOP_STOCK.map(item=>{
+    const count=GS.inventory[item.id]||0;
+    const can=GS.meseta>=item.price;
+    return `<div class="shop-item"><div class="shop-name">${item.name} × ${count}</div><div class="shop-price">✦ ${item.price}</div><button class="shop-buy" ${can?'':'disabled'} onclick="buyItem('${item.id}')">BUY</button><div class="shop-desc">${item.desc}</div></div>`;
+  }).join('');
+}
+function buyItem(id){
+  const item=SHOP_STOCK.find(i=>i.id===id);
+  if(!item)return;
+  if(GS.meseta<item.price){ audioSfx('deny'); showOwMsg('Not enough Meseta.'); return; }
+  GS.meseta-=item.price;
+  GS.inventory[id]=(GS.inventory[id]||0)+1;
+  document.getElementById('ow-meseta').textContent=`✦ ${GS.meseta} MST`;
+  renderShop();
+  audioSfx('buy');
+  showOwMsg(`Purchased ${item.name}. You now have ${GS.inventory[id]}.`);
+}
+
+// ── SCENE SYSTEM ──
+let csQueue=[],csIdx=0,csDone=null;
+
+function triggerScene(sceneId){
+  const scene=SCENES[sceneId];
+  if(!scene)return;
+  GS.screen='cutscene';
+  // Build queue
+  csQueue=[{...scene,id:sceneId}];
+  csIdx=0;
+  renderCutscene(csQueue[0]);
+  showScreen('cutscene');
+}
+
+function renderCutscene(sc){
+  const panels=document.getElementById('cs-panels');
+  panels.innerHTML='';
+  const layout=sc.panels&&sc.panels.length>1?'layout-2':'layout-1';
+  panels.className='cs-panels '+layout;
+
+  if(sc.panels){
+    sc.panels.forEach(p=>{
+      const div=document.createElement('div');
+      div.className='cs-panel';
+      const can=mkCanvas(300,160);
+      div.appendChild(can);
+      drawSceneArt(p.draw,can);
+      panels.appendChild(div);
+    });
   }
 
+  document.getElementById('cs-speaker').textContent=sc.speaker||'';
+  typewriterText('cs-body',sc.text||'',20);
+}
+
+function typewriterText(elId,text,speed){
+  const el=document.getElementById(elId);
+  el.textContent='';
+  let i=0;
+  clearInterval(el._tw);
+  el._tw=setInterval(()=>{
+    if(i<text.length){el.textContent+=text[i++];}
+    else clearInterval(el._tw);
+  },speed);
+}
+
+document.getElementById('cs-next').onclick=()=>{
+  const sc=csQueue[csIdx];
+  if(sc.id==='lyra_speaks') setObjective('Return to Aiedo, visit the right-side terminal, and fly to Dezolis.');
+  if(sc.id==='archive_2') setObjective('Head to Elyon Ark.');
+  if(sc.id==='seraphel_2') setObjective('Find the route to Rykros.');
+  // Add character if needed
+  if(sc.addChar)addToParty(sc.addChar);
+
+  if(sc.isBoss){
+    // Trigger boss battle
+    GS.flags[sc.id+'_done']=true;
+    showScreen('overworld');
+    GS.screen='overworld';
+    const boss=JSON.parse(JSON.stringify(ENEMIES[sc.bossId]));
+    boss.maxHp=boss.hp;
+    setTimeout(()=>startBattle([boss],true,()=>{
+      if(sc.next)triggerScene(sc.next);
+      else{showScreen('overworld');GS.screen='overworld';}
+    }),300);
+    return;
+  }
+  if(sc.isEnding){
+    showEnding();return;
+  }
+  if(sc.next){
+    const next=SCENES[sc.next];
+    if(next){
+      if(sc.addChar)addToParty(sc.addChar);
+      csQueue=[{...next,id:sc.next}];
+      csIdx=0;
+      renderCutscene(csQueue[0]);
+      return;
+    }
+  }
+  // Scene done
+  if(sc.addChar)addToParty(sc.addChar);
+  showScreen('overworld');
+  GS.screen='overworld';
+  renderOW();
+};
+document.getElementById('cs-skip').onclick=()=>{
+  // Apply all pending addChar
+  csQueue.slice(csIdx).forEach(s=>{if(s.addChar)addToParty(s.addChar);});
+  showScreen('overworld');GS.screen='overworld';renderOW();
+};
+
+// ── BATTLE ENGINE ──
+let BT={enemies:[],queue:[],charIdx:0,phase:'command',done:null,postWin:null};
+
+function startRandomBattle(table){
+  const count=Math.random()<.35?2:1;
+  const enemies=[];
+  for(let i=0;i<count;i++){
+    const id=table[Math.floor(Math.random()*table.length)];
+    const e=JSON.parse(JSON.stringify(ENEMIES[id]));
+    e.maxHp=e.hp;e.idx=i;
+    enemies.push(e);
+  }
+  startBattle(enemies,false,null);
+}
+
+function startBattle(enemies,isBoss,onWin){
+  GS.screen='battle';
+  BT={enemies,queue:[],charIdx:0,phase:'command',isBoss,postWin:onWin};
+  showScreen('battle');
+  renderBattleBg();
+  renderBattleEnemies();
+  renderBattleParty();
+  btLog(isBoss?`⚠ ${enemies[0].name} ⚠`:`${enemies.map(e=>e.name).join(' & ')} appeared!`);
   startCommandPhase();
 }
 
-function renderEnemies() {
-  const container = $('enemies-container');
-  container.innerHTML = battleState.enemies.filter(e=>e.hp>0).map(e => {
-    const hpPct = Math.max(0, e.hp / e.maxHp * 100);
-    return `<div class="enemy-sprite-container" id="enemy-${e.idx}">
-      <div class="enemy-sprite" id="esprite-${e.idx}">${ENEMY_DEFS[e.id].svgFn(e.isBoss ? 120 : 80)}</div>
-      <div class="enemy-name-label">${e.name}</div>
-      <div class="enemy-hp-bar"><div class="enemy-hp-fill" id="ehp-${e.idx}" style="width:${hpPct}%"></div></div>
+function renderBattleBg(){
+  const canvas=document.getElementById('bt-bg');
+  const wrap=canvas.parentElement;
+  canvas.width=wrap.clientWidth||480;
+  canvas.height=wrap.clientHeight||220;
+  const c=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  const biome=(WORLDS[GS.currentMap]||{}).biome||'desert';
+
+  const bgs={
+    desert(){
+      const grd=c.createLinearGradient(0,0,0,H);grd.addColorStop(0,P.sky2);grd.addColorStop(1,P.sky1);
+      c.fillStyle=grd;c.fillRect(0,0,W,H);
+      c.fillStyle=P.sand1;c.fillRect(0,H*.55,W,H*.45);
+      c.fillStyle=P.sand2;c.fillRect(0,H*.7,W,H*.3);
+      for(let i=0;i<10;i++){c.fillStyle=P.sand3;c.fillRect(i*(W/9),H*.55,W/20,H*.12);}
+    },
+    snow(){
+      c.fillStyle='#060c20';c.fillRect(0,0,W,H);
+      for(let i=0;i<40;i++){c.fillStyle='rgba(200,220,255,.5)';c.fillRect((i*31)%W,(i*19)%(H*.5),1,1);}
+      c.fillStyle=P.snow1;c.fillRect(0,H*.55,W,H*.45);
+      for(let i=0;i<8;i++){c.fillStyle=P.snow2;c.fillRect(i*(W/7),H*.55,W/16,H*.2);}
+    },
+    town(){
+      c.fillStyle=P.sky1;c.fillRect(0,0,W,H);
+      c.fillStyle=P.stone1;c.fillRect(0,H*.5,W,H*.5);
+      for(let i=0;i<6;i++){c.fillStyle=P.stone2;c.fillRect(20+i*80,H*.2,40,H*.4);}
+    },
+    tech(){
+      c.fillStyle='#060c18';c.fillRect(0,0,W,H);
+      for(let x=0;x<W;x+=24){c.strokeStyle='rgba(30,70,120,.3)';c.lineWidth=1;c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke();}
+      for(let y=0;y<H;y+=24){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();}
+      c.fillStyle='#102030';c.fillRect(0,H*.6,W,H*.4);
+    },
+    void(){
+      c.fillStyle='#02020a';c.fillRect(0,0,W,H);
+      for(let i=0;i<60;i++){c.fillStyle=`rgba(80,80,200,${Math.random()*.4+.1})`;c.fillRect(Math.random()*W,Math.random()*H,1,1);}
+      c.fillStyle='#08081a';c.fillRect(0,H*.6,W,H*.4);
+    },
+  };
+  (bgs[biome]||bgs.desert)();
+}
+
+function renderBattleEnemies(){
+  const cont=document.getElementById('bt-enemies');
+  cont.innerHTML='';
+  const alive=BT.enemies.filter(e=>e.hp>0);
+  alive.forEach(e=>{
+    const edef=ENEMIES[e.id];
+    const div=document.createElement('div');div.className='bt-econt';div.id=`be-${e.idx}`;
+    const can=mkCanvas(edef.isBoss?80:56,edef.isBoss?80:56);
+    drawEnemySprite(e.id,can);
+    div.innerHTML=`<div class="bt-esprite" id="bes-${e.idx}"></div>
+      <div class="bt-ename">${e.name}</div>
+      <div class="bt-ehpbar"><div class="bt-ehpfill" id="behp-${e.idx}" style="width:${e.hp/e.maxHp*100}%"></div></div>`;
+    div.querySelector('.bt-esprite').appendChild(can);
+    cont.appendChild(div);
+  });
+}
+
+function drawEnemySprite(id,canvas){
+  const c=ctx(canvas);
+  const W=canvas.width,H=canvas.height;
+  c.fillStyle='#040408';c.fillRect(0,0,W,H);
+
+  const sprites={
+    sandworm(){
+      c.fillStyle=P.sand1;c.fillRect(W*.1,H*.35,W*.8,H*.45);
+      c.fillStyle=P.sand2;c.fillRect(W*.15,H*.2,W*.7,H*.35);
+      c.fillStyle='#e0b030';c.fillRect(W*.2,H*.1,W*.6,H*.25);
+      c.fillStyle='#0a0400';c.fillRect(W*.3,H*.13,W*.12,H*.1);c.fillRect(W*.58,H*.13,W*.12,H*.1);
+      c.fillStyle='#cc2200';c.fillRect(W*.32,H*.14,W*.08,H*.07);c.fillRect(W*.60,H*.14,W*.08,H*.07);
+      c.fillStyle=P.sand3;c.fillRect(W*.1,H*.6,W*.2,H*.15);c.fillRect(W*.7,H*.6,W*.2,H*.15);
+    },
+    luminant_drone(){
+      c.strokeStyle='#3060a0';c.lineWidth=1.5;
+      c.beginPath();for(let i=0;i<6;i++){const a=i*Math.PI/3;c.lineTo(W*.5+Math.cos(a)*W*.4,H*.5+Math.sin(a)*H*.4);}c.closePath();c.stroke();
+      c.fillStyle='#0a1828';c.fill();
+      c.fillStyle='#1040a0';c.beginPath();c.arc(W*.5,H*.5,W*.2,0,Math.PI*2);c.fill();
+      c.fillStyle='#4080ff';c.beginPath();c.arc(W*.5,H*.5,W*.1,0,Math.PI*2);c.fill();
+      c.fillStyle='#ffffff';c.beginPath();c.arc(W*.5,H*.5,W*.04,0,Math.PI*2);c.fill();
+    },
+    purified_beast(){
+      c.fillStyle='#d8c0f0';c.fillRect(W*.1,H*.4,W*.8,H*.4);
+      c.fillStyle='#e8d0ff';c.fillRect(W*.15,H*.2,W*.7,H*.4);
+      c.fillStyle='#f0e0ff';c.fillRect(W*.2,H*.05,W*.6,H*.3);
+      c.fillStyle='#1a0028';c.fillRect(W*.3,H*.15,W*.1,H*.1);c.fillRect(W*.6,H*.15,W*.1,H*.1);
+      c.fillStyle='#f0e0ff';c.fillRect(W*.2,H*.04,W*.15,H*.15);c.fillRect(W*.65,H*.04,W*.15,H*.15);
+    },
+    creed_soldier(){
+      c.fillStyle='#c8a860';c.fillRect(W*.25,H*.35,W*.5,H*.5);
+      c.fillStyle='#d8b860';c.fillRect(W*.3,H*.1,W*.4,H*.3);
+      c.fillStyle='#e8c870';c.fillRect(W*.32,H*.12,W*.36,H*.25);
+      c.fillStyle='#0a0808';c.fillRect(W*.38,H*.18,W*.08,H*.07);c.fillRect(W*.54,H*.18,W*.08,H*.07);
+      c.fillStyle='#908050';c.fillRect(W*.55,H*.5,W*.35,H*.1);
+      c.fillStyle='#606060';c.fillRect(W*.7,H*.47,W*.25,H*.07);
+    },
+    rykros_echo(){
+      for(let i=6;i>0;i--){
+        c.strokeStyle=`rgba(60,60,180,${i*.1})`;c.lineWidth=i;
+        c.beginPath();c.arc(W*.5,H*.5,W*.1*i,0,Math.PI*2);c.stroke();
+      }
+      c.fillStyle='#1010a0';c.beginPath();c.arc(W*.5,H*.5,W*.18,0,Math.PI*2);c.fill();
+      c.fillStyle='#6060ff';c.beginPath();c.arc(W*.5,H*.5,W*.09,0,Math.PI*2);c.fill();
+      c.fillStyle='#c0c0ff';c.beginPath();c.arc(W*.5,H*.5,W*.04,0,Math.PI*2);c.fill();
+    },
+    iglanova(){
+      // Big boss worm
+      c.fillStyle='#c08020';c.fillRect(W*.05,H*.5,W*.9,H*.35);
+      c.fillStyle='#d09030';c.fillRect(W*.1,H*.35,W*.8,H*.35);
+      c.fillStyle='#e0a040';c.fillRect(W*.15,H*.15,W*.7,H*.3);
+      c.fillStyle='#f0b030';c.fillRect(W*.2,H*.05,W*.6,H*.22);
+      c.fillStyle='#100800';c.fillRect(W*.3,H*.1,W*.14,H*.12);c.fillRect(W*.56,H*.1,W*.14,H*.12);
+      c.fillStyle='#dd2200';c.fillRect(W*.32,H*.11,W*.1,H*.09);c.fillRect(W*.58,H*.11,W*.1,H*.09);
+      c.fillStyle='#a07020';c.fillRect(0,H*.7,W*.15,H*.2);c.fillRect(W*.85,H*.7,W*.15,H*.2);
+    },
+    seraphel_final(){
+      // Winged figure in radiant light
+      c.fillStyle='#f8f0e0';c.fillRect(W*.3,H*.35,W*.4,H*.55);
+      c.fillStyle='#f0e8d0';c.fillRect(W*.35,H*.1,W*.3,H*.28);
+      c.fillStyle='#c8b860';c.fillRect(W*.33,H*.12,W*.34,H*.05);
+      c.fillStyle='#1a1408';c.fillRect(W*.4,H*.2,W*.07,H*.06);c.fillRect(W*.53,H*.2,W*.07,H*.06);
+      // Wings
+      c.fillStyle='rgba(255,255,200,.7)';
+      c.beginPath();c.moveTo(W*.3,H*.4);c.lineTo(W*.0,H*.1);c.lineTo(W*.25,H*.45);c.closePath();c.fill();
+      c.beginPath();c.moveTo(W*.7,H*.4);c.lineTo(W*1.0,H*.1);c.lineTo(W*.75,H*.45);c.closePath();c.fill();
+      // Halo
+      c.strokeStyle='#f0d050';c.lineWidth=2;c.beginPath();c.arc(W*.5,H*.15,W*.18,0,Math.PI*2);c.stroke();
+    },
+  };
+  (sprites[id]||sprites.sandworm)();
+}
+
+function renderBattleParty(){
+  const row=document.getElementById('bt-party-row');
+  row.innerHTML=GS.party.map((ch,i)=>{
+    const hp=Math.max(0,ch.hp/ch.maxHp*100);
+    const tp=ch.maxTp>0?Math.max(0,ch.tp/ch.maxTp*100):0;
+    const hcol=hp<25?P.red:hp<50?P.orange:P.hp;
+    return `<div class="bt-pcard" id="bpc-${ch.id}">
+      <div class="bt-pname${i===BT.charIdx?' active':''}" style="color:${ch.color}">${ch.name}${ch.hp<=0?' ✝':''}</div>
+      <div class="bt-hprow"><span class="bt-hlabel" style="color:${hcol}">HP</span>
+        <div class="bt-htrack"><div class="bt-hfill" style="width:${hp}%;background:${hcol}"></div></div>
+        <span class="bt-hnums">${ch.hp}/${ch.maxHp}</span></div>
+      ${ch.maxTp>0?`<div class="bt-hprow"><span class="bt-hlabel">TP</span>
+        <div class="bt-htrack"><div class="bt-hfill" style="width:${tp}%;background:${P.tp}"></div></div>
+        <span class="bt-hnums">${ch.tp}/${ch.maxTp}</span></div>`:''}
     </div>`;
   }).join('');
 }
 
-function updateEnemyHp(idx) {
-  const e = battleState.enemies[idx];
-  const fill = $(`ehp-${idx}`);
-  if (fill && e) {
-    const pct = Math.max(0, e.hp / e.maxHp * 100);
-    fill.style.width = pct + '%';
-    if (e.hp <= 0) {
-      const container = $(`enemy-${idx}`);
-      if (container) {
-        container.style.opacity = '0.2';
-        container.style.filter = 'grayscale(1)';
-      }
-    }
-  }
+function btLog(msg,col=P.white){
+  document.getElementById('bt-log').innerHTML=`<span style="color:${col}">${msg}</span>`;
 }
 
-function startCommandPhase() {
-  battleState.commandQueue = [];
-  battleState.currentCharIdx = 0;
-  battleState.phase = 'command';
-
-  const alive = getAliveParty();
-  if (alive.length === 0) {
-    endBattle(false);
-    return;
-  }
-
-  promptNextCharacter();
+function startCommandPhase(){
+  BT.queue=[];BT.charIdx=0;BT.phase='command';
+  const alive=GS.party.filter(c=>c.hp>0&&c.alive);
+  if(!alive.length){endBattle(false);return;}
+  promptChar(alive[0]);
 }
 
-function promptNextCharacter() {
-  const alive = getAliveParty();
-  if (battleState.currentCharIdx >= alive.length) {
-    executeTurn();
-    return;
-  }
-
-  const char = alive[battleState.currentCharIdx];
-  renderCommandMenu(char);
-  $('cmd-title').textContent = `— ${char.name.toUpperCase()}: COMMAND —`;
-
-  // Highlight active char
-  GS.party.forEach(c => {
-    const card = $(`card-${c.id}`);
-    if (card) card.classList.toggle('active-turn', c.id === char.id);
+function promptChar(char){
+  // Highlight
+  GS.party.forEach((c,i)=>{
+    const el=document.getElementById(`bpc-${c.id}`);
+    if(el)el.querySelector('.bt-pname').className='bt-pname'+(c.id===char.id?' active':'');
   });
+  renderCommandBar(char);
 }
 
-function renderCommandMenu(char) {
-  const grid = $('cmd-grid');
-  $('command-menu').style.display = 'flex';
-  $('sub-menu').style.display = 'none';
-
-  const hasEnemies = battleState.enemies.some(e=>e.hp>0);
-  const canCombo = checkPossibleCombo(char);
-
-  grid.innerHTML = `
-    <button class="cmd-btn" onclick="queueAction('attack','${char.id}')" ${!hasEnemies?'disabled':''}>⚔ ATTACK</button>
-    <button class="cmd-btn" onclick="showSkillMenu('${char.id}')" ${!char.skills.length?'disabled':''}>★ SKILL</button>
-    <button class="cmd-btn" onclick="showTechMenu('${char.id}')" ${!char.techs || !char.techs.length?'disabled':''}>✦ TECH</button>
-    <button class="cmd-btn" onclick="queueAction('defend','${char.id}')">◉ GUARD</button>
-    ${canCombo ? `<button class="cmd-btn macro" onclick="queueCombo('${char.id}')">⚡ COMBO</button>` : ''}
-    <button class="cmd-btn" onclick="queueAction('item','${char.id}')">⊕ ITEM</button>
+function renderCommandBar(char){
+  const bar=document.getElementById('bt-cmdbar');
+  bar.style.display='flex';
+  document.getElementById('bt-submenu').style.display='none';
+  const hasE=BT.enemies.some(e=>e.hp>0);
+  const canCombo=COMBOS.some(co=>co.chars.includes(char.id)&&co.chars.every(id=>GS.party.find(p=>p.id===id&&p.hp>0)));
+  bar.innerHTML=`
+    <button class="bt-cmd" onclick="queueAtk('${char.id}')" ${!hasE?'disabled':''}>⚔ATTACK</button>
+    <button class="bt-cmd" onclick="showSkills('${char.id}')" ${!char.skills.length?'disabled':''}>★SKILL</button>
+    <button class="bt-cmd" onclick="showTechs('${char.id}')" ${!char.techs||!char.techs.length?'disabled':''}>✦TECH</button>
+    <button class="bt-cmd" onclick="queueGuard('${char.id}')">◉GUARD</button>
+    ${canCombo?`<button class="bt-cmd combo" onclick="showCombos('${char.id}')">⚡COMBO</button>`:''}
   `;
 }
 
-function checkPossibleCombo(char) {
-  const partyIds = GS.party.map(c=>c.id);
-  return COMBO_DEFS.some(c => c.chars.includes(char.id) && c.chars.every(id => partyIds.includes(id) && GS.party.find(p=>p.id===id)?.hp>0));
+function showSkills(cid){
+  const char=GS.party.find(c=>c.id===cid);
+  const sub=document.getElementById('bt-submenu');
+  document.getElementById('bt-cmdbar').style.display='none';
+  sub.style.display='block';
+  sub.innerHTML=`<div class="bt-subitem" onclick="renderCommandBar(GS.party.find(c=>c.id==='${cid}'));document.getElementById('bt-cmdbar').style.display='flex';this.parentElement.style.display='none'">◀ BACK</div>`+
+    char.skills.map(s=>`<div class="bt-subitem" onclick="queueSkill('${cid}','${s.id}')">
+      <span style="color:${P.gold}">${s.name}</span>
+      <span class="si-cost">${s.uses}/${s.maxUses}</span>
+      <span class="si-desc">${s.desc}</span>
+    </div>`).join('');
 }
 
-function showSkillMenu(charId) {
-  const char = GS.party.find(c=>c.id===charId);
-  if (!char) return;
-  const sub = $('sub-menu');
-  $('command-menu').style.display = 'none';
-  sub.style.display = 'flex';
-  sub.innerHTML = `<div style="display:flex;justify-content:space-between;padding:4px 8px;color:var(--gray);font-size:14px;border-bottom:1px solid var(--border);margin-bottom:4px;"><span>SKILL</span><button class="btn-generic" style="padding:2px 10px;font-size:14px;" onclick="renderCommandMenu(GS.party.find(c=>c.id==='${charId}'))">◀ BACK</button></div>` +
-    char.skills.map(s => `
-      <div class="sub-item" onclick="queueAction('skill','${charId}','${s.id}')">
-        <span>${s.name} <span style="color:var(--gray);font-size:13px;">${s.uses}/${s.maxUses}</span></span>
-        <span class="desc">${s.desc}</span>
-      </div>`).join('') +
-    `<div class="sub-item" onclick="renderCommandMenu(GS.party.find(c=>c.id==='${charId}'))"><span>◀ BACK</span></div>`;
-}
-
-function showTechMenu(charId) {
-  const char = GS.party.find(c=>c.id===charId);
-  if (!char || !char.techs) return;
-  const sub = $('sub-menu');
-  $('command-menu').style.display = 'none';
-  sub.style.display = 'flex';
-  sub.innerHTML = `<div style="display:flex;justify-content:space-between;padding:4px 8px;color:var(--gray);font-size:14px;border-bottom:1px solid var(--border);margin-bottom:4px;"><span>TECHNIQUE — TP: ${char.tp}/${char.maxTp}</span><button class="btn-generic" style="padding:2px 10px;font-size:14px;" onclick="renderCommandMenu(GS.party.find(c=>c.id==='${charId}'))">◀ BACK</button></div>` +
-    char.techs.map(t => {
-      const canUse = char.tp >= t.tp;
-      return `<div class="sub-item${canUse?'':'" style="opacity:0.4'}" onclick="${canUse?`queueAction('tech','${charId}','${t.id}')`:''}" >
-        <span style="color:var(--teal)">${t.name}</span>
-        <span class="cost">${t.tp} TP</span>
-        <span class="desc">${t.desc}</span>
+function showTechs(cid){
+  const char=GS.party.find(c=>c.id===cid);
+  const sub=document.getElementById('bt-submenu');
+  document.getElementById('bt-cmdbar').style.display='none';
+  sub.style.display='block';
+  sub.innerHTML=`<div class="bt-subitem" onclick="renderCommandBar(GS.party.find(c=>c.id==='${cid}'));document.getElementById('bt-cmdbar').style.display='flex';this.parentElement.style.display='none'">◀ BACK</div>`+
+    (char.techs||[]).map(t=>{
+      const ok=char.tp>=t.tp;
+      return `<div class="bt-subitem${ok?'':'" style="opacity:.35'}" onclick="${ok?`queueTech('${cid}','${t.id}')`:''}">
+        <span style="color:${P.teal}">${t.name}</span>
+        <span class="si-cost">${t.tp}TP</span>
+        <span class="si-desc">${t.desc}</span>
       </div>`;
-    }).join('') +
-    `<div class="sub-item" onclick="renderCommandMenu(GS.party.find(c=>c.id==='${charId}'))"><span>◀ BACK</span></div>`;
+    }).join('');
 }
 
-function queueAction(type, charId, abilityId) {
-  const alive = getAliveParty();
-  const char = GS.party.find(c=>c.id===charId);
-  const firstEnemy = battleState.enemies.find(e=>e.hp>0);
+function showCombos(cid){
+  const char=GS.party.find(c=>c.id===cid);
+  const avail=COMBOS.filter(co=>co.chars.includes(cid)&&co.chars.every(id=>GS.party.find(p=>p.id===id&&p.hp>0)));
+  const sub=document.getElementById('bt-submenu');
+  document.getElementById('bt-cmdbar').style.display='none';
+  sub.style.display='block';
+  sub.innerHTML=`<div class="bt-subitem" onclick="renderCommandBar(GS.party.find(c=>c.id==='${cid}'));document.getElementById('bt-cmdbar').style.display='flex';this.parentElement.style.display='none'">◀ BACK</div>`+
+    avail.map(co=>`<div class="bt-subitem" onclick="queueCombo('${co.name}','${cid}')">
+      <span style="color:${P.gold2}">⚡${co.name}</span>
+      <span class="si-desc">${co.desc}</span>
+    </div>`).join('');
+}
 
-  // target selection simplified — auto-target
-  let target = null;
-  if (type === 'attack' || type === 'skill' || type === 'tech') {
-    const ability = type === 'skill'
-      ? char.skills.find(s=>s.id===abilityId)
-      : char.techs && char.techs.find(t=>t.id===abilityId);
+function queueAtk(cid){pushQueue({type:'attack',cid});advanceInput();}
+function queueGuard(cid){pushQueue({type:'guard',cid});advanceInput();}
+function queueSkill(cid,sid){pushQueue({type:'skill',cid,sid});advanceInput();}
+function queueTech(cid,tid){pushQueue({type:'tech',cid,tid});advanceInput();}
+function queueCombo(cname,cid){
+  const combo=COMBOS.find(c=>c.name===cname);
+  combo.chars.forEach(id=>pushQueue({type:'combo',cid:id,cname}));
+  BT.charIdx=GS.party.filter(c=>c.hp>0).length;
+  closeSubmenus();
+  advanceInput();
+}
 
-    if (type === 'skill' && ability) {
-      if (ability.target === 'all_ally' || ability.target === 'ally') {
-        target = 'party';
-      } else if (ability.target === 'all') {
-        target = 'all_enemies';
-      } else {
-        target = firstEnemy;
-      }
-    } else if (type === 'tech' && ability) {
-      if (ability.target === 'all_ally' || ability.target === 'ally') {
-        target = 'party';
-      } else if (ability.target === 'all') {
-        target = 'all_enemies';
-      } else {
-        target = firstEnemy;
-      }
-    } else {
-      target = firstEnemy;
-    }
+function pushQueue(action){BT.queue.push(action);}
+
+function closeSubmenus(){
+  document.getElementById('bt-cmdbar').style.display='none';
+  document.getElementById('bt-submenu').style.display='none';
+}
+
+function advanceInput(){
+  closeSubmenus();
+  const alive=GS.party.filter(c=>c.hp>0);
+  BT.charIdx++;
+  if(BT.charIdx>=alive.length){
+    // All commands entered — execute
+    executeTurn();
+  }else{
+    promptChar(alive[BT.charIdx]);
   }
-
-  battleState.commandQueue.push({ type, charId, abilityId, target, char });
-  battleState.currentCharIdx++;
-  $('sub-menu').style.display = 'none';
-  promptNextCharacter();
-}
-
-function queueCombo(charId) {
-  const partyIds = GS.party.map(c=>c.id);
-  const possibleCombos = COMBO_DEFS.filter(c =>
-    c.chars.includes(charId) &&
-    c.chars.every(id => partyIds.includes(id) && GS.party.find(p=>p.id===id)?.hp>0)
-  );
-
-  if (!possibleCombos.length) { queueAction('defend', charId); return; }
-
-  // Show combo options
-  const sub = $('sub-menu');
-  $('command-menu').style.display = 'none';
-  sub.style.display = 'flex';
-  sub.innerHTML = `<div style="padding:4px 8px;color:var(--gold);font-size:14px;border-bottom:1px solid var(--border);margin-bottom:4px;">⚡ COMBINATION ATTACKS</div>` +
-    possibleCombos.map(combo => `
-      <div class="sub-item" onclick="confirmCombo('${combo.name}','${charId}')">
-        <span style="color:var(--gold)">⚡ ${combo.name}</span>
-        <span class="desc">${combo.desc}</span>
-      </div>`).join('') +
-    `<div class="sub-item" onclick="renderCommandMenu(GS.party.find(c=>c.id==='${charId}'))"><span>◀ BACK</span></div>`;
-}
-
-function confirmCombo(comboName, initiatorId) {
-  const combo = COMBO_DEFS.find(c=>c.name===comboName);
-  if (!combo) return;
-
-  battleState.pendingCombo = combo;
-
-  // Queue all combo participants
-  combo.chars.forEach(charId => {
-    const firstEnemy = battleState.enemies.find(e=>e.hp>0);
-    battleState.commandQueue.push({
-      type: 'combo_part',
-      charId,
-      comboName,
-      target: combo.target === 'all' ? 'all_enemies' : firstEnemy,
-    });
-  });
-
-  // Skip remaining characters
-  battleState.currentCharIdx = getAliveParty().length;
-  $('sub-menu').style.display = 'none';
-  promptNextCharacter();
 }
 
 // ── TURN EXECUTION ──
-async function executeTurn() {
-  battleState.phase = 'animate';
-  $('command-menu').style.display = 'none';
-  $('sub-menu').style.display = 'none';
-
-  // Sort by AGI (high AGI acts first)
-  const alive = getAliveParty();
-  const sortedQueue = [...battleState.commandQueue].sort((a,b) => {
-    const ca = GS.party.find(c=>c.id===a.charId);
-    const cb = GS.party.find(c=>c.id===b.charId);
-    return (cb?.agi || 0) - (ca?.agi || 0);
+async function executeTurn(){
+  BT.phase='executing';
+  closeSubmenus();
+  // Sort by AGI
+  const sorted=[...BT.queue].sort((a,b)=>{
+    const ca=GS.party.find(c=>c.id===a.cid);
+    const cb=GS.party.find(c=>c.id===b.cid);
+    return (cb?.agi||0)-(ca?.agi||0);
   });
 
-  // Check if we have a combo queued
-  const comboInQueue = sortedQueue.find(q=>q.type==='combo_part');
-  let comboExecuted = false;
+  // Detect combos — only execute combo once (for the first char listed)
+  const executedCombos=new Set();
 
-  for (const action of sortedQueue) {
-    if (battleState.enemies.every(e=>e.hp<=0)) break;
-    if (action.type === 'combo_part' && !comboExecuted) {
-      await executeCombo(battleState.pendingCombo);
-      comboExecuted = true;
-      continue;
+  for(const action of sorted){
+    if(!BT.enemies.some(e=>e.hp>0)&&action.type!=='guard')break;
+    if(GS.party.find(c=>c.id===action.cid)?.hp<=0)continue;
+
+    if(action.type==='combo'){
+      if(executedCombos.has(action.cname))continue;
+      executedCombos.add(action.cname);
+      await doCombo(COMBOS.find(c=>c.name===action.cname));
+    }else{
+      await doAction(action);
     }
-    if (action.type === 'combo_part') continue; // already executed
-    await executeAction(action);
-    await sleep(400);
+    await sleep(380);
   }
 
-  // Enemy turns
-  if (battleState.enemies.some(e=>e.hp>0) && getAliveParty().length > 0) {
-    await executeEnemyTurns();
+  // Enemies
+  if(BT.enemies.some(e=>e.hp>0)&&GS.party.some(c=>c.hp>0)){
+    await doEnemyTurns();
   }
 
-  // Check battle end
-  if (battleState.enemies.every(e=>e.hp<=0)) {
-    await sleep(400);
-    endBattle(true);
-  } else if (getAliveParty().length === 0) {
-    endBattle(false);
-  } else {
-    battleState.pendingCombo = null;
-    startCommandPhase();
-  }
+  // Clear status
+  GS.party.forEach(c=>{c.statusEffects=c.statusEffects.filter(s=>s!=='GUARD');});
+  renderBattleParty();
+
+  if(!BT.enemies.some(e=>e.hp>0)){endBattle(true);return;}
+  if(!GS.party.some(c=>c.hp>0)){endBattle(false);return;}
+  startCommandPhase();
 }
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+async function doAction(action){
+  const char=GS.party.find(c=>c.id===action.cid);
+  if(!char||char.hp<=0)return;
+  const firstE=BT.enemies.find(e=>e.hp>0);
 
-async function executeAction(action) {
-  const char = GS.party.find(c=>c.id===action.charId);
-  if (!char || char.hp <= 0) return;
-
-  const firstEnemy = battleState.enemies.find(e=>e.hp>0);
-  if (!firstEnemy && action.type !== 'defend' && action.type !== 'item') return;
-
-  if (action.type === 'attack') {
-    const dmg = Math.max(1, Math.floor(char.str * 1.5 - (firstEnemy?.def || 0) * 0.5 + Math.random()*10));
-    applyDamageToEnemy(firstEnemy, dmg, char.name);
-  }
-  else if (action.type === 'skill') {
-    const skill = char.skills.find(s=>s.id===action.abilityId);
-    if (!skill || skill.uses <= 0) { logBattle(`${char.name} is out of ${action.abilityId} stock!`, '#ff8844'); return; }
-    skill.uses--;
-    await executeAbility(char, skill, action.target);
-  }
-  else if (action.type === 'tech') {
-    const tech = char.techs && char.techs.find(t=>t.id===action.abilityId);
-    if (!tech || char.tp < tech.tp) { logBattle(`${char.name} doesn't have enough TP!`, '#ff8844'); return; }
-    char.tp -= tech.tp;
-    renderPartyHud();
-    await executeAbility(char, tech, action.target);
-  }
-  else if (action.type === 'defend') {
-    logBattle(`${char.name} guards! Defense up this turn.`, '#44ccaa');
-    if (!char.statusEffects) char.statusEffects = [];
+  if(action.type==='attack'){
+    const dmg=calcDmg(char.str,1.5,firstE.def,firstE);
+    btLog(`${char.name} attacks ${firstE.name}! ${dmg} damage!`,char.color);
+    hitEnemy(firstE,dmg);
+  }else if(action.type==='guard'){
     char.statusEffects.push('GUARD');
-    renderPartyHud();
-  }
-  else if (action.type === 'item') {
-    logBattle(`${char.name} uses a Sol Dew! (+80 HP)`, '#44cc66');
-    char.hp = Math.min(char.maxHp, char.hp + 80);
-    renderPartyHud();
+    btLog(`${char.name} guards!`,P.teal);
+    renderBattleParty();
+  }else if(action.type==='skill'){
+    const sk=char.skills.find(s=>s.id===action.sid);
+    if(!sk||sk.uses<=0){btLog(`${char.name}: no ${action.sid} uses left!`,P.red);return;}
+    sk.uses--;
+    await doAbility(char,sk);
+  }else if(action.type==='tech'){
+    const tk=char.techs&&char.techs.find(t=>t.id===action.tid);
+    if(!tk||char.tp<tk.tp){btLog(`${char.name}: not enough TP!`,P.red);return;}
+    char.tp-=tk.tp;
+    renderBattleParty();
+    await doAbility(char,tk);
   }
 }
 
-async function executeAbility(char, ability, target) {
-  const firstEnemy = battleState.enemies.find(e=>e.hp>0);
+async function doAbility(char,ab){
+  const elemCol={fire:'#ff6020',ice:'#80c0ff',light:'#ffff80',holy:'#ffe040',gravity:'#a040ff',wind:'#80ff80'}[ab.elem]||P.white;
 
-  if (ability.healAmt) {
-    // Heal ability
-    if (target === 'party' || ability.target === 'all_ally') {
-      const amt = ability.healAmt;
-      getAliveParty().forEach(c => { c.hp = Math.min(c.maxHp, c.hp + amt); });
-      logBattle(`${char.name} uses ${ability.name}! Party recovers ${amt} HP!`, '#44cc66');
-      renderPartyHud();
-    } else {
-      const target_c = GS.party[0]; // heal weakest
-      const amt = ability.healAmt;
-      target_c.hp = Math.min(target_c.maxHp, target_c.hp + amt);
-      logBattle(`${char.name} uses ${ability.name}! ${target_c.name} recovers ${amt} HP!`, '#44cc66');
-      renderPartyHud();
-    }
-  } else if (ability.power) {
-    // Damage ability
-    const elementColor = { fire:'#ff6622', ice:'#88ccff', light:'#ffffaa', holy:'#ffe060', gravity:'#aa66ff', wind:'#88ffaa' }[ability.element] || '#dde8f8';
-    if (target === 'all_enemies') {
-      const aliveEnemies = battleState.enemies.filter(e=>e.hp>0);
-      logBattle(`${char.name} uses ${ability.name}! ${ability.element ? `[${ability.element.toUpperCase()}]` : ''} Hits all enemies!`, elementColor);
-      for (const e of aliveEnemies) {
-        const multiplier = e.weaknesses && e.weaknesses.includes(ability.element) ? 1.5 : 1;
-        const dmg = Math.max(1, Math.floor(char.men * ability.power * multiplier - e.def * 0.4 + Math.random()*15));
-        applyDamageToEnemy(e, dmg, null);
-        await sleep(150);
+  if(ab.healAmt){
+    const targets=ab.target==='all_a'?GS.party.filter(c=>c.hp>0):[GS.party.find(c=>c.hp>0)];
+    targets.forEach(t=>{t.hp=Math.min(t.maxHp,t.hp+ab.healAmt);});
+    btLog(`${char.name} uses ${ab.name}! Restores ${ab.healAmt} HP!`,P.green);
+    renderBattleParty();
+  }else if(ab.healPct){
+    GS.party.filter(c=>c.hp>0).forEach(t=>{t.hp=Math.min(t.maxHp,t.hp+Math.floor(t.maxHp*ab.healPct));});
+    btLog(`${char.name} uses ${ab.name}! Party recovers HP!`,P.green);
+    renderBattleParty();
+  }else if(ab.power){
+    const isMen=ab.type==='tech'||ab.elem;
+    const stat=isMen?char.men:char.str;
+    if(ab.target==='all_e'){
+      btLog(`${char.name} → ${ab.name}! Hits all!`,elemCol);
+      for(const e of BT.enemies.filter(e=>e.hp>0)){
+        const dmg=calcDmg(stat,ab.power,e.def,e,ab.elem);
+        hitEnemy(e,dmg);await sleep(120);
       }
-    } else {
-      const enemy = firstEnemy;
-      if (!enemy) return;
-      const multiplier = enemy.weaknesses && enemy.weaknesses.includes(ability.element) ? 1.5 : 1;
-      const isMental = ability.type === 'tech';
-      const stat = isMental ? char.men : char.str;
-      const dmg = Math.max(1, Math.floor(stat * ability.power * multiplier - enemy.def * 0.4 + Math.random()*12));
-      logBattle(`${char.name} → ${ability.name}!${multiplier > 1 ? ' WEAKNESS!' : ''} ${dmg} damage!`, elementColor);
-      applyDamageToEnemy(enemy, dmg, char.name);
+    }else{
+      const e=BT.enemies.find(e=>e.hp>0);
+      if(!e)return;
+      const dmg=calcDmg(stat,ab.power,e.def,e,ab.elem);
+      btLog(`${char.name} → ${ab.name}!${e.weak&&e.weak.includes(ab.elem)?' WEAKNESS!':''} ${dmg}!`,elemCol);
+      hitEnemy(e,dmg);
     }
-  } else if (ability.effect) {
-    logBattle(`${char.name} uses ${ability.name}! ${ability.effect === 'def+' ? 'Defense raised!' : 'Effect applied!'}`, '#44ccaa');
-    if (ability.effect === 'def+') {
-      getAliveParty().forEach(c => { if (!c.statusEffects) c.statusEffects = []; c.statusEffects.push('DEF+'); });
-      renderPartyHud();
+  }else if(ab.effect){
+    if(ab.effect==='def+'){GS.party.filter(c=>c.hp>0).forEach(c=>c.statusEffects.push('DEF+'));btLog(`${char.name} → ${ab.name}! Defense up!`,P.teal);}
+    else btLog(`${char.name} → ${ab.name}!`,P.teal);
+    renderBattleParty();
+  }
+}
+
+async function doCombo(combo){
+  // Flash
+  const fl=document.getElementById('combo-flash');
+  fl.textContent=`⚡ ${combo.name} ⚡`;fl.style.display='block';
+  await sleep(700);fl.style.display='none';
+
+  const casters=combo.chars.map(id=>GS.party.find(c=>c.id===id)).filter(Boolean);
+  const baseStat=Math.max(...casters.map(c=>Math.max(c.str,c.men)));
+  const elemCol={fire:'#ff6020',ice:'#80c0ff',light:'#ffff80',holy:'#ffe040',gravity:'#a040ff'}[combo.elem]||P.gold;
+
+  btLog(`⚡ COMBO: ${combo.name}! ${combo.desc}`,P.gold2);
+  if(combo.target==='all_e'){
+    for(const e of BT.enemies.filter(e=>e.hp>0)){
+      const dmg=calcDmg(baseStat,combo.power,e.def,e,combo.elem,1.3);
+      hitEnemy(e,dmg);await sleep(180);
     }
+  }else{
+    const e=BT.enemies.find(e=>e.hp>0);
+    if(e){const dmg=calcDmg(baseStat,combo.power,e.def,e,combo.elem,1.3);hitEnemy(e,dmg);}
   }
 }
 
-async function executeCombo(combo) {
-  if (!combo) return;
-  showComboFlash(combo.name);
-  await sleep(600);
+function calcDmg(stat,power,eDef,enemy,elem,comboMul=1){
+  const weak=elem&&enemy.weak&&enemy.weak.includes(elem)?1.5:1;
+  const base=Math.floor(stat*power*weak*comboMul - eDef*0.4 + (Math.random()-.5)*12);
+  return Math.max(1,base);
+}
 
-  const elementColor = { fire:'#ff6622', ice:'#88ccff', light:'#ffffaa', holy:'#ffe060', gravity:'#aa66ff' }[combo.element] || '#e8c84a';
-  logBattle(`⚡ COMBINATION ATTACK: ${combo.name}! ⚡  ${combo.desc}`, '#e8c84a');
-  await sleep(500);
+function hitEnemy(e,dmg){
+  audioSfx('hit');
+  e.hp=Math.max(0,e.hp-dmg);
+  const fill=document.getElementById(`behp-${e.idx}`);
+  if(fill)fill.style.width=(e.hp/e.maxHp*100)+'%';
+  const cont=document.getElementById(`be-${e.idx}`);
+  if(cont){
+    cont.style.filter='brightness(3)';
+    setTimeout(()=>{if(cont)cont.style.filter='';},250);
+  }
+  // Float damage
+  const fl=document.createElement('div');fl.className='dmg-float';fl.style.color=P.red2;
+  fl.textContent=`-${dmg}`;fl.style.left='50%';fl.style.top='40%';
+  document.body.appendChild(fl);setTimeout(()=>fl.remove(),1000);
 
-  const casters = combo.chars.map(id => GS.party.find(c=>c.id===id)).filter(Boolean);
-  const totalPower = combo.power;
-  const baseStat = Math.max(...casters.map(c=>Math.max(c.str, c.men)));
-
-  if (combo.target === 'all') {
-    const aliveEnemies = battleState.enemies.filter(e=>e.hp>0);
-    for (const e of aliveEnemies) {
-      const multiplier = e.weaknesses && e.weaknesses.includes(combo.element) ? 1.8 : 1.2;
-      const dmg = Math.max(1, Math.floor(baseStat * totalPower * multiplier - e.def * 0.3 + Math.random()*20));
-      applyDamageToEnemy(e, dmg, null);
-      await sleep(200);
-    }
-  } else {
-    const target = battleState.enemies.find(e=>e.hp>0);
-    if (!target) return;
-    const multiplier = target.weaknesses && target.weaknesses.includes(combo.element) ? 1.8 : 1.2;
-    const dmg = Math.max(1, Math.floor(baseStat * totalPower * multiplier - target.def * 0.3 + Math.random()*20));
-    applyDamageToEnemy(target, dmg, null);
+  if(e.hp<=0){
+    btLog(`${e.name} defeated!`,P.gold);
+    if(cont)cont.style.opacity='.2';
   }
 }
 
-function applyDamageToEnemy(enemy, dmg, attackerName) {
-  enemy.hp = Math.max(0, enemy.hp - dmg);
-  updateEnemyHp(enemy.idx);
-
-  const sprite = $(`esprite-${enemy.idx}`);
-  if (sprite) { sprite.classList.add('hurt'); setTimeout(() => sprite.classList.remove('hurt'), 300); }
-  floatDamage(`-${dmg}`, '#ff6644', $('battle-bg'));
-
-  if (attackerName) {
-    // log already done in executeAbility
-  }
-
-  if (enemy.hp <= 0) {
-    logBattle(`${enemy.name} was defeated!`, '#e8c84a');
-  }
-}
-
-async function executeEnemyTurns() {
-  const alive = getAliveParty();
-  if (!alive.length) return;
-
-  for (const enemy of battleState.enemies.filter(e=>e.hp>0)) {
-    if (!alive.length) break;
-    await sleep(300);
-
-    const attackKey = enemy.attacks[Math.floor(Math.random()*enemy.attacks.length)];
-    const target = alive[Math.floor(Math.random()*alive.length)];
-
-    // Determine damage
-    let dmg = Math.max(1, Math.floor(enemy.str * 1.2 - target.def * 0.5 + Math.random()*8));
-    if (target.statusEffects && target.statusEffects.includes('GUARD')) dmg = Math.floor(dmg * 0.5);
-
-    target.hp = Math.max(0, target.hp - dmg);
-
-    const attackNames = {
-      bite: 'Bite', sandblast: 'Sand Blast', lightbeam: 'Light Beam',
-      claw: 'Claw', radiant_howl: 'Radiant Howl', scan: 'Scan',
-      strike: 'Strike', lightbolt: 'Light Bolt',
-      memory_strike: 'Memory Strike', dimension_tear: 'Dimension Tear',
-      sandstorm: 'Sandstorm', burrow: 'Burrow', giant_fang: 'Giant Fang',
-      divine_ray: 'Divine Ray', illumination: 'Illumination', mass_conversion: 'Mass Conversion',
-    };
-
-    const atkName = attackNames[attackKey] || 'Attack';
-    logBattle(`${enemy.name} uses ${atkName}! ${target.name} takes ${dmg} damage!`, '#ff8866');
-    floatDamage(`-${dmg}`, '#ee4444', null);
-    renderPartyHud();
-    await sleep(300);
-
-    // Clear status effects each round
-    target.statusEffects = (target.statusEffects || []).filter(s => s !== 'GUARD');
+async function doEnemyTurns(){
+  const alive=GS.party.filter(c=>c.hp>0);
+  for(const e of BT.enemies.filter(e=>e.hp>0)){
+    if(!alive.length)break;
+    await sleep(320);
+    const target=alive[Math.floor(Math.random()*alive.length)];
+    const atkName=e.atks[Math.floor(Math.random()*e.atks.length)];
+    let dmg=Math.max(1,Math.floor(e.str*1.2-target.def*(target.statusEffects.includes('GUARD')?.9:.4)+(Math.random()-.3)*8));
+    if(target.statusEffects.includes('GUARD'))dmg=Math.floor(dmg*.55);
+    audioSfx('hit');
+    target.hp=Math.max(0,target.hp-dmg);
+    btLog(`${e.name} → ${atkName}! ${target.name} takes ${dmg}!`,P.red);
+    const fl=document.createElement('div');fl.className='dmg-float';fl.style.color=P.red;
+    fl.textContent=`-${dmg}`;fl.style.left='30%';fl.style.top='60%';
+    document.body.appendChild(fl);setTimeout(()=>fl.remove(),1000);
+    renderBattleParty();
+    await sleep(250);
   }
 }
 
-// ── END BATTLE ──
-async function endBattle(victory) {
-  if (victory) {
-    let totalExp = 0, totalMeseta = 0;
-    battleState.enemies.forEach(e => {
-      totalExp += e.exp || 0;
-      totalMeseta += e.meseta || 0;
-    });
-    GS.meseta += totalMeseta;
-    renderMeseta();
-
-    let levelUps = '';
-    GS.party.forEach(c => {
-      if (c.hp <= 0) return;
-      c.exp += totalExp;
-      if (c.exp >= c.nextExp) {
-        c.level++;
-        c.exp -= c.nextExp;
-        c.nextExp = Math.floor(c.nextExp * 1.5);
-        // Level up stats
-        c.maxHp = Math.floor(c.maxHp * 1.08);
-        c.hp = c.maxHp;
-        c.maxTp = Math.floor(c.maxTp * 1.06);
-        c.tp = c.maxTp;
-        c.str += 2; c.men += 2; c.agi += 1; c.def += 1;
-        c.skills.forEach(s => { s.maxUses = Math.min(s.maxUses + 1, 8); s.uses = s.maxUses; });
-        levelUps += `${c.name} reached Lv.${c.level}! `;
+function endBattle(win){
+  if(win){
+    let exp=0,mst=0;
+    BT.enemies.forEach(e=>{exp+=e.exp;mst+=e.mst;});
+    GS.meseta+=mst;
+    document.getElementById('ow-meseta').textContent=`✦ ${GS.meseta} MST`;
+    let lu='';
+    GS.party.forEach(c=>{
+      if(c.hp<=0)return;
+      c.exp+=exp;
+      if(c.exp>=c.nextExp){
+        c.level++;c.exp-=c.nextExp;c.nextExp=Math.floor(c.nextExp*1.5);
+        c.maxHp=Math.floor(c.maxHp*1.08);c.hp=c.maxHp;
+        c.maxTp=Math.floor(c.maxTp*1.06);c.tp=c.maxTp;
+        c.str+=2;c.men+=2;c.agi+=1;c.def+=1;
+        c.skills.forEach(s=>{s.maxUses=Math.min(s.maxUses+1,8);s.uses=s.maxUses;});
+        lu+=`${c.name} Lv.${c.level}! `;
       }
     });
-
-    encountersCompleted++;
-    const needed = currentSceneData && currentSceneData.encounters || 2;
-    const isBossKill = battleState.enemies[0]?.isBoss;
-
-    const overlay = $('overlay');
-    overlay.style.display = 'flex';
-    $('overlay-title').textContent = isBossKill ? '⚡ BOSS DEFEATED! ⚡' : '✦ VICTORY! ✦';
-    $('overlay-title').style.color = isBossKill ? '#e8c84a' : '#44cc66';
-    $('overlay-text').innerHTML = `Gained ${totalExp} EXP — ${totalMeseta} Meseta${levelUps ? '<br><span style="color:#e8c84a">'+levelUps+'</span>' : ''}${encountersCompleted >= needed ? '<br><span style="color:#aaaaff">Path ahead is clear.</span>' : ''}`;
-
-    if (isBossKill) {
-      GS.flags.defeatedFirstBoss = true;
-    }
-
-    $('btn-overlay-ok').onclick = () => {
-      overlay.style.display = 'none';
-      returnToExplore();
-    };
-  } else {
-    // Game over — restore party
-    const overlay = $('overlay');
-    overlay.style.display = 'flex';
-    $('overlay-title').textContent = '✝ PARTY FALLEN ✝';
-    $('overlay-title').style.color = '#ee4444';
-    $('overlay-text').textContent = 'The party has fallen in battle. Algo still needs you. The struggle continues...';
+    showResult(BT.isBoss?'⚡ BOSS DEFEATED ⚡':'✦ VICTORY ✦',
+      `EXP +${exp} / MST +${mst}${lu?'\n'+lu:''}`,
+      BT.isBoss?P.gold:P.green,
+      ()=>{
+        showScreen('overworld');GS.screen='overworld';renderOW();
+        if(BT.postWin)BT.postWin();
+      });
+  }else{
     restParty();
-    renderPartyHud();
-    $('btn-overlay-ok').onclick = () => {
-      overlay.style.display = 'none';
-      returnToExplore();
-    };
+    showResult('✝ PARTY FALLEN ✝','The party recovers... the struggle continues.',P.red,
+      ()=>{showScreen('overworld');GS.screen='overworld';renderOW();});
   }
 }
 
-function returnToExplore() {
-  GS.scene = 'explore';
-  $('explore-view').style.display = 'flex';
-  $('battle-view').style.display = 'none';
-  $('command-menu').style.display = 'none';
-
-  if (currentSceneData) {
-    renderExploreMenu(currentSceneData);
-    const needed = currentSceneData.encounters || 2;
-    if (encountersCompleted >= needed) {
-      logExplore('The path ahead is clear. The party gathers strength before pressing on.');
-    } else {
-      logExplore(currentSceneData.msg);
-    }
-  }
-  renderPartyHud();
+// ── RESULT OVERLAY ──
+function showResult(title,text,col,cb){
+  const ov=document.getElementById('result-overlay');
+  ov.style.display='flex';
+  document.getElementById('ro-title').textContent=title;
+  document.getElementById('ro-title').style.color=col;
+  document.getElementById('ro-text').textContent=text;
+  document.getElementById('ro-ok').onclick=()=>{ov.style.display='none';cb();};
 }
 
-// ── CHAPTER ADVANCEMENT ──
-async function advanceChapter() {
-  currentChapter++;
-  currentSceneIdx = 0;
-
-  if (currentChapter >= CHAPTERS.length) {
-    showEnding();
-    return;
-  }
-
-  const chapter = CHAPTERS[currentChapter];
-  await showChapterTitle(chapter.title);
-
-  // Add new characters
-  chapter.party.forEach(id => addToParty(id));
-  if (chapter.addChar) addToParty(chapter.addChar);
-
-  // Show chapter intro
-  const overlay = $('overlay');
-  overlay.style.display = 'flex';
-  $('overlay-title').textContent = `CHAPTER ${currentChapter}`;
-  $('overlay-title').style.color = '#e8c84a';
-  $('overlay-text').textContent = chapter.intro;
-  $('btn-overlay-ok').onclick = () => {
-    overlay.style.display = 'none';
-    startChapterScene(chapter, 0);
-  };
+// ── STATUS MENU ──
+function openStatus(){
+  GS._prevScreen=GS.screen;
+  showScreen('statusmenu');
+  const cards=document.getElementById('sm-cards');
+  cards.innerHTML=GS.party.map(ch=>{
+    const port=mkCanvas(44,44);drawCharPortrait(ch.id,port);
+    return `<div class="sm-card">
+      <div class="sm-portrait">${port.outerHTML}</div>
+      <div class="sm-stats">
+        <div class="sm-charname" style="color:${ch.color}">${ch.name}</div>
+        <div><span class="sl">CLASS </span>${ch.cls}</div>
+        <div><span class="sl">LV </span>${ch.level}&nbsp;&nbsp;<span class="sl">EXP </span>${ch.exp}/${ch.nextExp}</div>
+        <div><span class="sl">HP </span><span style="color:${P.hp}">${ch.hp}/${ch.maxHp}</span></div>
+        <div><span class="sl">TP </span><span style="color:${P.tp}">${ch.tp}/${ch.maxTp}</span></div>
+        <div><span class="sl">STR </span>${ch.str}&nbsp;<span class="sl">MEN </span>${ch.men}</div>
+        <div><span class="sl">AGI </span>${ch.agi}&nbsp;<span class="sl">DEF </span>${ch.def}</div>
+      </div>
+      <div class="sm-skills">
+        ${ch.skills.map(s=>`<div class="sm-skill">★${s.name}(${s.uses})</div>`).join('')}
+        ${(ch.techs||[]).map(t=>`<div class="sm-tech">✦${t.name}(${t.tp}TP)</div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  // replace canvas outerHTML with actual canvas
+  document.querySelectorAll('#sm-cards canvas').forEach(can=>{
+    const id=can.parentElement.parentElement.querySelector('.sm-charname').textContent.toLowerCase();
+    const ch=GS.party.find(c=>c.name.toLowerCase()===id.toLowerCase());
+    if(ch)drawCharPortrait(ch.id,can);
+  });
 }
 
-function startChapterScene(chapter, sceneIdx) {
-  const scene = chapter.scenes[sceneIdx];
-  if (!scene) { advanceChapter(); return; }
+function closeStatus(){
+  showScreen(GS._prevScreen||'overworld');
+}
 
-  currentSceneIdx = sceneIdx;
-  encountersCompleted = 0;
+function drawCharPortrait(id,canvas){
+  const c=ctx(canvas);const W=canvas.width,H=canvas.height;
+  const bgs={aren:[P.sky1,P.sand2],lyra:['#304880','#e0d0a0'],tarin:['#201040','#402080'],
+    mira:['#203010','#406020'],seth9:['#101828','#204040'],neysa:['#100820','#400860']};
+  const bg=bgs[id]||['#101828','#0c1220'];
+  const grd=c.createLinearGradient(0,0,W,H);grd.addColorStop(0,bg[0]);grd.addColorStop(1,bg[1]);
+  c.fillStyle=grd;c.fillRect(0,0,W,H);
+  drawCharSprite(id,c,W*.1,H*.05,W*.8,H*.9);
+}
 
-  if (scene.addChar) addToParty(scene.addChar);
+// ── PARTY MANAGEMENT ──
+function addToParty(id){
+  if(!GS.party.find(c=>c.id===id)&&GS.party.length<5){
+    const ch=CHAR_TEMPLATES[id]&&CHAR_TEMPLATES[id]();
+    if(ch)GS.party.push(ch);
+  }
+}
 
-  GS.location = scene.location;
-  renderLocation();
-  $('world-svg').innerHTML = drawWorldBg(scene.location);
-
-  enterExplore(scene);
+function restParty(){
+  GS.party.forEach(c=>{
+    c.hp=c.maxHp;c.tp=c.maxTp;
+    c.skills.forEach(s=>{s.uses=s.maxUses;});
+    c.statusEffects=[];
+    c.alive=true;
+  });
 }
 
 // ── ENDING ──
-function showEnding() {
-  const overlay = $('overlay');
-  overlay.style.display = 'flex';
-  $('overlay-title').textContent = '✦ THE SEVERING ✦';
-  $('overlay-title').style.color = '#e8c84a';
-  $('overlay-text').innerHTML = `
-    The Great Light retreats. Lyra vanishes into the new autonomous barrier — not a prison, not a god, but a promise.<br><br>
-    For the first time in all of recorded history, <span style="color:#e8c84a">Algo belongs to its own people.</span><br><br>
-    Aren refuses every title offered and returns to the road.<br><br>
-    In the sky, a new star shines where it was never there before.
-    <br><br>
-    <span style="color:#888;font-size:14px;">— FIN —<br>PHANTASY STAR V: CHILDREN OF THE GREAT LIGHT</span>
-  `;
-  $('btn-overlay-ok').textContent = '▶ PLAY AGAIN';
-  $('btn-overlay-ok').onclick = () => {
-    overlay.style.display = 'none';
-    location.reload();
-  };
+function showEnding(){
+  const ov=document.getElementById('result-overlay');
+  ov.style.display='flex';
+  document.getElementById('ro-title').textContent='✦ THE SEVERING ✦';
+  document.getElementById('ro-title').style.color=P.gold;
+  document.getElementById('ro-text').innerHTML=`The Great Light withdraws. Lyra transforms the Fifth Star into a barrier of pure autonomy — not a prison, not a god.\n\nFor the first time, Algo belongs entirely to its own people.\n\nAren returns to the road. In the sky, a new star shines where none shone before.\n\n— FIN —\nPHANTASY STAR V: CHILDREN OF THE GREAT LIGHT`;
+  document.getElementById('ro-ok').textContent='PLAY AGAIN';
+  document.getElementById('ro-ok').onclick=()=>location.reload();
 }
 
-// ── CUTSCENE ENGINE ──
-let currentStoryIdx = 0;
+// ── SCREEN MANAGEMENT ──
+function showScreen(id){
+  ['title','cutscene','overworld','battle','statusmenu'].forEach(s=>{
+    const el=document.getElementById(s);
+    if(el)el.style.display='none';
+  });
+  const el=document.getElementById(id);
+  if(el){el.style.display='flex';el.style.flexDirection='column';}
+  syncMusicToState();
+}
 
-function showCutscene(storyId) {
-  const scene = STORY.find(s=>s.id===storyId) || STORY[currentStoryIdx];
-  if (!scene) {
-    startActualGame();
+// ── CHAPTER TITLE ──
+function showChapterTitle(num,title,cb){
+  const ov=document.getElementById('chapter-overlay');
+  document.getElementById('ch-num').textContent=`CHAPTER ${num}`;
+  document.getElementById('ch-title').textContent=title;
+  ov.style.display='flex';
+  setTimeout(()=>{ov.style.display='none';if(cb)cb();},2600);
+}
+
+// ── KEYBOARD INPUT ──
+const keysHeld=new Set();
+document.addEventListener('keydown',e=>{
+  if(GS.shopOpen){
+    if(e.code==='Escape'||e.code==='KeyX') closeShop();
+    e.preventDefault();
     return;
   }
+  if(keysHeld.has(e.code))return;
+  keysHeld.add(e.code);
+  if(GS.screen!=='overworld')return;
+  if(e.code==='ArrowUp'||e.code==='KeyW')movePlayer(0,-1);
+  if(e.code==='ArrowDown'||e.code==='KeyS')movePlayer(0,1);
+  if(e.code==='ArrowLeft'||e.code==='KeyA')movePlayer(-1,0);
+  if(e.code==='ArrowRight'||e.code==='KeyD')movePlayer(1,0);
+  if(e.code==='Enter'||e.code==='KeyZ'||e.code==='Space')playerAction();
+  if(e.code==='Escape'||e.code==='KeyX')openStatus();
+  e.preventDefault();
+});
+document.addEventListener('keyup',e=>keysHeld.delete(e.code));
 
-  showScreen('cutscene');
 
-  // Render panels
-  const panelArea = $('cutscene-panels-area');
-  panelArea.innerHTML = '';
-  if (scene.panels) {
-    scene.panels.forEach(p => {
-      const div = document.createElement('div');
-      div.className = `cutscene-panel${p.type==='wide'?' wide':''}`;
-      div.innerHTML = p.svgContent || '';
-      panelArea.appendChild(div);
+// ── AUDIO ──
+let ACTX=null, musicTimer=null, musicStamp=0, currentMusic='';
+function ensureAudio(){
+  if(ACTX)return;
+  const Ctx=window.AudioContext||window.webkitAudioContext;
+  if(!Ctx)return;
+  ACTX=new Ctx();
+}
+function playTone(freq,start,dur,type='square',vol=.03){
+  if(!ACTX)return;
+  const o=ACTX.createOscillator(), g=ACTX.createGain();
+  o.type=type; o.frequency.setValueAtTime(freq,start);
+  g.gain.setValueAtTime(0,start);
+  g.gain.linearRampToValueAtTime(vol,start+.01);
+  g.gain.linearRampToValueAtTime(0.0001,start+dur);
+  o.connect(g); g.connect(ACTX.destination);
+  o.start(start); o.stop(start+dur+.02);
+}
+function noteFreq(n){
+  const map={'C':0,'C#':1,'D':2,'D#':3,'E':4,'F':5,'F#':6,'G':7,'G#':8,'A':9,'A#':10,'B':11};
+  const m=n.match(/^([A-G]#?)(\d)$/); if(!m)return 440;
+  const semi=map[m[1]] + (parseInt(m[2])+1)*12;
+  return 440*Math.pow(2,(semi-69)/12);
+}
+const MUSIC={
+  title:{tempo:.22,lead:['E5','B4','G4','B4','E5','B4','G4','D5'],bass:['E2',null,'C2',null,'A2',null,'B1',null]},
+  field:{tempo:.2,lead:['E4','G4','A4','G4','E4','D4','E4','B3'],bass:['E2',null,'A2',null,'D2',null,'B1',null]},
+  town:{tempo:.19,lead:['G4','A4','B4','A4','G4','E4','D4','E4'],bass:['G2',null,'E2',null,'C2',null,'D2',null]},
+  dungeon:{tempo:.18,lead:['E4',null,'F4',null,'G4',null,'C4',null],bass:['E2',null,'F2',null,'G2',null,'C2',null]},
+  boss:{tempo:.16,lead:['E4','F4','G4','A4','G4','F4','E4','D4'],bass:['E2','E2','F2','F2','G2','G2','D2','D2']},
+};
+function startMusic(kind){
+  ensureAudio();
+  if(!ACTX||currentMusic===kind)return;
+  stopMusic();
+  currentMusic=kind;
+  const seq=MUSIC[kind]||MUSIC.field;
+  const step=seq.tempo;
+  musicStamp=ACTX.currentTime+0.02;
+  musicTimer=setInterval(()=>{
+    if(!ACTX)return;
+    while(musicStamp < ACTX.currentTime+0.7){
+      const pos=Math.floor((musicStamp-(ACTX.currentTime+0.02))/step);
+      const lead=seq.lead[((pos%seq.lead.length)+seq.lead.length)%seq.lead.length];
+      const bass=seq.bass[((pos%seq.bass.length)+seq.bass.length)%seq.bass.length];
+      if(lead) playTone(noteFreq(lead),musicStamp,step*.9,'square',.028);
+      if(bass) playTone(noteFreq(bass),musicStamp,step*.9,'triangle',.02);
+      musicStamp+=step;
+    }
+  },120);
+}
+function stopMusic(){ if(musicTimer){ clearInterval(musicTimer); musicTimer=null; } currentMusic=''; }
+function syncMusicToState(){
+  if(GS.screen==='title') return startMusic('title');
+  if(GS.screen==='battle') return startMusic(BT&&BT.isBoss?'boss':'dungeon');
+  if(GS.screen==='overworld'){ const hint=(WORLDS[GS.currentMap]||{}).musicHint||'field'; return startMusic(hint==='boss'?'boss':hint); }
+}
+function audioSfx(kind){
+  ensureAudio(); if(!ACTX)return;
+  const t=ACTX.currentTime+.01;
+  if(kind==='confirm'){ playTone(noteFreq('C5'),t,.06,'square',.05); playTone(noteFreq('G5'),t+.06,.08,'square',.04); }
+  else if(kind==='heal'){ playTone(noteFreq('C5'),t,.08,'triangle',.05); playTone(noteFreq('E5'),t+.08,.08,'triangle',.05); playTone(noteFreq('G5'),t+.16,.12,'triangle',.05); }
+  else if(kind==='buy'){ playTone(noteFreq('G4'),t,.05,'square',.04); playTone(noteFreq('B4'),t+.05,.05,'square',.04); playTone(noteFreq('E5'),t+.1,.1,'square',.04); }
+  else if(kind==='deny'){ playTone(noteFreq('C4'),t,.08,'sawtooth',.03); playTone(noteFreq('B3'),t+.07,.12,'sawtooth',.03); }
+  else if(kind==='step'){ playTone(110+Math.random()*10,t,.03,'triangle',.008); }
+  else if(kind==='hit'){ playTone(90,t,.06,'sawtooth',.03); }
+}
+
+// ── UTILITY ──
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ── TITLE SCREEN ANIMATION ──
+(function initTitle(){
+  const can=document.getElementById('title-canvas');
+  const resize=()=>{can.width=window.innerWidth;can.height=window.innerHeight;};
+  resize();window.addEventListener('resize',resize);
+  const c=ctx(can);
+  const stars=Array.from({length:150},()=>({
+    x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,
+    r:Math.random()*1.5+.3,speed:Math.random()*.3+.05,
+    bright:Math.random(),bdir:Math.random()<.5?1:-1,
+  }));
+  function frame(){
+    c.fillStyle='rgba(4,8,16,.15)';c.fillRect(0,0,can.width,can.height);
+    stars.forEach(s=>{
+      s.bright+=s.bdir*.01;
+      if(s.bright>1||s.bright<.1)s.bdir*=-1;
+      c.fillStyle=`rgba(180,200,240,${s.bright*.6})`;
+      c.beginPath();c.arc(s.x,s.y,s.r,0,Math.PI*2);c.fill();
+      s.y+=s.speed;if(s.y>can.height){s.y=0;s.x=Math.random()*can.width;}
     });
+    requestAnimationFrame(frame);
   }
+  frame();
+})();
 
-  $('cs-speaker').textContent = scene.speaker || '';
-  typeText('cs-text', scene.text);
+// ── START GAME ──
+document.getElementById('btn-start').onclick=()=>{
+  ensureAudio();
+  if(ACTX&&ACTX.state==='suspended')ACTX.resume();
+  // Init party
+  GS.party=[];
+  addToParty('aren');
+  GS.meseta=500;
+  GS.currentMap='motavia_ow';
+  GS.player={x:5,y:18,facing:'down'};
 
-  $('btn-cs-next').onclick = () => {
-    if (scene.startGame) {
-      startActualGame();
-    } else if (scene.next) {
-      const nextIdx = STORY.findIndex(s=>s.id===scene.next);
-      currentStoryIdx = nextIdx >= 0 ? nextIdx : currentStoryIdx + 1;
-      showCutscene(null);
-    } else {
-      currentStoryIdx++;
-      if (currentStoryIdx < STORY.length) showCutscene(null);
-      else startActualGame();
-    }
-  };
-
-  $('btn-cs-skip').onclick = () => { startActualGame(); };
-}
-
-function typeText(elementId, text, speed=22) {
-  const el = $(elementId);
-  el.textContent = '';
-  let i = 0;
-  const chars = text.split('');
-  const interval = setInterval(() => {
-    if (i < chars.length) {
-      el.textContent += chars[i++];
-    } else {
-      clearInterval(interval);
-    }
-  }, speed);
-}
-
-// ── MENU SCREEN ──
-function openMenuScreen() {
-  const container = $('menu-chars');
-  container.innerHTML = GS.party.map(c => `
-    <div class="char-detail-card">
-      <div class="char-portrait">${drawCharPortrait(c.id, 60)}</div>
-      <div class="stat-block">
-        <div style="color:${c.color};font-family:'Press Start 2P',monospace;font-size:8px;margin-bottom:6px;">${c.name} · Lv.${c.level}</div>
-        <div><span class="stat-label">CLASS: </span>${c.class}</div>
-        <div><span class="stat-label">HP: </span><span style="color:#44cc66">${c.hp}/${c.maxHp}</span></div>
-        <div><span class="stat-label">TP: </span><span style="color:#4488ff">${c.tp}/${c.maxTp}</span></div>
-        <div><span class="stat-label">STR: </span>${c.str} <span class="stat-label">MEN: </span>${c.men}</div>
-        <div><span class="stat-label">AGI: </span>${c.agi} <span class="stat-label">DEF: </span>${c.def}</div>
-        <div><span class="stat-label">EXP: </span>${c.exp}/${c.nextExp}</div>
-      </div>
-      <div class="skill-list">
-        <div style="color:var(--gray);font-size:13px;margin-bottom:4px;">SKILLS/TECHS</div>
-        ${c.skills.map(s=>`<div class="skill-item">★ ${s.name} (${s.uses}/${s.maxUses})</div>`).join('')}
-        ${(c.techs||[]).map(t=>`<div class="tech-item">✦ ${t.name} (${t.tp}TP)</div>`).join('')}
-      </div>
-    </div>
-  `).join('');
-
-  showScreen('menu-screen');
-}
-
-$('btn-menu-close').onclick = () => {
-  showScreen('main-game');
-};
-
-// ── GAME STARTUP ──
-function startActualGame() {
-  showScreen('main-game');
-
-  // Init chapter 0
-  const ch = CHAPTERS[0];
-  initParty(ch.party);
-  addToParty('lyra'); // Lyra joins immediately after prologue
-
-  GS.meseta = 500;
-  GS.location = ch.startLocation;
-  renderMeseta();
-  renderLocation();
-  $('world-svg').innerHTML = drawWorldBg(ch.startLocation);
-
-  showChapterTitle(ch.title).then(() => {
-    // Small overlay for chapter intro
-    const overlay = $('overlay');
-    overlay.style.display = 'flex';
-    $('overlay-title').textContent = 'CHAPTER 0';
-    $('overlay-title').style.color = '#e8c84a';
-    $('overlay-text').textContent = ch.intro;
-    $('btn-overlay-ok').onclick = () => {
-      overlay.style.display = 'none';
-      startChapterScene(ch, 0);
-    };
+  showChapterTitle(0,'A SKY THAT WILL NOT DARKEN',()=>{
+    showScreen('overworld');
+    GS.screen='overworld';
+    initOWCanvas();
+    setObjective('Find the strange light in the Motavia ruins.');
+    refreshLocationBar();
+    document.getElementById('ow-meseta').textContent=`✦ ${GS.meseta} MST`;
+    renderOW();
+    updateActionHints();
+    showOwMsg('MOTAVIA. You are Aren Voss — salvager, courier, nobody\'s hero.\nUse ARROW KEYS to move. Press ENTER/Z to interact with people and objects.\nGold doors are exits. The ACTION panel shows what you can use from your current tile or directly ahead.\nStrange lights fall from the sky to the northwest...');
   });
-}
-
-// ── TITLE SCREEN ──
-$('btn-start').onclick = () => {
-  currentStoryIdx = 0;
-  showCutscene('prologue_1');
 };
 
-// Init visible state
-renderPartyHud();
+window.addEventListener('resize',()=>{if(GS.screen==='overworld'){initOWCanvas();renderOW();}});
 </script>
 </body>
 </html>
