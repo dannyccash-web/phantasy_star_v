@@ -36,7 +36,7 @@ body{
   background:var(--black);
   color:var(--white);
   font-family:'Press Start 2P',monospace;
-  font-size:8px;
+  font-size:10px;
   line-height:1.6;
   display:flex;
   flex-direction:column;
@@ -54,11 +54,17 @@ canvas{image-rendering:pixelated;display:block;}
   width:100vw;height:100vh;background:var(--black);position:relative;overflow:hidden;
 }
 #title canvas{position:absolute;top:0;left:0;pointer-events:none;}
-.t-logo{font-size:clamp(10px,3vw,22px);color:var(--gold2);text-shadow:0 0 16px #f0d05066;margin-bottom:6px;text-align:center;z-index:1;}
-.t-sub{font-size:clamp(6px,1.5vw,11px);color:var(--blue2);margin-bottom:32px;letter-spacing:2px;z-index:1;}
-.t-blurb{font-size:clamp(5px,1.2vw,8px);color:var(--gray);margin-bottom:28px;text-align:center;max-width:460px;line-height:2;z-index:1;padding:0 20px;}
+.t-logo{
+  font-size:clamp(10px,3vw,22px);color:var(--gold2);
+  text-shadow:0 0 24px #f0d05088, 0 0 48px #f0d05033;
+  margin-bottom:6px;text-align:center;z-index:1;
+  animation:titlePulse 3s ease-in-out infinite;
+}
+@keyframes titlePulse{0%,100%{text-shadow:0 0 16px #f0d05066;}50%{text-shadow:0 0 32px #f0d050aa, 0 0 64px #f0d05044;}}
+.t-sub{font-size:clamp(8px,1.8vw,13px);color:var(--blue2);margin-bottom:32px;letter-spacing:2px;z-index:1;}
+.t-blurb{font-size:clamp(7px,1.5vw,10px);color:var(--gray);margin-bottom:28px;text-align:center;max-width:460px;line-height:2;z-index:1;padding:0 20px;}
 #btn-start{
-  font-family:'Press Start 2P',monospace;font-size:clamp(7px,1.8vw,10px);
+  font-family:'Press Start 2P',monospace;font-size:clamp(9px,2vw,12px);
   color:var(--white);background:var(--panel);border:1px solid var(--border2);
   padding:10px 22px;cursor:pointer;z-index:1;
   animation:blink 1s infinite;
@@ -88,14 +94,14 @@ canvas{image-rendering:pixelated;display:block;}
   padding:10px 14px;min-height:72px;flex-shrink:0;
   position:relative;
 }
-.cs-speaker{color:var(--gold);font-size:7px;margin-bottom:6px;letter-spacing:1px;}
-.cs-body{font-size:7px;line-height:1.9;color:var(--white);}
+.cs-speaker{color:var(--gold);font-size:10px;margin-bottom:6px;letter-spacing:1px;}
+.cs-body{font-size:9px;line-height:2;color:var(--white);}
 .cs-nav{
   display:flex;justify-content:flex-end;gap:8px;
   background:var(--panel);border-top:1px solid var(--border);padding:5px 10px;flex-shrink:0;
 }
 .cs-nav button{
-  font-family:'Press Start 2P',monospace;font-size:7px;
+  font-family:'Press Start 2P',monospace;font-size:9px;
   background:var(--panel2);border:1px solid var(--border);color:var(--white);
   padding:5px 12px;cursor:pointer;
 }
@@ -107,11 +113,11 @@ canvas{image-rendering:pixelated;display:block;}
 }
 #ow-topbar{
   background:var(--panel);border-bottom:2px solid var(--border);
-  padding:5px 10px;display:flex;justify-content:space-between;align-items:center;
+  padding:6px 12px;display:flex;justify-content:space-between;align-items:center;
   flex-shrink:0;
 }
-.ow-location{font-size:8px;color:var(--gold);}
-.ow-meseta{font-size:7px;color:var(--gold2);}
+.ow-location{font-size:10px;color:var(--gold);}
+.ow-meseta{font-size:10px;color:var(--gold2);}
 #ow-main{flex:1;display:flex;flex-direction:column;min-height:0;}
 #ow-canvas-wrap{
   flex:1;display:flex;align-items:center;justify-content:center;
@@ -122,13 +128,13 @@ canvas{image-rendering:pixelated;display:block;}
 #ow-label{
   position:absolute;top:8px;left:50%;transform:translateX(-50%);
   background:rgba(0,0,0,0.75);border:1px solid var(--border2);
-  padding:3px 10px;font-size:7px;color:var(--gold2);pointer-events:none;
+  padding:3px 10px;font-size:9px;color:var(--gold2);pointer-events:none;
   display:none;
 }
 #ow-msgbox{
   background:var(--panel);border-top:2px solid var(--border);
-  padding:8px 12px;min-height:52px;flex-shrink:0;font-size:7px;
-  line-height:1.9;color:var(--white);white-space:pre-line;
+  padding:10px 14px;min-height:62px;flex-shrink:0;font-size:9px;
+  line-height:2;color:var(--white);white-space:pre-line;
 }
 #ow-controls{
   background:var(--panel2);border-top:1px solid var(--border);
@@ -136,12 +142,12 @@ canvas{image-rendering:pixelated;display:block;}
   flex-wrap:wrap;
 }
 .ow-btn{
-  font-family:'Press Start 2P',monospace;font-size:6px;
+  font-family:'Press Start 2P',monospace;font-size:8px;
   background:var(--panel);border:1px solid var(--border);color:var(--white);
-  padding:5px 8px;cursor:pointer;min-width:56px;text-align:center;
+  padding:6px 10px;cursor:pointer;min-width:60px;text-align:center;
 }
 .ow-btn:hover,.ow-btn.active{background:var(--border);color:var(--gold);}
-.ow-btn.dir{font-size:10px;padding:4px 6px;min-width:28px;}
+.ow-btn.dir{font-size:12px;padding:5px 8px;min-width:32px;}
 
 /* ── BATTLE ── */
 #battle{
@@ -149,37 +155,39 @@ canvas{image-rendering:pixelated;display:block;}
 }
 #bt-scene{
   flex:1;position:relative;overflow:hidden;min-height:0;
-  display:flex;align-items:flex-end;
+  display:flex;align-items:center;justify-content:center;
 }
 #bt-bg{position:absolute;inset:0;width:100%;height:100%;}
 #bt-enemies{
-  position:absolute;display:flex;gap:16px;align-items:flex-end;
-  bottom:20px;left:50%;transform:translateX(-50%);
+  position:absolute;
+  display:flex;gap:32px;align-items:flex-end;justify-content:center;
+  bottom:30%;left:0;right:0;
 }
-.bt-econt{display:flex;flex-direction:column;align-items:center;gap:3px;}
-.bt-esprite canvas{image-rendering:pixelated;}
-.bt-ename{font-size:6px;color:var(--gray);}
-.bt-ehpbar{width:64px;height:4px;background:#0a0a1a;border:1px solid #222;}
-.bt-ehpfill{height:100%;background:var(--hp);transition:width .3s;}
+.bt-econt{display:flex;flex-direction:column;align-items:center;gap:4px;transition:opacity 0.5s,transform 0.5s;}
+.bt-esprite canvas{image-rendering:pixelated;display:block;}
+.bt-ename{font-size:8px;color:var(--gray);}
+.bt-ehpbar{width:80px;height:6px;background:#0a0a1a;border:1px solid #333;box-sizing:border-box;}
+.bt-ehpfill{height:100%;min-width:2px;background:var(--hp);transition:width .3s;}
 .bt-party-row{
   position:absolute;bottom:0;left:0;right:0;
-  display:flex;gap:2px;background:rgba(4,8,16,0.85);
-  border-top:1px solid var(--border);padding:4px;
+  display:flex;gap:3px;background:rgba(4,8,16,0.92);
+  border-top:2px solid var(--border);padding:6px;
 }
 .bt-pcard{
   flex:1;background:var(--panel);border:1px solid var(--border);
-  padding:3px 5px;min-width:0;
+  padding:4px 6px;min-width:0;display:flex;flex-direction:column;align-items:center;
 }
-.bt-pname{font-size:6px;color:var(--gold);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.bt-pname.active{color:var(--gold2);text-shadow:0 0 6px var(--gold);}
-.bt-hprow{display:flex;align-items:center;gap:2px;margin-bottom:1px;}
-.bt-hlabel{font-size:5px;color:var(--gray);width:12px;}
-.bt-htrack{flex:1;height:4px;background:#080808;border:1px solid #111;}
-.bt-hfill{height:100%;transition:width .3s;}
-.bt-hnums{font-size:5px;color:var(--gray);white-space:nowrap;}
+.bt-pportrait{image-rendering:pixelated;display:block;margin-bottom:3px;}
+.bt-pname{font-size:8px;color:var(--gold);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;width:100%;}
+.bt-pname.active{color:var(--gold2);text-shadow:0 0 8px var(--gold);}
+.bt-hprow{display:flex;align-items:center;gap:3px;margin-bottom:2px;width:100%;}
+.bt-hlabel{font-size:7px;color:var(--gray);width:16px;flex-shrink:0;}
+.bt-htrack{flex:1;height:6px;background:#080808;border:1px solid #1a1a2a;box-sizing:border-box;min-width:0;}
+.bt-hfill{height:100%;min-width:2px;transition:width .3s;}
+.bt-hnums{font-size:7px;color:var(--gray);white-space:nowrap;flex-shrink:0;}
 #bt-log{
   flex-shrink:0;background:var(--panel);border-top:2px solid var(--border);
-  padding:6px 10px;min-height:42px;font-size:7px;line-height:1.9;
+  padding:6px 12px;min-height:36px;font-size:8px;line-height:1.8;
 }
 #bt-actions{
   flex-shrink:0;background:var(--panel2);border-top:1px solid var(--border);
@@ -188,23 +196,24 @@ canvas{image-rendering:pixelated;display:block;}
   display:flex;border-bottom:1px solid var(--border);
 }
 .bt-cmd{
-  flex:1;font-family:'Press Start 2P',monospace;font-size:7px;
+  flex:1;font-family:'Press Start 2P',monospace;font-size:8px;
   background:transparent;border:none;border-right:1px solid var(--border);
-  color:var(--white);padding:8px 4px;cursor:pointer;text-align:center;
+  color:var(--white);padding:10px 4px;cursor:pointer;text-align:center;
 }
 .bt-cmd:hover:not(:disabled){background:var(--border);color:var(--gold);}
 .bt-cmd:disabled{opacity:.3;cursor:default;}
 .bt-cmd.combo{color:var(--purple);}
 .bt-cmd:last-child{border-right:none;}
-#bt-submenu{display:none;max-height:100px;overflow-y:auto;}
+#bt-submenu{display:none;max-height:120px;overflow-y:auto;}
 .bt-subitem{
   display:flex;justify-content:space-between;align-items:center;
-  padding:5px 10px;border-bottom:1px solid var(--border);
-  cursor:pointer;font-size:6px;
+  padding:6px 12px;border-bottom:1px solid var(--border);
+  cursor:pointer;font-size:7px;
 }
 .bt-subitem:hover{background:var(--border);color:var(--gold);}
-.bt-subitem .si-cost{color:var(--tp);font-size:5px;}
-.bt-subitem .si-desc{color:var(--gray);font-size:5px;}
+.bt-subitem .si-cost{color:var(--tp);font-size:6px;}
+.bt-subitem .si-desc{color:var(--gray);font-size:6px;}
+.bt-pcard-dead{opacity:0.45;}
 
 /* ── STATUS MENU ── */
 #statusmenu{
@@ -216,26 +225,26 @@ canvas{image-rendering:pixelated;display:block;}
   padding:8px 12px;display:flex;justify-content:space-between;align-items:center;
   flex-shrink:0;
 }
-#sm-topbar h2{font-size:9px;color:var(--gold);}
+#sm-topbar h2{font-size:11px;color:var(--gold);}
 .sm-close{
-  font-family:'Press Start 2P',monospace;font-size:6px;
+  font-family:'Press Start 2P',monospace;font-size:9px;
   background:var(--panel2);border:1px solid var(--border);color:var(--white);
-  padding:5px 10px;cursor:pointer;
+  padding:6px 12px;cursor:pointer;
 }
 .sm-close:hover{color:var(--gold);}
 #sm-cards{padding:8px;display:flex;flex-direction:column;gap:8px;}
 .sm-card{
   background:var(--panel);border:1px solid var(--border);
-  display:grid;grid-template-columns:48px 1fr 1fr;gap:10px;padding:10px;
+  display:grid;grid-template-columns:68px 1fr 1fr;gap:12px;padding:12px;
   align-items:start;
 }
 .sm-portrait canvas{image-rendering:pixelated;}
-.sm-stats{font-size:6px;line-height:2.1;}
+.sm-stats{font-size:9px;line-height:2.2;}
 .sm-stats .sl{color:var(--gray);}
-.sm-skills{font-size:6px;line-height:2.1;}
+.sm-skills{font-size:9px;line-height:2.2;}
 .sm-skill{color:var(--purple);}
 .sm-tech{color:var(--teal);}
-.sm-charname{font-size:7px;margin-bottom:4px;}
+.sm-charname{font-size:10px;margin-bottom:5px;}
 
 /* ── FLOATS & FLASHES ── */
 .dmg-float{
@@ -261,10 +270,10 @@ canvas{image-rendering:pixelated;display:block;}
   display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;
   text-align:center;padding:20px;
 }
-#ro-title{font-size:clamp(11px,3vw,18px);color:var(--gold);}
-#ro-text{font-size:7px;color:var(--gray);max-width:400px;line-height:2;}
+#ro-title{font-size:clamp(12px,3vw,20px);color:var(--gold);}
+#ro-text{font-size:9px;color:var(--gray);max-width:400px;line-height:2;}
 #ro-ok{
-  font-family:'Press Start 2P',monospace;font-size:8px;
+  font-family:'Press Start 2P',monospace;font-size:10px;
   background:var(--panel);border:1px solid var(--border2);color:var(--white);
   padding:8px 20px;cursor:pointer;
 }
@@ -273,12 +282,12 @@ canvas{image-rendering:pixelated;display:block;}
 
 /* ── CONTEXT ACTIONS / SHOP ── */
 #ow-action-hints{
-  position:absolute;left:8px;top:8px;min-width:150px;max-width:220px;
-  background:rgba(0,0,0,.78);border:1px solid var(--border2);
-  padding:6px 8px;font-size:6px;line-height:1.8;color:var(--white);
+  position:absolute;left:8px;top:8px;min-width:170px;max-width:260px;
+  background:rgba(0,0,0,.82);border:1px solid var(--border2);
+  padding:7px 10px;font-size:8px;line-height:2;color:var(--white);
   pointer-events:none;
 }
-#ow-action-hints .ah-head{color:var(--gold2);margin-bottom:2px;}
+#ow-action-hints .ah-head{color:var(--gold2);margin-bottom:3px;}
 #ow-action-hints .ah-row{color:var(--gray);}
 #ow-action-hints .ah-row strong{color:var(--white);font-weight:normal;}
 #shop-overlay{
@@ -286,28 +295,28 @@ canvas{image-rendering:pixelated;display:block;}
   display:none;align-items:center;justify-content:center;padding:18px;
 }
 .shop-panel{
-  width:min(520px,96vw);background:var(--panel);border:2px solid var(--border2);
-  box-shadow:0 0 0 2px #000 inset;padding:12px;
+  width:min(580px,96vw);background:var(--panel);border:2px solid var(--border2);
+  box-shadow:0 0 0 2px #000 inset;padding:14px;
 }
-.shop-title{font-size:9px;color:var(--gold2);margin-bottom:10px;text-align:center;}
-.shop-money{font-size:7px;color:var(--gold);margin-bottom:8px;text-align:center;}
+.shop-title{font-size:11px;color:var(--gold2);margin-bottom:10px;text-align:center;}
+.shop-money{font-size:10px;color:var(--gold);margin-bottom:8px;text-align:center;}
 .shop-list{display:flex;flex-direction:column;gap:6px;}
 .shop-item{
   display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;
-  border:1px solid var(--border);background:var(--panel2);padding:7px 8px;font-size:6px;
+  border:1px solid var(--border);background:var(--panel2);padding:8px 10px;font-size:8px;
 }
 .shop-item:hover{background:var(--border);}
 .shop-name{color:var(--white);}
 .shop-desc{color:var(--gray);grid-column:1 / span 2;}
 .shop-price{color:var(--gold2);}
 .shop-buy{
-  font-family:'Press Start 2P',monospace;font-size:6px;color:var(--white);
-  background:var(--panel);border:1px solid var(--border2);padding:5px 8px;cursor:pointer;
+  font-family:'Press Start 2P',monospace;font-size:8px;color:var(--white);
+  background:var(--panel);border:1px solid var(--border2);padding:6px 10px;cursor:pointer;
 }
 .shop-buy:hover{color:var(--gold);}
 .shop-buy:disabled{opacity:.35;cursor:default;}
 .shop-close{
-  margin-top:10px;width:100%;font-family:'Press Start 2P',monospace;font-size:7px;
+  margin-top:10px;width:100%;font-family:'Press Start 2P',monospace;font-size:9px;
   background:var(--panel2);border:1px solid var(--border);color:var(--white);padding:8px;cursor:pointer;
 }
 .shop-close:hover{color:var(--gold);}
@@ -383,7 +392,7 @@ canvas{image-rendering:pixelated;display:block;}
   </div>
   <div id="bt-log">Enemy approaches!</div>
   <div id="bt-actions">
-    <div id="bt-cmdbar" style="display:none;"></div>
+    <div id="bt-cmdbar"></div>
     <div id="bt-submenu"></div>
   </div>
 </div>
@@ -444,13 +453,13 @@ const P={
   teal:'#20a080',
   orange:'#c06010',
   panel:'#0c1828',panelborder:'#1e3a5a',
-  // character colors
-  aren_shirt:'#3060a0',aren_hair:'#604020',aren_skin:'#c8a870',
-  lyra_dress:'#e0d090',lyra_hair:'#f0e080',lyra_skin:'#e8d8c0',
-  tarin_robe:'#604090',tarin_hair:'#402010',tarin_skin:'#c8a070',
-  mira_suit:'#406020',mira_hair:'#804020',mira_skin:'#c8a870',
-  seth_body:'#406060',seth_eye:'#40d0a0',
-  neysa_robe:'#802090',neysa_hair:'#c060e0',neysa_skin:'#e0c8e0',
+  // character colors — enriched for detailed sprites
+  aren_shirt:'#3a6890',aren_hair:'#6a4818',aren_skin:'#d0aa78',
+  lyra_dress:'#c8dcf4',lyra_hair:'#dce8f8',lyra_skin:'#ead4c0',
+  tarin_robe:'#382868',tarin_hair:'#4a2810',tarin_skin:'#c0a068',
+  mira_suit:'#485e32',mira_hair:'#963020',mira_skin:'#d0a878',
+  seth_body:'#2c4858',seth_eye:'#30e0b0',
+  neysa_robe:'#3a0860',neysa_hair:'#8028b0',neysa_skin:'#dcc0d8',
 };
 
 // ── TILE DEFINITIONS ──
@@ -565,21 +574,24 @@ const MAP_DEZOLIS_OW=buildMap([
 ]);
 
 // ── MAP: ELYON ARK (ORBITAL) ──
+// 28×16 tech map: main corridor, 3 connected rooms, side wing, all walkable
+// c=techfloor(12,walk), 5=floor(5,walk), 4=wall(4,no), e=warpgate(14,walk)
+// Layout: outer corridor wraps around, inner rooms accessible via doorways
 const MAP_ELYON=buildMap([
   '0000000000000000000000000000',
-  '0000ccccccccccccccccccc00000',
-  '0000c111111111111111c1c00000',
-  '0000c111111111111111c1c00000',
-  '0000c144444444444441c1c00000',
-  '0000c14555555555541c1c00000',
-  '0000c14555555555541c1c00000',
-  '0000c14555555555541c1c00000',
-  '0000c14555555555541c1c00000',
-  '0000c14555555555541c1c00000',
-  '0000c144444444444441c1c00000',
-  '0000c111e11111e111111c00000',
-  '0000c111111111111111cc00000',
-  '0000ccccccccccccccccc000000',
+  '0000cccccccccccccccccccc0000',
+  '0000c555555555555555555c0000',
+  '0000c555555555555555555c0000',
+  '0000c55c444c55555c444c55c000',
+  '0000c55c5e5c55555c5e5c55c000',
+  '0000c55c555c55555c555c55c000',
+  '0000c55c555c55555c555c55c000',
+  '0000c55c555c55555c555c55c000',
+  '0000c55c444c55555c444c55c000',
+  '0000c555555555555555555c0000',
+  '000cc555555555555555555c0000',
+  '000c5555e55555e555555e5c0000',
+  '000cccccccccccccccccccc0000',
   '0000000000000000000000000000',
   '0000000000000000000000000000',
 ]);
@@ -619,9 +631,20 @@ const WORLDS={
       // Lyra event trigger
       {type:'story',x:7,y:7,storyId:'find_lyra',label:'Ancient Ruins',once:true,flag:'lyra_found'},
       // Ruins to the south
+      {type:'story',x:17,y:12,storyId:'iglanova_boss',label:'Ruins Boss Chamber',once:true,flag:'iglanova_done'},
       {type:'story',x:13,y:14,storyId:'lightfall_msg',label:'Lightfall Site',once:false},
-      // Guild / info NPC
-      {type:'npc',x:20,y:10,name:'HUNTER',lines:["HUNTER GUILD's moved to Aiedo. Something big happened there. The whole district is still glowing.","I've been running salvage here for years. Never seen light like that before."]},
+      // Hunter NPCs with more lore
+      {type:'npc',x:20,y:10,name:'HUNTER',lines:["HUNTER GUILD's moved to Aiedo. Something big happened there. The whole district is still glowing.","I've been running salvage here for years. Never seen light like that before. Crops grew overnight near the old Paseo complex. Seemed like a blessing, until the people there stopped talking.","My partner walked into one of those light columns last week. She came back... peaceful. Too peaceful. She couldn't remember our guild contract. She couldn't remember my name."]},
+      {type:'npc',x:8,y:8,name:'SALVAGER',lines:["Careful out east. Three of the old pre-Mother Brain vaults have been cracked open by the lightfalls. Something in there is active.","I found a Wren-class maintenance log in vault 7B. It mentioned an 'Observer Continuity Protocol' engaged when the Profound Darkness seal was broken. Never heard of that before.","Take this — found it near the ruins. Don't know what it is but it's got old Algo glyphs on it. Maybe someone in Aiedo can read it."]},
+      {type:'npc',x:16,y:15,name:'FARMER',lines:["My field grew three weeks of crops in one night after the lightfall. I should be grateful.","My wife says she's 'at peace now.' She doesn't worry about the harvest anymore. She doesn't worry about anything. Is that what peace looks like?","The Luminant Creed preacher says the Great Light is perfecting us. I keep thinking: I never asked to be perfected."]},
+      {type:'npc',x:22,y:6,name:'ELDER',lines:["I remember the old cycles. Dark Force every thousand years, the world shuddering, heroes rising. We thought if we ever broke that cycle, we'd be free.","Now I wonder if freedom and protection were always the same cage. The walls just changed color."]},
+      // Item chest
+      {type:'chest',x:10,y:12,itemId:'solDew',label:'Old Supply Crate',qty:2,once:true,flag:'chest_motavia_1'},
+      {type:'chest',x:18,y:16,itemId:'antidote',label:'Salvage Bag',qty:3,once:true,flag:'chest_motavia_2'},
+      // Examine spots
+      {type:'examine',x:14,y:14,once:false,text:"A column of pale light scoured the sand here. Where it struck, the ground is glassy and faintly warm. Sand fused into a mirror. A perfect circle.\n\nNo footprints around it. Whatever was here either walked out in the light, or never needed to walk."},
+      {type:'examine',x:11,y:10,once:true,text:"Ancient terminal — pre-Mother Brain era. The screen flickers with fragments of a Nurvus maintenance report.\n\n'OBSERVER DIRECTIVE 0 — MONITOR FOR POST-SEAL CONDITIONS. IF SEAL BREAKS: INITIATE CONTINUITY PROTOCOL. AWAIT CONVERGENCE.'\n\nWhat convergence? The seal wasn't supposed to break."},
+      {type:'examine',x:6,y:14,once:false,text:"A shrine with offerings — water, dried flowers, a photograph. The photo shows two people. Someone has written on the back: 'She forgot us after the second lightfall. But she seems happy. Maybe that's enough?'\n\nBelow that, crossed out three times: 'It is NOT enough.'"},
       // Tarin join event
       {type:'story',x:12,y:7,storyId:'meet_tarin',label:'Dezolis Gate',once:true,flag:'tarin_joined'},
     ],
@@ -635,16 +658,27 @@ const WORLDS={
     encRate:0,
     encTable:[],
     entities:[
-      {type:'npc',x:7,y:7,name:'ELDER',lines:['The lights started three weeks ago. The Luminant Creed calls it a blessing. I call it an omen.','Chaz Ashley defeated the Profound Darkness here, forty years back. There is a statue in the square. Worth seeing.']},
-      {type:'npc',x:15,y:6,name:'CREED FOLLOWER',lines:['Have you felt the warmth of the Great Light? The Archon says it will cleanse all pain from Algo.','The age of suffering is over. Embrace the light, and you will know peace.']},
-      {type:'sign',x:3,y:5,text:'AIEDO HUNTERS GUILD — "When monsters appear, we appear."'},
-      {type:'sign',x:16,y:5,text:'LUVENO MEMORIAL INN — Rest and recover your strength.'},
-      {type:'shop',x:6,y:7,label:'SHOP DOOR'},
+      {type:'npc',x:7,y:7,name:'ELDER',lines:['The lights started three weeks ago. The Luminant Creed calls it a blessing. I call it an omen.','Chaz Ashley defeated the Profound Darkness here, forty years back. There is a statue in the square. Worth seeing.','I spoke with one of the "illuminated" yesterday. She was serene. Helpful. She smiled at everything. I asked her about her daughter who died in the last monster attack. She said she\'t remember having a daughter. She was still smiling.']},
+      {type:'npc',x:15,y:6,name:'CREED FOLLOWER',lines:['Have you felt the warmth of the Great Light? The Archon says it will cleanse all pain from Algo.','The age of suffering is over. Embrace the light, and you will know peace.','You look troubled, traveler. The Light can take that from you. All your worry, all your grief — surrendered to radiance. Is that not mercy?','I used to be a hunter. I used to fight monsters and worry about death every day. Now I feel nothing but calm. I think that\'s what salvation feels like.']},
+      {type:'npc',x:11,y:8,name:'GUILD RECEPTIONIST',lines:['The Hunter Guild is still operating, barely. Half our members have "converted." They don\'t fight anymore — say violence disturbs the harmony.','We have bounties posted. Monsters mutating near lightfall sites — not the usual Dark Force influence, but something stranger. They\'re... peaceful. They don\'t attack unless provoked. It\'s worse somehow.','If you\'re looking for work, check the board. We need someone to investigate the ruins east of town. Three salvagers went in and never came back. Creed says they "achieved illumination."']},
+      {type:'npc',x:4,y:9,name:'CHAZ MEMORIAL',lines:['[A worn bronze plaque at the base of the statue.]\n\n"CHAZ ASHLEY — 2330-2392\nHunter. Hero. The sword that broke the Millennium Cycle.\nHe fought because ordinary people deserved the right to be ordinary.\nHe never asked for destiny. He chose it anyway."\n\nBelow in newer lettering: "If you\'re reading this — the rest is yours now."']},
+      // Signs on walkable floor tiles
+      {type:'sign',x:3,y:6,text:'AIEDO HUNTERS GUILD — "When monsters appear, we appear."'},
+      {type:'sign',x:16,y:6,text:'LUVENO MEMORIAL INN — Rest and recover your strength.'},
+      {type:'sign',x:12,y:4,text:'LUMINANT CREED CHAPEL — "The Light takes all burdens." [Newly posted]'},
+      // Shop and Inn on walkable interior tiles
+      {type:'shop',x:5,y:7,label:'SHOP DOOR'},
       {type:'inn',x:13,y:7,label:'INN DOOR'},
-      {type:'warp',x:7,y:10,target:'motavia_ow',tx:13,ty:8,label:'TOWN EXIT'},
-      {type:'warp',x:17,y:7,target:'dezolis_ow',tx:10,ty:10,label:'SPACEPORT TERMINAL'},
+      // Examine spots on walkable tiles
+      {type:'examine',x:5,y:9,once:false,text:"The statue of Chaz Ashley stands in the town square. Bronze, slightly green at the edges from age. He\'s depicted mid-swing with his sword, but the sculptor caught something unusual — his expression is uncertain. Not heroic. Not triumphant.\n\nJust resolute. Like someone who knows the cost and pays it anyway."},
+      {type:'examine',x:10,y:9,once:true,text:"A bounty board. Most postings are old, faded. But three are fresh:\n\n'INVESTIGATE: Light-mutated beasts near Paseo ruins. Payment: 200 MST.'\n\n'FIND: Three salvagers, overdue from east ruins. Last comm: encountered a light column. Payment: 150 MST.'\n\n'WARN: Do not enter lightfall zones after dark. Creed patrols seen near affected villages. Unarmed.'"},
+      {type:'chest',x:3,y:8,itemId:'solDew',label:'Supply Cache',qty:1,once:true,flag:'chest_aiedo_1'},
+      // Town gate back to Motavia — at the e-tile row 10
+      {type:'warp',x:7,y:10,target:'motavia_ow',tx:13,ty:8,label:'TOWN GATE'},
+      // Spaceport to Dezolis — return warp in Dezolis at (17,8) lands back here at (17,8)
+      {type:'warp',x:17,y:8,target:'dezolis_ow',tx:17,ty:8,label:'SPACEPORT TERMINAL'},
     ],
-    playerStart:{x:10,y:8},
+    playerStart:{x:10,y:9},
     musicHint:'town',
   },
   dezolis_ow:{
@@ -656,13 +690,25 @@ const WORLDS={
     entities:[
       {type:'story',x:9,y:8,storyId:'meet_mira',label:'Starport',once:true,flag:'mira_joined'},
       {type:'story',x:14,y:13,storyId:'esper_archive',label:'Esper Archive',once:true,flag:'archive_read'},
-      {type:'npc',x:18,y:9,name:'DEZOLIAN ELDER',lines:['The Great Light warms our world for the first time in memory. But my granddaughter... she has forgotten my name.','The Creed says this is purification. I say something is wrong.']},
-      {type:'npc',x:5,y:14,name:'CREED PRIEST',lines:['Archon Seraphel speaks truth. The light offers peace. Why do you resist?','The archive holds old lies. Do not go there.']},
-      {type:'warp',x:15,y:6,target:'aiedo',tx:10,ty:9,label:'→ Motavia'},
+      {type:'npc',x:18,y:9,name:'DEZOLIAN ELDER',lines:['The Great Light warms our world for the first time in memory. But my granddaughter... she has forgotten my name.','The Creed says this is purification. I say something is wrong.','I have lived through three generations of this world\'s suffering. I know what hope looks like from the inside. This is not hope. This is silence dressed in gold.','The esper archives recorded something two days ago — a shift in the cosmic resonance frequency. The last time that happened was when Rolf destroyed the Mother Brain three centuries ago. The last time before that was when Alis defeated the first Dark Force. Something fundamental has changed.']},
+      {type:'npc',x:5,y:14,name:'CREED PRIEST',lines:['Archon Seraphel speaks truth. The light offers peace. Why do you resist?','The archive holds old lies. Do not go there.','I was an esper once. I studied the ancient records. Then I understood what I was really studying: a cage. The Espers have been maintaining that cage for centuries, calling it wisdom. The Light offers the only exit.','What is free will worth if you use it to choose suffering? If the Great Light removes the capacity for pain, have you truly lost anything?']},
+      {type:'npc',x:12,y:8,name:'ESPER STUDENT',lines:['The senior espers have been locked in emergency council for three days. They won\'t say why.','I found one of the old training texts last week — "Resonance Harmonics and the Cosmic Lattice." It was sealed with seven wards. I broke four before the book disintegrated. What I read... the Profound Darkness wasn\'t just evil. It was a counterweight.','If you\'re going to the archive, be careful. Two researchers went in last week and came out "illuminated." They burned their notes before we could read them. They were smiling the whole time.']},
+      {type:'npc',x:7,y:11,name:'TRAVELER',lines:['I came from Motavia three weeks ago. The spaceport just reopened — first time in twenty years.','On the way here, our shuttle passed through a region of space that was... wrong. The instruments read normal, but everyone felt calm. Too calm. The pilot nearly forgot to land.','One of the passengers said she heard music. Beautiful, perfect music. She said she didn\'t want it to stop. We had to physically stop her from opening the airlock to float toward it.']},
+      // Item chests
+      {type:'chest',x:16,y:12,itemId:'escapipe',label:'Emergency Kit',qty:1,once:true,flag:'chest_dez_1'},
+      {type:'chest',x:6,y:8,itemId:'solDew',label:'Abandoned Pack',qty:2,once:true,flag:'chest_dez_2'},
+      // Examine spots
+      {type:'examine',x:14,y:12,once:false,text:"The Esper Archive — a tower of carved stone and crystal, centuries old. Above the entrance, someone has recently scratched words into the stone:\n\n'WE BURIED THE TRUTH TO PROTECT YOU. WE WERE WRONG.'\n\nBelow it, in different handwriting: 'WE KNEW. WE WENT IN ANYWAY.'\n\nBelow that, freshest of all: 'IS ANYONE ELSE SEEING THIS?'"},
+      {type:'examine',x:20,y:14,once:true,text:"A Dezolian weather sensor on a pole. Its readout screen shows:\n\nCURRENT TEMP: -12°C\nCOSMIC RESONANCE INDEX: 8,847 (CRITICAL — NORMAL RANGE 100-400)\nSEAL INTEGRITY: [ERROR — PARAMETER NO LONGER EXISTS]\nOBSERVER PROTOCOL STATUS: ACTIVE\n\nThe last reading has been logged continuously for six weeks, since the day the Profound Darkness was destroyed."},
+      // Spaceport terminal back to Aiedo — at (17,8), matching Aiedo's terminal at (17,8)
+      {type:'warp',x:17,y:8,target:'aiedo',tx:17,ty:8,label:'TERMINAL → Aiedo'},
+      // Warp up to Elyon Ark at (18,5) — return warp from Elyon lands at (18,6)
       {type:'warp',x:18,y:5,target:'elyon',tx:14,ty:11,label:'↑ Elyon Ark'},
+      // Return portal from Elyon — player lands here at (18,6)
+      {type:'warp',x:18,y:6,target:'elyon',tx:14,ty:11,label:'↑ Elyon Ark (Return)'},
     ],
-    playerStart:{x:10,y:10},
-    musicHint:'field',
+    playerStart:{x:17,y:9},
+    musicHint:'snow',
   },
   elyon:{
     mapData:MAP_ELYON,
@@ -671,14 +717,30 @@ const WORLDS={
     encRate:0.09,
     encTable:['creed_soldier','luminant_drone','creed_soldier'],
     entities:[
-      {type:'story',x:7,y:5,storyId:'meet_seth9',label:'Control Room',once:true,flag:'seth9_joined'},
-      {type:'story',x:14,y:5,storyId:'meet_neysa',label:'Esper Chamber',once:true,flag:'neysa_joined'},
-      {type:'story',x:10,y:7,storyId:'seraphel_speech',label:'Throne Room',once:true,flag:'seraphel_met'},
-      {type:'npc',x:5,y:7,name:'CONVERT',lines:['I gave my fear to the Light. I gave my grief to the Light. I gave my name...']},
-      {type:'warp',x:11,y:11,target:'dezolis_ow',tx:18,ty:6,label:'EXIT'},
-      {type:'warp',x:12,y:11,target:'rykros',tx:11,ty:5,label:'→ RYKROS'},
+      // Control room — left side room (entry warp-door at x:9,y:5)
+      {type:'story',x:8,y:7,storyId:'meet_seth9',label:'Control Room',once:true,flag:'seth9_joined'},
+      // Esper Chamber — right side room (entry warp-door at x:19,y:5)
+      {type:'story',x:18,y:7,storyId:'meet_neysa',label:'Esper Chamber',once:true,flag:'neysa_joined'},
+      // Throne Room — main hall centre
+      {type:'story',x:14,y:5,storyId:'seraphel_speech',label:'Throne Room',once:true,flag:'seraphel_met'},
+      // NPCs in the main corridors
+      {type:'npc',x:6,y:3,name:'CONVERT',lines:['I gave my fear to the Light. I gave my grief to the Light. I gave my name...','I don\'t remember what I was afraid of. Is that strange? I feel like it should feel like a loss. But I don\'t feel the loss either.','They say I was a soldier before. I must have fought things. I don\'t know why. Everything is so much clearer now. There\'s nothing to fight. There\'s nothing to fear. There\'s nothing to...']},
+      {type:'npc',x:22,y:3,name:'CONVERT 2',lines:['The Archon is kind. He says we are being completed.','My children used to cry. They don\'t cry anymore. I used to think that meant something was wrong. The Light showed me I was mistaken.','You should join us. The Light doesn\'t take anything from you. It just... smooths everything. All the rough parts. All the edges. Everything becomes... smooth.']},
+      {type:'npc',x:14,y:3,name:'CREED TECHNICIAN',lines:['Elyon has been in orbit for at least eight hundred years. Pre-Mother Brain. Pre-everything we know.','The guidance systems reference coordinates that don\'t exist in our star charts. Archon Seraphel says they map to the Great Light\'s approach vector.','We found a sealed section yesterday. Old Algo script above the door: "FAILSAFE CHAMBER — AUTHORIZED CARETAKERS ONLY." The Archon said to seal it off again. He looked... unsettled for the first time I\'ve seen.']},
+      // Examine spots on main floor
+      {type:'examine',x:10,y:3,once:true,text:"A control panel in the secondary bay. Most displays are in languages predating the current Algo calendar.\n\nOne active terminal shows a star map. Algo is marked, but so is a point far outside the solar system — a designation in Old Light-script that Seth-9 might be able to translate.\n\nThe trajectory lines converge on Algo. ETA: calculated from 'date of seal failure.' You count back.\n\nSix weeks ago. The day Chaz destroyed the Profound Darkness."},
+      {type:'examine',x:20,y:3,once:true,text:"A glass case containing what appears to be personal effects — a tattered orange bandanna, a data chip, a cracked pistol. A card reads:\n\n'ARTIFACTS OF THE PRIOR AGE — DO NOT ILLUMINATE'\n\nThe bandanna has a Hunter Guild emblem. The pistol... is the same model Chaz Ashley's companions are described carrying in the records. These were here before the Creed found this ship. These were placed here by someone who knew this ship would be found."},
+      {type:'examine',x:14,y:10,once:false,text:"The central hall of Elyon stretches further than the outer hull should allow. Ark architecture — the interior is larger than the exterior.\n\nThe walls hum at a frequency just below hearing. You feel it in your back teeth. In your sternum.\n\nLyra stops walking. Her eyes are half-closed. 'It's singing to me,' she says. 'It knows my harmonic signature. It's been waiting for exactly... me.'"},
+      // Chest in left room
+      {type:'chest',x:7,y:7,itemId:'solDew',label:'Emergency Locker',qty:2,once:true,flag:'chest_elyon_1'},
+      // Chest in right room
+      {type:'chest',x:19,y:7,itemId:'trimate',label:'Medical Cache',qty:1,once:true,flag:'chest_elyon_2'},
+      // Three working warp tiles at bottom row y:12 — x:8, x:14, x:21
+      {type:'warp',x:8,y:12,target:'dezolis_ow',tx:18,ty:7,label:'EXIT BAY → Dezolis'},
+      {type:'warp',x:14,y:12,target:'dezolis_ow',tx:18,ty:7,label:'MAIN EXIT → Dezolis'},
+      {type:'warp',x:21,y:12,target:'rykros',tx:11,ty:5,label:'→ RYKROS GATE'},
     ],
-    playerStart:{x:11,y:11},
+    playerStart:{x:14,y:11},
     musicHint:'dungeon',
   },
   rykros:{
@@ -690,11 +752,18 @@ const WORLDS={
     entities:[
       {type:'story',x:11,y:6,storyId:'archive_of_balance',label:'Archive of Balance',once:true,flag:'archive_found'},
       {type:'story',x:11,y:5,storyId:'boss_seraphel',label:'Convergence Point',once:true,flag:'boss_seraphel_done'},
-      {type:'npc',x:3,y:5,name:'ECHO OF ALIS',lines:['We chose to fight. Every generation. Even knowing what we were chosen to protect — a seal, not a people.','You are the first in a very long time who was not chosen. That is why you matter.']},
-      {type:'npc',x:19,y:5,name:'ECHO OF CHAZ',lines:['I broke the cycle. But I did not know what lived inside it.','You will know. You will choose anyway. That is what it means to be free.']},
+      {type:'npc',x:3,y:5,name:'ECHO OF ALIS',lines:['We chose to fight. Every generation. Even knowing what we were chosen to protect — a seal, not a people.','You are the first in a very long time who was not chosen. That is why you matter.','I spent my whole life wondering if Alis would have fought differently if she\'d known the truth. Now I think... yes. I think she would have fought harder. Knowing you\'re fighting for people, not for a cosmic machine — that changes everything about how it feels to swing the sword.','Tell the others: the old heroes didn\'t become heroes because destiny called them. They became heroes because they refused to let the world be worse than it could be. That\'s all. That\'s everything. Pass it on.']},
+      {type:'npc',x:19,y:5,name:'ECHO OF CHAZ',lines:['I broke the cycle. But I did not know what lived inside it.','You will know. You will choose anyway. That is what it means to be free.','When I destroyed the Profound Darkness, I felt the universe... exhale. I thought that exhale was relief. I understand now it was anticipation.','The Great Light has been waiting for this moment for a very long time. It waited with perfect patience because it knew the seal would eventually break. It planned for this. We were always going to end up here. The only thing it didn\'t plan for... is you refusing the script.']},
+      {type:'npc',x:11,y:9,name:'ECHO OF NEI',lines:['...I am older than my memories. An echo of something that existed only briefly.\n\nBut I remember what it was like to matter to someone.\n\nDon\'t let her go. The one who came after me — all the ones who came after. Don\'t let the Light tell you caring about specific people is imperfection to be corrected.','That\'s what love is, isn\'t it? The refusal to smooth all people into sameness. Every person being precisely themselves, exactly.']},
+      {type:'npc',x:5,y:8,name:'ECHO OF ROLF',lines:['I fought the Mother Brain. I know what it looks like when a system decides it knows better than the people inside it.','The Great Light is not evil. That is what makes it so dangerous. It is correct about suffering. It is correct that it can end pain. It is only wrong about whether that is something to want.','I would rather have Nei — imperfect, brief, mortal Nei — than a thousand years of harmonious emptiness. Make sure that preference survives.']},
+      {type:'examine',x:9,y:7,once:true,text:"The floor of Rykros is transparent here. Beneath it: Algo, impossibly distant, impossibly clear — all three planets visible at once.\n\nMotavia glows faintly gold. Dezolis shimmers pale blue. The orbital habitats catch light like scattered seeds.\n\nSomewhere out there, millions of people who have no idea this conversation is happening.\n\nThey don't need to know. They just need to still be themselves tomorrow."},
+      {type:'examine',x:14,y:8,once:true,text:"A fractured monument. The inscription is in at least four languages, each from a different era:\n\n[ANCIENT ALGO SCRIPT]: 'HERE THE LIGHT CONFINED ITS ENEMY AND CALLED IT VICTORY.'\n[PRE-MOTHER BRAIN]: 'HERE THE SEAL WAS MAINTAINED AT COST OF TRUTH.'\n[PSII ERA]: 'HERE THE HEROES WERE USED AND DID NOT KNOW.'\n[PSIV ERA, RECENT — CHAZ'S HANDWRITING]: 'Here we did what we could with what we knew. I hope it's enough. — C.A.'\n\nBelow that, in your own handwriting from a moment that hasn't happened yet: [blank]"},
+      {type:'chest',x:16,y:7,itemId:'escapipe',label:'Ancient Cache',qty:1,once:true,flag:'chest_rykros_1'},
+      // Exit portal back to Elyon — in the lower chamber so player can't get trapped
+      {type:'warp',x:11,y:9,target:'elyon',tx:14,ty:11,label:'← PORTAL TO ELYON'},
     ],
     playerStart:{x:11,y:7},
-    musicHint:'boss',
+    musicHint:'void',
   },
 };
 
@@ -721,7 +790,7 @@ function normalizeWorldEntities(){
   Object.values(WORLDS).forEach(world=>{
     const map=world.mapData;
     world.entities.forEach(ent=>{
-      if(!['warp','inn','shop','story','sign','npc'].includes(ent.type)) return;
+      if(!['warp','inn','shop','story','sign','npc','chest','examine'].includes(ent.type)) return;
       const tid=map.data[ent.y*map.w+ent.x];
       if((TILES[tid]||TILES[0]).walk) return;
       const found=findNearestWalkable(map,ent.x,ent.y,4);
@@ -733,6 +802,20 @@ function normalizeWorldEntities(){
 // ── STORY SCENES ──
 // Each has: id, panels[], speaker, text, next (id or null→game continues), addChar, effect
 const SCENES={
+  iglanova_boss:{
+    panels:[{type:'wide',draw:'motavia_ruins'}],
+    speaker:'',
+    text:"Deep beneath the ruins, something ancient stirs. A sandworm of massive size — not corrupted by Dark Force, but purified by the Great Light. Its eyes glow red with forced serenity.\n\nIts rage is buried under luminescence. Its hunger pacified. And yet it attacks.",
+    isBoss:true,
+    bossId:'iglanova',
+    next:'iglanova_after',
+  },
+  iglanova_after:{
+    panels:[{type:'left',draw:'aren_portrait'},{type:'right',draw:'lyra_portrait'}],
+    speaker:'LYRA',
+    text:"It wasn't attacking us out of malice. It was attacking because something inside it still remembered what it was — and that memory was trying to break free.\n\nThe Great Light calls this compassion. Erasing the instinct to be what you are.\n\nI can hear the Light's voice clearly now. It says I was made to fix this. I don't know if I believe that yet.",
+    next:null,
+  },
   find_lyra:{
     panels:[
       {type:'wide',draw:'motavia_ruins'},
@@ -909,13 +992,13 @@ const CHAR_TEMPLATES={
 
 // ── ENEMY DEFINITIONS ──
 const ENEMIES={
-  sandworm:{id:'sandworm',name:'Sand Worm',hp:80,str:18,men:6,agi:10,def:8,exp:30,mst:20,weak:['ice'],atks:['Bite','Sand Blast']},
-  luminant_drone:{id:'luminant_drone',name:'Lum. Drone',hp:60,str:14,men:20,agi:24,def:6,exp:40,mst:30,weak:['gravity'],atks:['Light Beam','Scan Pulse'],elem:'light'},
-  purified_beast:{id:'purified_beast',name:'Purif. Beast',hp:120,str:24,men:14,agi:16,def:12,exp:55,mst:40,weak:['holy'],atks:['Claw','Radiant Howl'],elem:'light'},
-  creed_soldier:{id:'creed_soldier',name:'Creed Soldier',hp:100,str:22,men:18,agi:20,def:14,exp:60,mst:50,weak:[],atks:['Strike','Light Bolt']},
-  rykros_echo:{id:'rykros_echo',name:'Rykros Echo',hp:180,str:30,men:28,agi:22,def:18,exp:100,mst:80,weak:['holy','gravity'],atks:['Memory Strike','Dim. Tear']},
-  iglanova:{id:'iglanova',name:'IGLANOVA',hp:500,str:32,men:22,agi:14,def:20,exp:300,mst:200,weak:['ice','holy'],atks:['Sandstorm','Burrow','Giant Fang'],isBoss:true},
-  seraphel_final:{id:'seraphel_final',name:'SERAPHEL',hp:900,str:40,men:50,agi:28,def:28,exp:800,mst:600,weak:['gravity'],atks:['Divine Ray','Illumination','Mass Convert'],isBoss:true,elem:'light'},
+  sandworm:      {id:'sandworm',      name:'Sand Worm',    hp:80, str:18,men:6, agi:8, def:8, exp:30, mst:20, weak:['ice'],          atks:['Bite','Sand Blast']},
+  luminant_drone:{id:'luminant_drone',name:'Lum. Drone',   hp:60, str:14,men:20,agi:24,def:6, exp:40, mst:30, weak:['gravity'],       atks:['Light Beam','Scan Pulse'],  elem:'light'},
+  purified_beast:{id:'purified_beast',name:'Purif. Beast', hp:120,str:24,men:14,agi:16,def:12,exp:55, mst:40, weak:['holy'],          atks:['Claw','Radiant Howl'],      elem:'light'},
+  creed_soldier: {id:'creed_soldier', name:'Creed Soldier',hp:100,str:22,men:18,agi:20,def:14,exp:60, mst:50, weak:[],               atks:['Strike','Light Bolt']},
+  rykros_echo:   {id:'rykros_echo',   name:'Rykros Echo',  hp:180,str:30,men:28,agi:22,def:18,exp:100,mst:80, weak:['holy','gravity'],atks:['Memory Strike','Dim. Tear']},
+  iglanova:      {id:'iglanova',      name:'IGLANOVA',     hp:500,str:32,men:22,agi:14,def:20,exp:300,mst:200,weak:['ice','holy'],    atks:['Sandstorm','Burrow','Giant Fang'],isBoss:true},
+  seraphel_final:{id:'seraphel_final',name:'SERAPHEL',     hp:900,str:40,men:50,agi:28,def:28,exp:800,mst:600,weak:['gravity'],       atks:['Divine Ray','Illumination','Mass Convert'],isBoss:true,elem:'light'},
 };
 
 // ── COMBO DEFINITIONS ──
@@ -942,7 +1025,7 @@ const GS={
   battle:null,
   // story
   pendingScene:null,
-  inventory:{solDew:0,antidote:0,escapipe:0},
+  inventory:{solDew:0,antidote:0,escapipe:0,moon_dew:0,telepipe:0,trimate:0},
   objective:'Find the strange light in the Motavia ruins.',
   shopOpen:false,
   audioReady:false,
@@ -1152,68 +1235,380 @@ function drawSceneArt(id,canvas){
 }
 
 function drawLargePortrait(id,c,W,H){
-  c.fillStyle=P.panel;c.fillRect(0,0,W,H);
-  // Background gradient by character
   const bgs={
-    aren:[P.sky1,P.sand1],lyra:['#d0e8ff','#f0f0e0'],tarin:['#201040','#100820'],
-    mira:['#203010','#102010'],seth9:['#102828','#081818'],neysa:['#200830','#100418'],
-    seraphel:['#f0e8d0','#d4c070'],
+    aren:[P.sky1,P.sand1],
+    lyra:['#0c1c40','#182850'],
+    tarin:['#180830','#100420'],
+    mira:['#0c1408','#182010'],
+    seth9:['#081420','#0c1c2c'],
+    neysa:['#0c0418','#180830'],
+    seraphel:['#f0e8d0','#d8d0a0'],
   };
-  const bg=bgs[id]||[P.panel,P.panel2];
+  const bg=bgs[id]||[P.panel,'#0c1220'];
   const grd=c.createLinearGradient(0,0,0,H);
   grd.addColorStop(0,bg[0]);grd.addColorStop(1,bg[1]);
   c.fillStyle=grd;c.fillRect(0,0,W,H);
-  drawCharSprite(id,c,W*.2,H*.05,W*.6,H*.9);
+
+  // Subtle background detail by character
+  if(id==='aren'){
+    // Desert horizon
+    c.fillStyle=P.sand2; c.fillRect(0,H*.72,W,H*.28);
+    c.fillStyle=P.sand3; c.fillRect(0,H*.78,W,H*.22);
+    for(let i=0;i<5;i++){c.fillStyle=P.sand1;c.fillRect(i*W*.22,H*.68,W*.1,H*.12);}
+  } else if(id==='lyra'){
+    // Blue light rays from top
+    for(let i=0;i<6;i++){
+      const grd2=c.createLinearGradient(W*(0.2+i*.12),0,W*(0.2+i*.12),H);
+      grd2.addColorStop(0,'rgba(180,220,255,.18)');grd2.addColorStop(1,'rgba(180,220,255,0)');
+      c.fillStyle=grd2;c.fillRect(W*(0.18+i*.12),0,W*.06,H);
+    }
+  } else if(id==='neysa'){
+    // Arcane runes in background
+    c.fillStyle='rgba(140,40,200,.08)';
+    for(let i=0;i<4;i++){
+      c.beginPath();c.arc(W*.5,H*.5,W*(0.15+i*.12),0,Math.PI*2);c.stroke&&c.stroke();
+      c.fillRect(W*(0.1+i*.22),H*.1,W*.04,H*.8);
+    }
+    const rg=c.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,W*.4);
+    rg.addColorStop(0,'rgba(140,40,200,.12)');rg.addColorStop(1,'rgba(0,0,0,0)');
+    c.fillStyle=rg;c.fillRect(0,0,W,H);
+  } else if(id==='seraphel'){
+    // Divine light columns
+    for(let i=0;i<4;i++){
+      const sg=c.createLinearGradient(W*(0.15+i*.22),0,W*(0.15+i*.22),H);
+      sg.addColorStop(0,'rgba(255,255,180,.3)');sg.addColorStop(1,'rgba(255,255,180,0)');
+      c.fillStyle=sg;c.fillRect(W*(0.13+i*.22),0,W*.08,H);
+    }
+  } else if(id==='seth9'){
+    // Grid lines
+    c.strokeStyle='rgba(40,100,160,.2)';c.lineWidth=1;
+    for(let x=0;x<W;x+=W*.12){c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke();}
+    for(let y=0;y<H;y+=H*.12){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();}
+  }
+
+  // Draw character sprite, centered, large
+  const margin=Math.floor(W*0.1);
+  drawCharSprite(id,c,margin,Math.floor(H*0.03),W-margin*2,H-Math.floor(H*0.06));
 }
 
 function drawCharSprite(id,c,x,y,w,h){
-  // Draw a character at the given position/size
+  // Draw PSIV-style detailed character sprites
   const s=Math.min(w,h);
-  const cx=x+w*.5,cy=y+h*.1;
-  const sw=s*.45,sh=s*.55;
+  const u=s/32; // 1 "unit" = 1/32 of sprite size, scales everything
+  const cx=Math.floor(x+w*.5);
+  const cy=Math.floor(y+h*.08);
 
-  const col={
-    aren:{body:P.aren_shirt,hair:P.aren_hair,skin:P.aren_skin,acc:P.gold},
-    lyra:{body:P.lyra_dress,hair:P.lyra_hair,skin:P.lyra_skin,acc:'#ffffff'},
-    tarin:{body:P.tarin_robe,hair:P.tarin_hair,skin:P.tarin_skin,acc:'#9050d0'},
-    mira:{body:P.mira_suit,hair:P.mira_hair,skin:P.mira_skin,acc:P.orange},
-    seth9:{body:P.seth_body,hair:P.seth_body,skin:'#304040',acc:P.seth_eye},
-    neysa:{body:P.neysa_robe,hair:P.neysa_hair,skin:P.neysa_skin,acc:'#c060e0'},
-    seraphel:{body:'#f8f0e0',hair:'#c0b060',skin:'#e8d8c0',acc:P.gold2},
-  }[id]||{body:P.gray,hair:P.darkgray,skin:P.sand1,acc:P.gold};
+  function px(rx,ry,rw,rh){ c.fillRect(Math.floor(cx+rx*u),Math.floor(cy+ry*u),Math.max(1,Math.floor(rw*u)),Math.max(1,Math.floor(rh*u))); }
 
-  // Body
-  c.fillStyle=col.body;
-  c.fillRect(cx-sw*.35,cy+sh*.35,sw*.7,sh*.55);
-  // Legs
-  c.fillStyle=col.body;
-  c.fillRect(cx-sw*.3,cy+sh*.88,sw*.25,sh*.12);
-  c.fillRect(cx+sw*.05,cy+sh*.88,sw*.25,sh*.12);
-  // Arms
-  c.fillRect(cx-sw*.5,cy+sh*.4,sw*.15,sh*.3);
-  c.fillRect(cx+sw*.35,cy+sh*.4,sw*.15,sh*.3);
-  // Head
-  c.fillStyle=col.skin;
-  c.fillRect(cx-sw*.28,cy,sw*.56,sh*.33);
-  // Hair
-  c.fillStyle=col.hair;
-  c.fillRect(cx-sw*.3,cy-sh*.04,sw*.6,sh*.12);
-  if(id==='lyra'){c.fillRect(cx-sw*.28,cy,sw*.1,sh*.2);c.fillRect(cx+sw*.18,cy,sw*.1,sh*.2);}
-  if(id==='neysa'){c.fillRect(cx-sw*.3,cy,sw*.1,sh*.25);c.fillRect(cx+sw*.2,cy,sw*.1,sh*.25);}
-  // Eyes
-  c.fillStyle='#0a0a0a';
-  c.fillRect(cx-sw*.15,cy+sh*.1,sw*.08,sh*.07);
-  c.fillRect(cx+sw*.07,cy+sh*.1,sw*.08,sh*.07);
-  // Special features
-  if(id==='seth9'){
-    c.fillStyle=col.acc;
-    c.fillRect(cx-sw*.15,cy+sh*.08,sw*.12,sh*.1);
-    c.fillRect(cx+sw*.03,cy+sh*.08,sw*.12,sh*.1);
-  }
-  if(id==='lyra'){
-    const grd=c.createRadialGradient(cx,cy+sh*.15,0,cx,cy+sh*.15,sw*.35);
-    grd.addColorStop(0,'rgba(255,255,220,.15)');grd.addColorStop(1,'rgba(255,255,220,0)');
-    c.fillStyle=grd;c.fillRect(cx-sw*.5,cy-sh*.1,sw,sh*.5);
+  if(id==='aren'){
+    // Shadow
+    c.fillStyle='rgba(0,0,0,.25)'; px(-7,29,14,3);
+    // Boots
+    c.fillStyle='#3a2010'; px(-6,25,5,5); px(1,25,5,5);
+    c.fillStyle='#5a3018'; px(-7,27,4,3); px(2,27,4,3);
+    // Pants - dark brown
+    c.fillStyle='#4a3020'; px(-6,18,12,8);
+    c.fillStyle='#3a2010'; px(-5,22,4,4); px(1,22,4,4);
+    // Belt
+    c.fillStyle='#8a6030'; px(-6,17,12,2);
+    c.fillStyle=P.gold; px(-2,17,4,2);
+    // Shirt / jacket - teal-grey
+    c.fillStyle='#4a6878'; px(-7,10,14,9);
+    c.fillStyle='#3a5868'; px(-8,11,3,7); px(5,11,3,7); // sleeves
+    // Jacket accent
+    c.fillStyle='#2a4858'; px(-1,10,2,9);
+    // Hands
+    c.fillStyle=P.aren_skin; px(-9,16,2,3); px(7,16,2,3);
+    // Collar
+    c.fillStyle='#607080'; px(-4,9,8,3);
+    // Neck
+    c.fillStyle=P.aren_skin; px(-2,7,4,3);
+    // Head
+    c.fillStyle=P.aren_skin; px(-5,1,10,7);
+    // Jaw shadow
+    c.fillStyle='#c08870'; px(-4,6,8,2);
+    // Hair - messy brown
+    c.fillStyle=P.aren_hair; px(-6,-1,12,4);
+    c.fillStyle=P.aren_hair; px(-6,1,3,4); // left bang
+    c.fillStyle=P.aren_hair; px(4,1,2,3); // right accent
+    c.fillStyle='#5a3818'; px(-5,0,2,2); px(2,0,2,2); // hair detail
+    // Eyes
+    c.fillStyle='#0a0a10'; px(-3,3,2,2); px(1,3,2,2);
+    c.fillStyle='#6080a0'; px(-3,3,1,1); px(1,3,1,1); // iris
+    c.fillStyle='#ffffff'; px(-4,3,1,1); px(0,3,1,1); // highlight
+    // Nose
+    c.fillStyle='#c08870'; px(0,5,1,1);
+    // Sword handle on back
+    c.fillStyle=P.gold; px(5,9,2,8);
+    c.fillStyle='#8a6020'; px(4,11,4,2);
+    c.fillStyle='#a07840'; px(5,14,2,5);
+    // Scar detail
+    c.fillStyle='#d09060'; px(-2,4,1,2);
+  } else if(id==='lyra'){
+    // Soft glow aura
+    const grd=c.createRadialGradient(cx,cy+16*u,0,cx,cy+16*u,14*u);
+    grd.addColorStop(0,'rgba(220,240,255,.18)');grd.addColorStop(1,'rgba(220,240,255,0)');
+    c.fillStyle=grd; c.fillRect(cx-15*u,cy-2*u,30*u,36*u);
+    // Shadow
+    c.fillStyle='rgba(0,0,0,.2)'; px(-5,29,10,2);
+    // Dress - white with blue trim
+    c.fillStyle='#e8f0ff'; px(-6,14,12,16);
+    c.fillStyle='#c8d8f0'; px(-7,16,3,10); px(4,16,3,10); // sleeves
+    // Dress trim
+    c.fillStyle='#90b8e0'; px(-6,13,12,2); px(-6,28,12,2);
+    c.fillStyle='#b0d0f0'; px(-5,15,10,14);
+    // Dress panel detail
+    c.fillStyle='#d0e4ff'; px(-3,16,6,11);
+    c.fillStyle='#a8c4e8'; px(-2,17,4,9);
+    // Sash
+    c.fillStyle='#7898c8'; px(-4,14,8,3);
+    c.fillStyle=P.gold; px(-1,14,2,3);
+    // Hands
+    c.fillStyle=P.lyra_skin; px(-8,20,2,2); px(6,20,2,2);
+    // Neck
+    c.fillStyle=P.lyra_skin; px(-2,10,4,5);
+    // Head
+    c.fillStyle=P.lyra_skin; px(-5,2,10,9);
+    // Hair - silvery white, long
+    c.fillStyle=P.lyra_hair; px(-6,-1,12,4);
+    c.fillStyle=P.lyra_hair; px(-7,2,3,14); // left long strand
+    c.fillStyle=P.lyra_hair; px(5,2,3,12);  // right long strand
+    c.fillStyle='#c8d8f0'; px(-5,0,2,3); px(4,0,2,2); // hair sheen
+    // Eyes - glowing blue
+    c.fillStyle='#0020a0'; px(-3,5,2,2); px(1,5,2,2);
+    c.fillStyle='#4080ff'; px(-3,5,1,1); px(1,5,1,1);
+    c.fillStyle='rgba(180,200,255,.8)'; px(-3,5,1,1); px(1,5,1,1); // glow
+    // Small dot marks (synthetic life indicator)
+    c.fillStyle='rgba(160,200,255,.6)'; px(-4,8,1,1); px(3,8,1,1);
+    // Crystal pendant
+    c.fillStyle='#a0c8ff'; px(-1,13,2,2);
+    c.fillStyle='#c8e8ff'; px(-1,13,1,1);
+  } else if(id==='tarin'){
+    // Shadow
+    c.fillStyle='rgba(0,0,0,.25)'; px(-6,29,12,3);
+    // Robes - deep purple/navy, scholar-priest
+    c.fillStyle=P.tarin_robe; px(-7,10,14,20);
+    c.fillStyle='#281848'; px(-8,12,3,14); px(5,12,3,14); // outer robe panels
+    // Robe trim - gold
+    c.fillStyle='#a07820'; px(-7,9,14,2); px(-7,28,14,2);
+    c.fillStyle=P.gold; px(-1,10,2,18); // center trim
+    // Inner robe
+    c.fillStyle='#402860'; px(-5,11,10,17);
+    // Belt/sash
+    c.fillStyle='#604010'; px(-6,18,12,3);
+    c.fillStyle='#c09030'; px(-2,18,4,3);
+    // Book carried at side
+    c.fillStyle='#803020'; px(6,15,4,8);
+    c.fillStyle='#c04020'; px(6,15,4,1); px(6,22,4,1);
+    c.fillStyle='#f0d040'; px(7,16,2,6);
+    // Hands
+    c.fillStyle=P.tarin_skin; px(-9,18,2,3); px(7,18,2,3);
+    // Neck
+    c.fillStyle=P.tarin_skin; px(-2,7,4,4);
+    // Head
+    c.fillStyle=P.tarin_skin; px(-5,0,10,8);
+    // Jaw - older face
+    c.fillStyle='#b08060'; px(-4,6,8,2);
+    // Hair - greying at temples
+    c.fillStyle=P.tarin_hair; px(-5,-1,10,3);
+    c.fillStyle='#808070'; px(-5,-1,2,3); px(4,-1,2,3); // grey temples
+    // Eyes - wise, dark
+    c.fillStyle='#1a0a08'; px(-3,3,2,2); px(1,3,2,2);
+    c.fillStyle='#604030'; px(-3,3,1,1); px(1,3,1,1);
+    // Brow furrow
+    c.fillStyle='#b08060'; px(-4,2,4,1); px(1,2,3,1);
+    // Small beard
+    c.fillStyle=P.tarin_hair; px(-2,7,4,2);
+    c.fillStyle='#707060'; px(-1,7,2,2);
+    // Religious symbol on robe
+    c.fillStyle='rgba(200,160,40,.6)'; px(-1,13,2,4); px(-3,15,6,1);
+  } else if(id==='mira'){
+    // Shadow
+    c.fillStyle='rgba(0,0,0,.25)'; px(-6,29,12,3);
+    // Boots - tactical
+    c.fillStyle='#3a3a3a'; px(-6,24,5,6); px(1,24,5,6);
+    c.fillStyle='#555'; px(-7,26,4,4); px(2,26,4,4);
+    // Pants - cargo green
+    c.fillStyle='#3a4a2a'; px(-6,16,12,9);
+    c.fillStyle='#2a3a1a'; px(-5,18,4,6); px(1,18,4,6);
+    // Cargo pockets
+    c.fillStyle='#4a5a3a'; px(-6,19,3,4); px(3,19,3,4);
+    // Flight suit jacket
+    c.fillStyle=P.mira_suit; px(-7,8,14,9);
+    c.fillStyle='#506040'; px(-8,9,3,8); px(5,9,3,8); // sleeves
+    // Jacket details - patches, zippers
+    c.fillStyle='#304020'; px(-7,7,14,2); // collar base
+    c.fillStyle='#607050'; px(-6,8,3,7); // lapel L
+    c.fillStyle=P.orange; px(-4,9,2,1); px(-4,11,2,1); px(-4,13,2,1); // status lights
+    // Arm-mounted scanner
+    c.fillStyle='#303030'; px(6,10,4,4);
+    c.fillStyle='#4080a0'; px(7,11,2,2);
+    // Hands
+    c.fillStyle=P.mira_skin; px(-9,14,2,3); px(7,14,2,3);
+    // Neck
+    c.fillStyle=P.mira_skin; px(-2,6,4,3);
+    // Head
+    c.fillStyle=P.mira_skin; px(-5,0,10,7);
+    // Jaw line - angular
+    c.fillStyle='#c09070'; px(-5,5,10,2);
+    // Hair - short red-brown, practical
+    c.fillStyle=P.mira_hair; px(-5,-2,10,4);
+    c.fillStyle='#8a3018'; px(-5,-2,3,3); px(3,-2,2,2); // dark strands
+    c.fillStyle='#c04820'; px(-4,-1,2,2); // highlight
+    // Eyes - sharp
+    c.fillStyle='#200808'; px(-3,2,2,2); px(1,2,2,2);
+    c.fillStyle='#803020'; px(-3,2,1,1); px(1,2,1,1);
+    c.fillStyle='#ffffff'; px(-4,2,1,1); px(0,2,1,1);
+    // Goggles pushed up on forehead
+    c.fillStyle='#303030'; px(-4,-1,8,2);
+    c.fillStyle='#506070'; px(-3,-1,3,2); px(1,-1,3,2);
+    c.fillStyle='rgba(100,160,200,.5)'; px(-3,-1,3,2); px(1,-1,3,2);
+    // Pilot badge
+    c.fillStyle=P.orange; px(-2,9,4,3);
+    c.fillStyle='#f0b040'; px(-1,10,2,1);
+  } else if(id==='seth9'){
+    // Shadow
+    c.fillStyle='rgba(0,0,0,.3)'; px(-8,29,16,3);
+    // Heavy android legs
+    c.fillStyle=P.seth_body; px(-7,20,6,10); px(1,20,6,10);
+    c.fillStyle='#182830'; px(-6,22,4,7); px(2,22,4,7);
+    // Knee joints
+    c.fillStyle='#405060'; px(-7,23,6,3); px(1,23,6,3);
+    c.fillStyle='#304050'; px(-6,24,4,2); px(2,24,4,2);
+    // Torso - heavy armor
+    c.fillStyle=P.seth_body; px(-9,8,18,13);
+    c.fillStyle='#1c3040'; px(-8,9,16,11); // inner panel
+    // Chest armor plates
+    c.fillStyle='#283848'; px(-7,9,6,5); px(1,9,6,5);
+    c.fillStyle='#304858'; px(-7,14,14,5);
+    // Chest power core
+    c.fillStyle='#004060'; px(-3,10,6,4);
+    c.fillStyle=P.seth_eye; px(-2,11,4,2);
+    c.fillStyle='#80f0ff'; px(-1,11,2,1);
+    // Shoulder armor
+    c.fillStyle='#283848'; px(-11,8,5,5); px(6,8,5,5);
+    c.fillStyle='#1c3040'; px(-10,9,4,4); px(7,9,4,4);
+    // Arms - mechanical
+    c.fillStyle=P.seth_body; px(-11,12,4,10); px(7,12,4,10);
+    c.fillStyle='#1c3040'; px(-10,14,3,7); px(8,14,3,7);
+    // Elbow joints
+    c.fillStyle='#405060'; px(-11,18,4,3); px(7,18,4,3);
+    // Clamp hands
+    c.fillStyle='#283848'; px(-11,21,5,4); px(6,21,5,4);
+    c.fillStyle='#1c3040'; px(-11,22,2,2); px(-9,22,2,2); px(6,22,2,2); px(9,22,2,2);
+    // Neck
+    c.fillStyle='#1c3040'; px(-3,5,6,4);
+    c.fillStyle=P.seth_body; px(-2,6,4,3);
+    // Head - angular android
+    c.fillStyle=P.seth_body; px(-6,0,12,6);
+    c.fillStyle='#1c3040'; px(-5,1,10,4);
+    // Visor / eyes - teal glow
+    c.fillStyle='#001828'; px(-5,2,10,2);
+    c.fillStyle=P.seth_eye; px(-4,2,8,2);
+    c.fillStyle='#80f0ff'; px(-3,2,6,1);
+    // Head sensors
+    c.fillStyle='#405060'; px(-7,-1,2,3); px(5,-1,2,3);
+    c.fillStyle=P.seth_eye; px(-6,0,1,1); px(5,0,1,1);
+    // Observer insignia on chest
+    c.fillStyle='rgba(100,200,220,.4)'; px(-2,14,4,3); px(-1,13,2,5);
+  } else if(id==='neysa'){
+    // Shadow
+    c.fillStyle='rgba(0,0,0,.2)'; px(-6,29,12,3);
+    // Esper robes - deep violet
+    c.fillStyle=P.neysa_robe; px(-6,11,12,19);
+    c.fillStyle='#300850'; px(-7,13,3,13); px(4,13,3,13); // outer panels
+    // Robe trim - bright purple
+    c.fillStyle='#a040e0'; px(-6,10,12,2); px(-6,28,12,2);
+    // Inner robe shimmer
+    c.fillStyle='#500880'; px(-4,12,8,15);
+    c.fillStyle='#4a0878'; px(-3,13,6,13);
+    // Arcane rune on chest
+    c.fillStyle='rgba(200,100,255,.5)'; px(-2,14,4,6); px(-4,16,8,2);
+    c.fillStyle='rgba(220,150,255,.3)'; px(-1,14,2,6); px(-4,16,8,1);
+    // Hands - holding small orb of light
+    c.fillStyle=P.neysa_skin; px(-9,18,2,3); px(7,18,2,3);
+    c.fillStyle='#c080ff'; px(6,17,4,4); // orb in right hand
+    c.fillStyle='#e0b0ff'; px(7,18,2,2);
+    // Belt
+    c.fillStyle='#400860'; px(-5,11,10,2);
+    c.fillStyle='#8020c0'; px(-1,11,2,2);
+    // Long flowing hair - drapes down
+    c.fillStyle=P.neysa_hair; px(-7,4,3,22); // left hair cascade
+    c.fillStyle=P.neysa_hair; px(5,4,3,18);  // right hair cascade
+    c.fillStyle='#180228'; px(-6,5,2,14); px(5,5,2,12); // hair shadow
+    c.fillStyle='#400860'; px(-6,4,2,2); px(5,4,2,2); // hair sheen
+    // Neck
+    c.fillStyle=P.neysa_skin; px(-2,8,4,4);
+    // Head
+    c.fillStyle=P.neysa_skin; px(-5,1,10,8);
+    c.fillStyle='#d4a090'; px(-4,7,8,2);
+    // Hair - top
+    c.fillStyle=P.neysa_hair; px(-6,-1,12,4);
+    c.fillStyle='#1a0228'; px(-5,0,2,2); px(4,0,2,2);
+    // Eyes - intense violet
+    c.fillStyle='#200040'; px(-3,3,2,2); px(1,3,2,2);
+    c.fillStyle='#8020c0'; px(-3,4,2,1); px(1,4,2,1);
+    c.fillStyle='rgba(200,100,255,.7)'; px(-3,3,1,1); px(1,3,1,1); // glow
+    // Esper mark on forehead
+    c.fillStyle='rgba(180,80,240,.6)'; px(-1,1,2,2);
+    c.fillStyle='rgba(220,150,255,.4)'; px(-1,1,1,1);
+    // Stern expression
+    c.fillStyle='#200040'; px(-4,2,4,1); px(1,2,3,1); // intense brows
+  } else if(id==='seraphel'){
+    // Shadow
+    c.fillStyle='rgba(220,220,150,.2)'; px(-8,29,16,3);
+    // Divine light aura
+    const grd=c.createRadialGradient(cx,cy+15*u,0,cx,cy+15*u,18*u);
+    grd.addColorStop(0,'rgba(255,255,200,.2)');grd.addColorStop(1,'rgba(255,255,200,0)');
+    c.fillStyle=grd; c.fillRect(cx-20*u,cy-4*u,40*u,40*u);
+    // Robes - pure white with gold
+    c.fillStyle='#f0eae0'; px(-8,10,16,20);
+    c.fillStyle='#e0d8c8'; px(-9,12,4,14); px(5,12,4,14);
+    // Gold trim, elaborate
+    c.fillStyle='#c8a020'; px(-8,9,16,2); px(-8,28,16,2);
+    c.fillStyle=P.gold2; px(-1,10,2,18);
+    c.fillStyle='#c8a020'; px(-7,14,3,2); px(4,14,3,2); // cross accents
+    // Wings - radiant
+    c.fillStyle='rgba(255,255,200,.55)';
+    c.beginPath();c.moveTo(cx-7*u,cy+12*u);c.lineTo(cx-18*u,cy+1*u);c.lineTo(cx-5*u,cy+15*u);c.closePath();c.fill();
+    c.beginPath();c.moveTo(cx+7*u,cy+12*u);c.lineTo(cx+18*u,cy+1*u);c.lineTo(cx+5*u,cy+15*u);c.closePath();c.fill();
+    c.fillStyle='rgba(255,255,220,.3)';
+    c.beginPath();c.moveTo(cx-8*u,cy+14*u);c.lineTo(cx-22*u,cy+5*u);c.lineTo(cx-6*u,cy+18*u);c.closePath();c.fill();
+    c.beginPath();c.moveTo(cx+8*u,cy+14*u);c.lineTo(cx+22*u,cy+5*u);c.lineTo(cx+6*u,cy+18*u);c.closePath();c.fill();
+    // Belt sash gold
+    c.fillStyle='#c8a020'; px(-7,18,14,3);
+    c.fillStyle=P.gold2; px(-3,18,6,3);
+    // Hands
+    c.fillStyle='#e8d8c8'; px(-10,16,2,4); px(8,16,2,4);
+    // Neck
+    c.fillStyle='#e8d8c8'; px(-2,7,4,4);
+    // Head
+    c.fillStyle='#e8d8c8'; px(-5,0,10,8);
+    c.fillStyle='#d8c8b8'; px(-4,6,8,2);
+    // Hair - golden
+    c.fillStyle='#c0a030'; px(-5,-2,10,4);
+    c.fillStyle=P.gold2; px(-4,-1,8,2);
+    c.fillStyle='#d4b840'; px(-3,-1,2,2); px(2,-1,2,2);
+    // Eyes - calm, blue-gold
+    c.fillStyle='#102030'; px(-3,3,2,2); px(1,3,2,2);
+    c.fillStyle='#4080b0'; px(-3,3,1,1); px(1,3,1,1);
+    // Halo
+    c.strokeStyle=P.gold2; c.lineWidth=Math.max(1,u*1.5);
+    c.beginPath();c.arc(cx,cy-1*u,7*u,0,Math.PI*2);c.stroke();
+    c.strokeStyle='rgba(240,220,100,.4)'; c.lineWidth=Math.max(1,u*3);
+    c.beginPath();c.arc(cx,cy-1*u,8*u,0,Math.PI*2);c.stroke();
+    // Staff
+    c.fillStyle='#c0a030'; px(8,5,2,24);
+    c.fillStyle=P.gold2; px(6,5,6,3);
+    c.fillStyle='rgba(255,255,180,.8)'; px(8,7,2,2);
+  } else {
+    // Generic NPC fallback
+    c.fillStyle='rgba(0,0,0,.2)'; px(-5,29,10,2);
+    c.fillStyle=P.gray; px(-5,10,10,18);
+    c.fillStyle=P.gray; px(-6,11,3,12); px(3,11,3,12);
+    c.fillStyle=P.sand1; px(-4,3,8,7);
+    c.fillStyle='#807060'; px(-5,0,10,4);
+    c.fillStyle='#0a0a0a'; px(-2,5,2,2); px(1,5,2,2);
   }
 }
 
@@ -1254,7 +1649,7 @@ function getNearbyActions(){
   return actions;
 }
 function entityVerb(ent){
-  return {npc:'TALK',sign:'READ',inn:'REST',shop:'BUY',warp:'ENTER',story:'CHECK'}[ent.type]||'ACT';
+  return {npc:'TALK',sign:'READ',inn:'REST',shop:'BUY',warp:'ENTER',story:'CHECK',chest:'OPEN',examine:'EXAMINE'}[ent.type]||'ACT';
 }
 
 function setObjective(text){
@@ -1304,6 +1699,21 @@ function initOWCanvas(){
   owCanvas.style.height=(owCanvas.height*scale)+'px';
   owCtx=owCanvas.getContext('2d');
   owCtx.imageSmoothingEnabled=false;
+  // Start portal animation loop (runs once globally)
+  if(!window._owAnimLoop){
+    window._owAnimLoop=true;
+    let lastFrame=0;
+    (function loop(ts){
+      requestAnimationFrame(loop);
+      if(GS.screen==='overworld'&&owCtx&&ts-lastFrame>40){
+        // Only animate when there are portals visible
+        const world=WORLDS[GS.currentMap];
+        if(world&&world.entities.some(e=>e.type==='warp')){
+          renderOW(); lastFrame=ts;
+        }
+      }
+    })(0);
+  }
 }
 
 function renderOW(){
@@ -1387,37 +1797,133 @@ function renderOW(){
     if(sx<0||sy<0||sx>=VP.w*OW_TSIZE||sy>=VP.h*OW_TSIZE)continue;
 
     if(ent.type==='warp'){
-      c.fillStyle='rgba(0,0,0,.22)';c.fillRect(sx+2,sy+13,12,2);
-      if((ent.label||'').includes('TERMINAL')){
-        c.fillStyle='#213654'; c.fillRect(sx+2,sy+5,12,9);
-        c.fillStyle='#4d78b8'; c.fillRect(sx+3,sy+3,10,4);
-        c.fillStyle='#d8e8ff'; c.fillRect(sx+5,sy+8,3,3); c.fillRect(sx+9,sy+8,3,3);
-        c.fillStyle='#8bb8ff'; c.fillRect(sx+3,sy+6,10,1);
-      }else{
-        c.fillStyle='#3d2b10';c.fillRect(sx+2,sy+2,12,13);
-        c.fillStyle='#71541f';c.fillRect(sx+3,sy+3,10,11);
-        c.fillStyle=P.gold2;c.fillRect(sx+5,sy+4,6,8);
-        c.fillStyle='#fff0a0';c.fillRect(sx+5,sy+4,6,1);
-        c.fillStyle='#221808';c.fillRect(sx+7,sy+8,1,1);
+      const label=(ent.label||'');
+      const isTerminal=label.includes('TERMINAL') || label.includes('SPACEPORT') || label.includes('EXIT BAY') || label.includes('MAIN EXIT') || label.includes('PORTAL') || label.includes('GATE') || label.includes('ARK') || label.includes('RYKROS');
+      if(isTerminal){
+        // Animated portal — pulsing blue radial gradient
+        const t=Date.now()/800;
+        const pulse=0.55+Math.sin(t)*0.2;
+        const pulse2=0.4+Math.sin(t+1.2)*0.15;
+        const cx2=sx+OW_TSIZE/2, cy2=sy+OW_TSIZE/2;
+        // Outer glow ring
+        const g1=c.createRadialGradient(cx2,cy2,1,cx2,cy2,OW_TSIZE*0.62);
+        g1.addColorStop(0,`rgba(120,200,255,${pulse})`);
+        g1.addColorStop(0.4,`rgba(40,100,220,${pulse2})`);
+        g1.addColorStop(0.7,`rgba(10,40,120,0.3)`);
+        g1.addColorStop(1,'rgba(0,0,50,0)');
+        c.fillStyle=g1; c.fillRect(sx-2,sy-2,OW_TSIZE+4,OW_TSIZE+4);
+        // Inner swirl ring
+        c.strokeStyle=`rgba(140,220,255,${pulse})`;
+        c.lineWidth=1.5;
+        c.beginPath(); c.arc(cx2,cy2,OW_TSIZE*0.38,0,Math.PI*2); c.stroke();
+        c.strokeStyle=`rgba(80,160,255,${pulse2})`;
+        c.lineWidth=1;
+        c.beginPath(); c.arc(cx2,cy2,OW_TSIZE*0.28,t*0.3,t*0.3+Math.PI*1.5); c.stroke();
+        // Bright core
+        const g2=c.createRadialGradient(cx2,cy2,0,cx2,cy2,OW_TSIZE*0.2);
+        g2.addColorStop(0,'rgba(220,240,255,0.9)');
+        g2.addColorStop(0.5,'rgba(80,160,255,0.5)');
+        g2.addColorStop(1,'rgba(0,0,0,0)');
+        c.fillStyle=g2; c.beginPath(); c.arc(cx2,cy2,OW_TSIZE*0.2,0,Math.PI*2); c.fill();
+      } else {
+        // Ground-level warp tile (town gate etc) — golden gate arch
+        c.fillStyle='rgba(0,0,0,.22)'; c.fillRect(sx+2,sy+13,12,2);
+        c.fillStyle='#3d2b10'; c.fillRect(sx+2,sy+2,12,13);
+        c.fillStyle='#71541f'; c.fillRect(sx+3,sy+3,10,11);
+        c.fillStyle=P.gold2; c.fillRect(sx+5,sy+4,6,8);
+        c.fillStyle='#fff0a0'; c.fillRect(sx+5,sy+4,6,1);
+        c.fillStyle='#221808'; c.fillRect(sx+7,sy+8,2,2);
+        c.fillStyle='rgba(255,240,160,.18)'; c.fillRect(sx,sy,OW_TSIZE,OW_TSIZE);
       }
-      c.fillStyle='rgba(255,240,160,.18)';c.fillRect(sx,sy,OW_TSIZE,OW_TSIZE);
     }else if(ent.type==='story'){
-      c.fillStyle='rgba(100,180,255,.12)';c.fillRect(sx+1,sy+1,OW_TSIZE-2,OW_TSIZE-2);
-      c.fillStyle='#80c0ff'; c.fillRect(sx+7,sy+2,2,8); c.fillRect(sx+5,sy+8,6,2);
-      c.fillStyle='rgba(255,255,255,.28)'; c.fillRect(sx+7,sy+3,1,4);
+      const sid=(ent.storyId||'').toLowerCase();
+      const isTerminalScene = sid.includes('archive')||sid.includes('seth')||sid.includes('elyon')||sid.includes('control')||sid.includes('esper');
+      const isBossScene = ent.isBoss || sid.includes('boss')||sid.includes('iglanova')||sid.includes('seraphel');
+      if(isTerminalScene){
+        // Computer terminal — dark casing, screen glow, keyboard
+        c.fillStyle='rgba(0,0,0,.3)'; c.fillRect(sx+3,sy+14,10,2); // shadow
+        c.fillStyle='#1a2838'; c.fillRect(sx+2,sy+4,12,11); // outer casing
+        c.fillStyle='#243448'; c.fillRect(sx+3,sy+5,10,7);  // screen bezel
+        // Screen with green/cyan glow
+        c.fillStyle='#081820'; c.fillRect(sx+4,sy+6,8,5); // screen bg
+        c.fillStyle='rgba(40,200,160,.7)'; c.fillRect(sx+5,sy+7,6,1); // scan line 1
+        c.fillStyle='rgba(40,200,160,.4)'; c.fillRect(sx+5,sy+8,4,1); // scan line 2
+        c.fillStyle='rgba(40,200,160,.5)'; c.fillRect(sx+5,sy+9,5,1); // scan line 3
+        // Screen glow halo
+        const sg=c.createRadialGradient(sx+8,sy+8.5,0,sx+8,sy+8.5,7);
+        sg.addColorStop(0,'rgba(40,200,160,.15)');sg.addColorStop(1,'rgba(0,0,0,0)');
+        c.fillStyle=sg; c.fillRect(sx,sy+3,OW_TSIZE,OW_TSIZE-3);
+        // Keyboard strip
+        c.fillStyle='#1a2838'; c.fillRect(sx+3,sy+12,10,2);
+        c.fillStyle='#2a3848'; c.fillRect(sx+4,sy+12,8,1);
+        for(let k=0;k<5;k++){c.fillStyle='#334458';c.fillRect(sx+4+k*2,sy+12,1,1);}
+        // Status light
+        c.fillStyle='#20e080'; c.fillRect(sx+13,sy+6,1,1);
+      } else if(isBossScene){
+        // Boss encounter marker — ominous dark red aura
+        const t=Date.now()/600;
+        const pulse=0.3+Math.sin(t)*0.15;
+        const bg=c.createRadialGradient(sx+8,sy+8,0,sx+8,sy+8,10);
+        bg.addColorStop(0,`rgba(180,20,20,${pulse})`);bg.addColorStop(1,'rgba(0,0,0,0)');
+        c.fillStyle=bg; c.fillRect(sx-2,sy-2,OW_TSIZE+4,OW_TSIZE+4);
+        c.fillStyle=`rgba(220,60,60,${0.5+Math.sin(t)*0.2})`; c.fillRect(sx+6,sy+2,4,1);
+        c.fillStyle='rgba(180,20,20,.6)'; c.fillRect(sx+5,sy+3,6,1); c.fillRect(sx+4,sy+4,8,1);
+        c.fillStyle='rgba(200,40,40,.4)'; c.fillRect(sx+4,sy+5,8,8);
+        c.fillStyle='rgba(240,80,80,.7)'; c.fillRect(sx+7,sy+3,2,10);c.fillRect(sx+4,sy+6,8,2);
+      } else {
+        // Story/trigger marker — soft blue light column
+        c.fillStyle='rgba(100,180,255,.10)';c.fillRect(sx+1,sy+1,OW_TSIZE-2,OW_TSIZE-2);
+        c.fillStyle='rgba(100,160,255,.5)'; c.fillRect(sx+7,sy+1,2,12);
+        c.fillStyle='rgba(100,160,255,.3)'; c.fillRect(sx+5,sy+7,6,2);
+        c.fillStyle='rgba(200,230,255,.25)'; c.fillRect(sx+7,sy+2,1,5);
+      }
     }else if(ent.type==='npc'){
-      const tone=(ent.name||'').includes('CREED') ? '#d8b860' : P.gray;
+      const name=(ent.name||'').toUpperCase();
+      const isCreed=name.includes('CREED')||name.includes('PRIEST')||name.includes('ARCHON');
+      const isElder=name.includes('ELDER')||name.includes('DEZOLIAN');
+      const isHunter=name.includes('HUNTER')||name.includes('SALVAGER')||name.includes('GUILD');
+      const bodyCol=isCreed?'#c8a820':isElder?'#506090':isHunter?'#4a6050':'#6070a0';
+      const hairCol=isCreed?'#f0d840':isElder?'#c0b890':isHunter?'#402810':'#504060';
+      const skinCol=isCreed?'#e8d090':isElder?'#c0a070':'#d0a878';
+      // Shadow
       c.fillStyle='rgba(0,0,0,.2)'; c.fillRect(sx+4,sy+13,8,2);
-      c.fillStyle=tone;c.fillRect(sx+5,sy+8,6,6);
-      c.fillStyle=P.sand1;c.fillRect(sx+6,sy+4,4,4);
-      c.fillStyle='#0a0a0a';c.fillRect(sx+7,sy+6,1,1); c.fillRect(sx+9,sy+6,1,1);
-      c.fillStyle=tone;c.fillRect(sx+5,sy+14,2,1); c.fillRect(sx+9,sy+14,2,1);
+      // Body/robe
+      c.fillStyle=bodyCol; c.fillRect(sx+5,sy+8,6,7);
+      c.fillStyle='rgba(0,0,0,.15)'; c.fillRect(sx+5,sy+8,2,7); // shading left
+      // Arms
+      c.fillStyle=bodyCol; c.fillRect(sx+3,sy+9,2,4); c.fillRect(sx+11,sy+9,2,4);
+      // Legs
+      c.fillStyle=isCreed?'#a08010':isHunter?'#303020':'#384060';
+      c.fillRect(sx+6,sy+13,2,2); c.fillRect(sx+9,sy+13,2,2);
+      // Head
+      c.fillStyle=skinCol; c.fillRect(sx+6,sy+4,4,4);
+      // Hair
+      c.fillStyle=hairCol; c.fillRect(sx+5,sy+3,6,2);
+      if(isElder){c.fillRect(sx+5,sy+7,1,1);c.fillRect(sx+10,sy+7,1,1);}
+      // Eyes
+      c.fillStyle='#0a0808'; c.fillRect(sx+7,sy+6,1,1); c.fillRect(sx+9,sy+6,1,1);
+      if(isCreed){
+        c.fillStyle='rgba(255,220,80,.6)'; c.fillRect(sx+7,sy+9,2,4); c.fillRect(sx+6,sy+11,4,1);
+        c.fillStyle='#f0d840'; c.fillRect(sx+6,sy+3,4,1);
+      }
+      if(isHunter){
+        c.fillStyle='#604020'; c.fillRect(sx+5,sy+11,6,1);
+        c.fillStyle='#808080'; c.fillRect(sx+12,sy+8,1,5);
+      }
     }else if(ent.type==='inn'){
+      // Inn building front — warm light in windows
       c.fillStyle='rgba(0,0,0,.22)';c.fillRect(sx+1,sy+13,14,2);
-      c.fillStyle='#263c60';c.fillRect(sx+1,sy+5,14,10);
-      c.fillStyle='#5b86c0';c.fillRect(sx+2,sy+3,12,4);
-      c.fillStyle='#d8e8ff';c.fillRect(sx+4,sy+8,3,3); c.fillRect(sx+9,sy+8,3,3);
-      c.fillStyle='#9dc0f0';c.fillRect(sx+2,sy+6,12,1);
+      c.fillStyle='#263c60';c.fillRect(sx+1,sy+5,14,10);    // building face
+      c.fillStyle='#3a5888';c.fillRect(sx+1,sy+3,14,3);      // roof trim
+      c.fillStyle='#1e3050';c.fillRect(sx+1,sy+5,14,1);      // shadow under roof
+      // Windows with warm glow
+      c.fillStyle='#f0d070';c.fillRect(sx+3,sy+7,3,3); c.fillRect(sx+10,sy+7,3,3);
+      c.fillStyle='rgba(255,220,100,.3)';c.fillRect(sx+2,sy+6,5,5); c.fillRect(sx+9,sy+6,5,5);
+      // Door
+      c.fillStyle='#3a2810';c.fillRect(sx+6,sy+10,4,5);
+      c.fillStyle='#5a4020';c.fillRect(sx+7,sy+11,1,3);
+      // Sign above door
+      c.fillStyle='#c89040';c.fillRect(sx+4,sy+5,8,2);
     }else if(ent.type==='shop'){
       c.fillStyle='rgba(0,0,0,.22)';c.fillRect(sx+1,sy+13,14,2);
       c.fillStyle='#4b2a16';c.fillRect(sx+1,sy+5,14,10);
@@ -1425,39 +1931,42 @@ function renderOW(){
       c.fillStyle='#f6d080';c.fillRect(sx+6,sy+8,4,4);
       c.fillStyle='#5a3010';c.fillRect(sx+7,sy+10,2,5);
       c.fillStyle='#ffcf6a';c.fillRect(sx+2,sy+6,12,1);
+    }else if(ent.type==='chest'){
+      // Treasure chest
+      const opened=ent.once&&ent.flag&&GS.flags[ent.flag];
+      c.fillStyle='rgba(0,0,0,.2)';c.fillRect(sx+3,sy+13,10,2);
+      c.fillStyle=opened?'#4a3818':'#8a5820';c.fillRect(sx+3,sy+8,10,7); // chest body
+      c.fillStyle=opened?'#3a2810':'#6a4018';c.fillRect(sx+3,sy+8,10,3); // lid
+      c.fillStyle=opened?'#302008':'#a06828';c.fillRect(sx+4,sy+9,8,2);  // lid highlight
+      c.fillStyle=opened?'#302008':P.gold;c.fillRect(sx+7,sy+11,2,2);    // lock
+      if(!opened){c.fillStyle='rgba(255,220,100,.4)';c.fillRect(sx+3,sy+6,10,2);} // glow
+    }else if(ent.type==='examine'){
+      // Examine spot — subtle shimmer marker
+      c.fillStyle='rgba(80,140,200,.08)';c.fillRect(sx,sy,OW_TSIZE,OW_TSIZE);
+      c.fillStyle='rgba(120,180,255,.35)';c.fillRect(sx+6,sy+12,4,2);
+      c.fillStyle='rgba(120,180,255,.2)';c.fillRect(sx+5,sy+11,6,1); c.fillRect(sx+5,sy+14,6,1);
     }
   }
 
-  // Draw player
+  // Draw player using the proper sprite renderer
   const psx=(Math.floor(VP.w/2))*OW_TSIZE;
   const psy=(Math.floor(VP.h/2))*OW_TSIZE;
+  // Shadow
+  c.fillStyle='rgba(0,0,0,.2)'; c.fillRect(psx+3,psy+14,10,2);
+  // Use drawCharSprite for Aren on overworld
+  const spriteSize=OW_TSIZE-1;
+  drawCharSprite('aren',c,psx+1,psy,spriteSize,spriteSize);
+  // NO direction arrow — removed per user request
 
-  // Player sprite (Aren) — 16×16 pixel art
-  c.fillStyle='rgba(0,0,0,.22)'; c.fillRect(psx+3,psy+14,10,2);
-  c.fillStyle=P.aren_shirt;c.fillRect(psx+3,psy+5,10,9);
-  c.fillStyle=P.aren_skin;c.fillRect(psx+4,psy+1,8,6);
-  c.fillStyle=P.aren_hair;c.fillRect(psx+3,psy,10,3);
-  c.fillStyle=P.gold;c.fillRect(psx+11,psy+6,2,6);
-  c.fillStyle='#0a0a0a';c.fillRect(psx+5,psy+3,2,2);c.fillRect(psx+9,psy+3,2,2);
-  // Direction indicator
-  c.fillStyle=P.aren_hair;
-  if(GS.player.facing==='up')c.fillRect(psx+5,psy-1,6,2);
-  if(GS.player.facing==='down')c.fillRect(psx+5,psy+15,6,2);
-  if(GS.player.facing==='left')c.fillRect(psx-1,psy+6,2,6);
-  if(GS.player.facing==='right')c.fillRect(psx+15,psy+6,2,6);
-
-  // Party followers (first 3)
+  // Party followers — use their sprite renderers
   const directions={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
   const dir=directions[GS.player.facing]||[0,1];
   GS.party.slice(1,4).forEach((ch,i)=>{
     const fsx=psx-dir[0]*(i+1)*OW_TSIZE;
     const fsy=psy-dir[1]*(i+1)*OW_TSIZE;
     if(fsx<0||fsy<0||fsx>=VP.w*OW_TSIZE||fsy>=VP.h*OW_TSIZE)return;
-    // Simple follower dot
-    c.fillStyle='rgba(0,0,0,.18)'; c.fillRect(fsx+4,fsy+13,8,2);
-    c.fillStyle=ch.color||P.blue2;
-    c.fillRect(fsx+4,fsy+5,8,8);
-    c.fillStyle=P.sand1;c.fillRect(fsx+5,fsy+2,6,5);
+    c.fillStyle='rgba(0,0,0,.18)'; c.fillRect(fsx+3,fsy+14,10,2);
+    drawCharSprite(ch.id,c,fsx+1,fsy,spriteSize,spriteSize);
   });
 
   // Mini-map (top-right corner) — very small
@@ -1479,66 +1988,106 @@ function renderOW(){
 }
 
 // ── PLAYER MOVEMENT ──
+// Entity types that physically block the player (can't occupy same tile)
+const BLOCKING_ENTITY_TYPES=new Set(['npc','sign','chest','shop','inn','story','examine']);
+
+function tileBlockedByEntity(x,y){
+  const world=WORLDS[GS.currentMap];
+  if(!world)return false;
+  for(const ent of world.entities){
+    if(ent.once&&ent.flag&&GS.flags[ent.flag])continue; // collected/used entities don't block
+    if(ent.x===x&&ent.y===y&&BLOCKING_ENTITY_TYPES.has(ent.type))return ent;
+  }
+  return false;
+}
+
 function movePlayer(dx,dy){
   if(GS.screen!=='overworld')return;
   const world=WORLDS[GS.currentMap];
   const map=world.mapData;
   const nx=GS.player.x+dx,ny=GS.player.y+dy;
 
-  // Facing
+  // Always update facing direction
   if(dy<0)GS.player.facing='up';
   if(dy>0)GS.player.facing='down';
   if(dx<0)GS.player.facing='left';
   if(dx>0)GS.player.facing='right';
 
-  if(nx<0||ny<0||nx>=map.w||ny>=map.h)return;
+  if(nx<0||ny<0||nx>=map.w||ny>=map.h){renderOW();return;}
+
+  // Check if an entity is blocking the target tile
+  const blockingEnt=tileBlockedByEntity(nx,ny);
+  if(blockingEnt){
+    // Bump into it — face it and trigger interaction
+    renderOW();
+    audioSfx('confirm');
+    activateEntity(blockingEnt);
+    return;
+  }
+
   const tid=map.data[ny*map.w+nx];
   const tile=TILES[tid];
-  if(!tile.walk)return;
+  if(!tile.walk){renderOW();return;} // facing update visible even if blocked
 
   GS.player.x=nx;GS.player.y=ny;
   GS.stepCount++;
 
   renderOW();
   audioSfx('step');
-  checkEntities();
+
+  // Check for auto-trigger warp tiles (stepped ON a warp)
+  const warpEnt=world.entities.find(e=>e.type==='warp'&&e.x===nx&&e.y===ny);
+  if(warpEnt){
+    audioSfx('confirm');
+    warpToMap(warpEnt.target,warpEnt.tx,warpEnt.ty);
+    return;
+  }
 
   // Random encounter
   if(world.encRate>0&&Math.random()<world.encRate&&tid!==14){
     startRandomBattle(world.encTable);
     return;
   }
+  updateActionHints();
   refreshLocationBar();
 }
 
 function playerAction(){
   if(GS.screen!=='overworld')return;
-  const actions=getNearbyActions();
-  if(actions.length){ activateEntity(actions[0].ent); return; }
-  const map=WORLDS[GS.currentMap].mapData;
-  const tid=map.data[GS.player.y*map.w+GS.player.x];
-  if(tid===14){
-    showOwMsg('This is a door or gate. Stand next to it and press ACTION.');
-    return;
-  }
-  showOwMsg('There is nothing to interact with here.');
-  updateActionHints();
-}
-
-function checkEntities(forceAdj=false){
+  // Interact with entity directly in front of player
+  const dirs={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+  const [fdx,fdy]=dirs[GS.player.facing]||[0,1];
+  const fx=GS.player.x+fdx, fy=GS.player.y+fdy;
   const world=WORLDS[GS.currentMap];
-  const px=GS.player.x,py=GS.player.y;
-  // Check current tile
+
+  // Check facing tile first
   for(const ent of world.entities){
     if(ent.once&&ent.flag&&GS.flags[ent.flag])continue;
-    const dx=Math.abs(ent.x-px),dy=Math.abs(ent.y-py);
-    const dist=dx+dy;
-    if(dist===0||(forceAdj&&dist===1)){
+    if(ent.x===fx&&ent.y===fy){
+      audioSfx('confirm');
       activateEntity(ent);
       return;
     }
   }
+  // Also check all adjacent tiles (for warps the player is standing next to)
+  const adjDirs=[[0,-1],[1,0],[0,1],[-1,0]];
+  for(const [dx,dy] of adjDirs){
+    const ax=GS.player.x+dx, ay=GS.player.y+dy;
+    for(const ent of world.entities){
+      if(ent.once&&ent.flag&&GS.flags[ent.flag])continue;
+      if(ent.type==='warp'&&ent.x===ax&&ent.y===ay){
+        audioSfx('confirm');
+        activateEntity(ent);
+        return;
+      }
+    }
+  }
+  showOwMsg('Nothing to interact with. Face an object or person and press ACTION.');
+  updateActionHints();
 }
+
+// Entity activation is now handled by movePlayer (blocking entities bump-trigger)
+// and playerAction (facing-direction interaction)
 
 function activateEntity(ent){
   if(!ent) return;
@@ -1565,6 +2114,16 @@ function activateEntity(ent){
   }else if(ent.type==='shop'){
     audioSfx('confirm');
     openShop();
+  }else if(ent.type==='chest'){
+    if(ent.once&&ent.flag&&GS.flags[ent.flag]){showOwMsg(`[${ent.label||'CHEST'}]: Already opened.`);return;}
+    if(ent.flag)GS.flags[ent.flag]=true;
+    const qty=ent.qty||1;
+    GS.inventory[ent.itemId]=(GS.inventory[ent.itemId]||0)+qty;
+    audioSfx('buy');
+    showOwMsg(`[${ent.label||'CHEST'}]: Found ${qty}x ${ent.itemId.toUpperCase()}!`);
+  }else if(ent.type==='examine'){
+    audioSfx('confirm');
+    showOwMsg(ent.text||'Nothing remarkable here.');
   }
   updateActionHints();
 }
@@ -1577,7 +2136,7 @@ function warpToMap(mapId,tx,ty){
   refreshLocationBar();
   renderOW();
   updateActionHints();
-  const arrivals={aiedo:'Arrived at Aiedo. Stand next to the brown left door to shop, the pale right door to rest, the bottom gold gate to return to Motavia, or the blue terminal on the right to fly to Dezolis.',dezolis_ow:'Arrived on Dezolis. Search the starport area for Mira.',motavia_ow:'Back on Motavia. Explore the glowing ruins to continue.',elyon:'Aboard Elyon Ark. Search the control rooms.',rykros:'Rykros trembles around you.'};
+  const arrivals={aiedo:'Arrived at Aiedo. Stand next to the brown left door to shop, the pale right door to rest, the bottom gold gate to return to Motavia, or the blue terminal on the right to fly to Dezolis.',dezolis_ow:'Arrived on Dezolis. Search the starport area for Mira.',motavia_ow:'Back on Motavia. Explore the glowing ruins to continue.',elyon:'Aboard Elyon Ark. The main corridor stretches ahead. Explore the side rooms — two chambers branch off left and right. The Throne Room lies at the center. Three exits are at the far end of the hall.',rykros:'Rykros trembles around you.'};
   showOwMsg(arrivals[mapId]||`Arrived at ${WORLDS[mapId].name}.`);
 }
 
@@ -1587,9 +2146,12 @@ function showOwMsg(text){
 
 
 const SHOP_STOCK=[
-  {id:'solDew',name:'SOL DEW',price:50,desc:'Restores a small amount of HP.'},
+  {id:'solDew',name:'SOL DEW',price:50,desc:'Restores 60 HP to one ally.'},
+  {id:'moon_dew',name:'MOON DEW',price:120,desc:'Restores all HP to one ally.'},
   {id:'antidote',name:'ANTIDOTE',price:20,desc:'Neutralizes poison.'},
-  {id:'escapipe',name:'ESCAPIPE',price:80,desc:'Warp out of danger instantly.'},
+  {id:'telepipe',name:'TELEPIPE',price:60,desc:'Return to last town instantly.'},
+  {id:'escapipe',name:'ESCAPIPE',price:80,desc:'Warp out of any dungeon instantly.'},
+  {id:'trimate',name:'TRIMATE',price:200,desc:'Restores 120 HP to entire party.'},
 ];
 function openShop(){
   GS.shopOpen=true;
@@ -1649,15 +2211,36 @@ function renderCutscene(sc){
     sc.panels.forEach(p=>{
       const div=document.createElement('div');
       div.className='cs-panel';
-      const can=mkCanvas(300,160);
+      // Size canvas to the panel container
+      const W=div.clientWidth||320, H=div.clientHeight||180;
+      const can=mkCanvas(Math.max(W,320),Math.max(H,160));
+      can.style.width='100%'; can.style.height='100%';
+      can.style.objectFit='cover';
       div.appendChild(can);
-      drawSceneArt(p.draw,can);
       panels.appendChild(div);
+      // Render after layout paints
+      requestAnimationFrame(()=>{
+        const rect=div.getBoundingClientRect();
+        const rw=Math.max(rect.width||320,320), rh=Math.max(rect.height||180,160);
+        can.width=rw; can.height=rh;
+        drawSceneArt(p.draw,can);
+      });
     });
   }
 
-  document.getElementById('cs-speaker').textContent=sc.speaker||'';
-  typewriterText('cs-body',sc.text||'',20);
+  // Speaker name with character color
+  const spkEl=document.getElementById('cs-speaker');
+  spkEl.textContent=sc.speaker||'';
+  const spkColors={
+    AREN:P.aren_shirt, LYRA:P.lyra_dress, TARIN:P.tarin_robe,
+    MIRA:P.mira_suit, 'SETH-9':P.seth_eye, NEYSA:P.neysa_robe,
+    'ARCHON SERAPHEL':P.gold2, SERAPHEL:P.gold2,
+    'ECHO OF ALIS':'#a0c0ff','ECHO OF CHAZ':'#80d0a0',
+  };
+  if(sc.speaker&&spkColors[sc.speaker]) spkEl.style.color=spkColors[sc.speaker];
+  else spkEl.style.color=P.gold;
+
+  typewriterText('cs-body',sc.text||'',18);
 }
 
 function typewriterText(elId,text,speed){
@@ -1673,9 +2256,27 @@ function typewriterText(elId,text,speed){
 
 document.getElementById('cs-next').onclick=()=>{
   const sc=csQueue[csIdx];
-  if(sc.id==='lyra_speaks') setObjective('Return to Aiedo, visit the right-side terminal, and fly to Dezolis.');
-  if(sc.id==='archive_2') setObjective('Head to Elyon Ark.');
-  if(sc.id==='seraphel_2') setObjective('Find the route to Rykros.');
+  // Update objectives at key story beats
+  const objMap={
+    find_lyra: 'Find Tarin at the Dezolis Gate (northwest Motavia).',
+    lyra_speaks: 'Find Tarin at the Dezolis Gate (northwest Motavia).',
+    meet_tarin: 'Travel to Aiedo, then fly to Dezolis.',
+    iglanova_after: 'Travel to Aiedo, then fly to Dezolis.',
+    lightfall_msg: null, // no change
+    meet_mira: 'Enter the Esper Archive on Dezolis.',
+    esper_archive: 'Board the Elyon Ark via the Dezolis spaceport.',
+    archive_2: 'Board the Elyon Ark. Find Seth-9 in the control room.',
+    meet_seth9: 'Find Neysa in the Esper Chamber aboard Elyon.',
+    meet_neysa: 'Confront Archon Seraphel in the Throne Room.',
+    seraphel_speech: 'Find a route to the unstable Rykros.',
+    seraphel_2: 'Find a route to the unstable Rykros.',
+    archive_of_balance: 'Reach the Convergence Point at the heart of Rykros.',
+    lyra_choice: 'Reach the Convergence Point at the heart of Rykros.',
+    aren_refuse: 'Confront Seraphel at the Convergence Point.',
+    boss_seraphel: null,
+    ending: null,
+  };
+  if(sc.id in objMap && objMap[sc.id]) setObjective(objMap[sc.id]);
   // Add character if needed
   if(sc.addChar)addToParty(sc.addChar);
 
@@ -1754,33 +2355,121 @@ function renderBattleBg(){
 
   const bgs={
     desert(){
-      const grd=c.createLinearGradient(0,0,0,H);grd.addColorStop(0,P.sky2);grd.addColorStop(1,P.sky1);
-      c.fillStyle=grd;c.fillRect(0,0,W,H);
-      c.fillStyle=P.sand1;c.fillRect(0,H*.55,W,H*.45);
-      c.fillStyle=P.sand2;c.fillRect(0,H*.7,W,H*.3);
-      for(let i=0;i<10;i++){c.fillStyle=P.sand3;c.fillRect(i*(W/9),H*.55,W/20,H*.12);}
+      // Sky gradient
+      const sky=c.createLinearGradient(0,0,0,H*.55);
+      sky.addColorStop(0,'#0c1840');sky.addColorStop(.6,'#183860');sky.addColorStop(1,'#284870');
+      c.fillStyle=sky;c.fillRect(0,0,W,H*.55);
+      // Stars
+      for(let i=0;i<25;i++){const a=(i*31+7)%100*.01;c.fillStyle=`rgba(200,220,255,${a*.5+.1})`;c.fillRect((i*37)%W,(i*19)%(H*.4),1,1);}
+      // Two moons (Algo system has multiple)
+      c.fillStyle='#e0d8c0'; c.beginPath();c.arc(W*.8,H*.12,H*.07,0,Math.PI*2);c.fill();
+      c.fillStyle='#c8c0a0'; c.beginPath();c.arc(W*.8+H*.04,H*.12,H*.045,0,Math.PI*2);c.fill();
+      // Distant ruins silhouette
+      c.fillStyle='#1a1008';
+      for(let i=0;i<6;i++){const rx=W*(0.05+i*.16);c.fillRect(rx,H*.38,W*.06,H*(0.1+i%3*.04));}
+      // Sand ground — layered
+      const sand=c.createLinearGradient(0,H*.54,0,H);
+      sand.addColorStop(0,P.sand1);sand.addColorStop(.3,P.sand2);sand.addColorStop(1,'#806010');
+      c.fillStyle=sand;c.fillRect(0,H*.54,W,H*.46);
+      // Sand ripple texture
+      c.fillStyle='rgba(0,0,0,.08)';
+      for(let y=0;y<H*.4;y+=H*.04){c.fillRect(0,H*.54+y,W,H*.02);}
+      // Foreground dunes
+      c.fillStyle=P.sand2;
+      c.beginPath();c.moveTo(0,H*.7);c.quadraticCurveTo(W*.25,H*.58,W*.5,H*.68);c.quadraticCurveTo(W*.75,H*.78,W,H*.65);c.lineTo(W,H);c.lineTo(0,H);c.closePath();c.fill();
     },
     snow(){
-      c.fillStyle='#060c20';c.fillRect(0,0,W,H);
-      for(let i=0;i<40;i++){c.fillStyle='rgba(200,220,255,.5)';c.fillRect((i*31)%W,(i*19)%(H*.5),1,1);}
-      c.fillStyle=P.snow1;c.fillRect(0,H*.55,W,H*.45);
-      for(let i=0;i<8;i++){c.fillStyle=P.snow2;c.fillRect(i*(W/7),H*.55,W/16,H*.2);}
+      // Dark night sky
+      const sky=c.createLinearGradient(0,0,0,H*.55);
+      sky.addColorStop(0,'#020408');sky.addColorStop(1,'#060c20');
+      c.fillStyle=sky;c.fillRect(0,0,W,H*.55);
+      // Stars — Dezolis has thick starfield
+      for(let i=0;i<60;i++){
+        const a=Math.random()*.7+.1;
+        c.fillStyle=`rgba(200,220,255,${a})`;
+        c.fillRect((i*31+3)%W,(i*17+5)%(H*.5),i%3===0?2:1,i%3===0?2:1);
+      }
+      // Aurora hints
+      for(let i=0;i<3;i++){
+        const ag=c.createLinearGradient(W*(0.1+i*.3),0,W*(0.2+i*.3),H*.4);
+        ag.addColorStop(0,'rgba(40,200,120,0)');ag.addColorStop(.4,`rgba(40,200,120,0.08)`);ag.addColorStop(1,'rgba(40,200,120,0)');
+        c.fillStyle=ag;c.fillRect(W*(0.05+i*.28),0,W*.2,H*.45);
+      }
+      // Snow ground
+      const sg=c.createLinearGradient(0,H*.54,0,H);
+      sg.addColorStop(0,P.snow1);sg.addColorStop(.4,P.snow2);sg.addColorStop(1,'#6878a0');
+      c.fillStyle=sg;c.fillRect(0,H*.54,W,H*.46);
+      // Snow hillocks
+      c.fillStyle=P.snow1;
+      c.beginPath();c.moveTo(0,H*.72);c.quadraticCurveTo(W*.3,H*.56,W*.6,H*.72);c.quadraticCurveTo(W*.8,H*.82,W,H*.7);c.lineTo(W,H);c.lineTo(0,H);c.closePath();c.fill();
+      // Esper tower silhouette far back
+      c.fillStyle='#0a0c18'; c.fillRect(W*.6,H*.24,W*.06,H*.32); c.fillRect(W*.58,H*.24,W*.1,H*.04);
     },
     town(){
-      c.fillStyle=P.sky1;c.fillRect(0,0,W,H);
+      // Daytime sky
+      const sky=c.createLinearGradient(0,0,0,H*.5);
+      sky.addColorStop(0,'#1848a0');sky.addColorStop(1,'#3068c0');
+      c.fillStyle=sky;c.fillRect(0,0,W,H*.5);
+      // Clouds
+      c.fillStyle='rgba(220,230,255,.35)';
+      c.beginPath();c.ellipse(W*.2,H*.2,W*.12,H*.06,0,0,Math.PI*2);c.fill();
+      c.beginPath();c.ellipse(W*.65,H*.15,W*.1,H*.05,0,0,Math.PI*2);c.fill();
+      // Stone ground
       c.fillStyle=P.stone1;c.fillRect(0,H*.5,W,H*.5);
-      for(let i=0;i<6;i++){c.fillStyle=P.stone2;c.fillRect(20+i*80,H*.2,40,H*.4);}
+      c.fillStyle=P.stone2;
+      for(let y=0;y<H*.5;y+=H*.06){for(let x=(y/H*.06)%2?0:W*.05;x<W;x+=W*.12){c.fillRect(x,H*.5+y,W*.1,H*.04);}}
+      // Building silhouettes
+      c.fillStyle='#303820';
+      for(let i=0;i<5;i++){
+        const bx=i*W*.2,bh=H*(0.15+i%3*.05);
+        c.fillRect(bx,H*.5-bh,W*.15,bh);
+        // Window lights
+        c.fillStyle='rgba(255,220,120,.4)';
+        for(let j=0;j<3;j++){c.fillRect(bx+W*.02+j*W*.04,H*.5-bh+H*.04,W*.025,H*.025);}
+        c.fillStyle='#303820';
+      }
     },
     tech(){
-      c.fillStyle='#060c18';c.fillRect(0,0,W,H);
-      for(let x=0;x<W;x+=24){c.strokeStyle='rgba(30,70,120,.3)';c.lineWidth=1;c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke();}
-      for(let y=0;y<H;y+=24){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();}
-      c.fillStyle='#102030';c.fillRect(0,H*.6,W,H*.4);
+      // Space black with grid
+      c.fillStyle='#04080c';c.fillRect(0,0,W,H);
+      c.strokeStyle='rgba(30,80,140,.25)';c.lineWidth=1;
+      for(let x=0;x<W;x+=W*.08){c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke();}
+      for(let y=0;y<H;y+=H*.08){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();}
+      // Glow on grid intersection points
+      for(let x=0;x<W;x+=W*.08){for(let y=0;y<H;y+=H*.08){if((x/W*H/y+y)%3===0){c.fillStyle='rgba(40,120,200,.3)';c.fillRect(x-1,y-1,2,2);}}}
+      // Floor panel
+      const fp=c.createLinearGradient(0,H*.58,0,H);
+      fp.addColorStop(0,'#102030');fp.addColorStop(1,'#060c18');
+      c.fillStyle=fp;c.fillRect(0,H*.58,W,H*.42);
+      // Elyon hull details
+      c.fillStyle='#182838';
+      for(let i=0;i<4;i++){c.fillRect(i*W*.26,H*.58,W*.02,H*.12);}
+      c.fillStyle='rgba(40,120,200,.3)'; c.fillRect(0,H*.57,W,H*.02);
     },
     void(){
+      // Rykros — dimensional fracture space
       c.fillStyle='#02020a';c.fillRect(0,0,W,H);
-      for(let i=0;i<60;i++){c.fillStyle=`rgba(80,80,200,${Math.random()*.4+.1})`;c.fillRect(Math.random()*W,Math.random()*H,1,1);}
-      c.fillStyle='#08081a';c.fillRect(0,H*.6,W,H*.4);
+      // Dimensional rift cracks
+      c.strokeStyle='rgba(80,60,200,.4)';c.lineWidth=1;
+      for(let i=0;i<8;i++){
+        c.beginPath();
+        c.moveTo(Math.random()*W,0);
+        const mx=Math.random()*W,my=Math.random()*H;
+        c.quadraticCurveTo(mx,my,Math.random()*W,H);
+        c.stroke();
+      }
+      // Memory fragments — faint impressions of Algo
+      const mg=c.createRadialGradient(W*.5,H*.3,0,W*.5,H*.3,W*.4);
+      mg.addColorStop(0,'rgba(60,50,180,.25)');mg.addColorStop(1,'rgba(0,0,0,0)');
+      c.fillStyle=mg;c.fillRect(0,0,W,H*.6);
+      // Scattered star-points
+      for(let i=0;i<40;i++){
+        c.fillStyle=`rgba(${100+i*3},${80+i*2},255,${Math.random()*.5+.1})`;
+        c.fillRect((i*29+7)%W,(i*17+3)%H,1,1);
+      }
+      // Ground plane — void floor
+      c.fillStyle='#06060e';c.fillRect(0,H*.6,W,H*.4);
+      c.fillStyle='rgba(60,50,200,.15)';c.fillRect(0,H*.6,W,H*.02);
     },
   };
   (bgs[biome]||bgs.desert)();
@@ -1790,14 +2479,19 @@ function renderBattleEnemies(){
   const cont=document.getElementById('bt-enemies');
   cont.innerHTML='';
   const alive=BT.enemies.filter(e=>e.hp>0);
+  // Measure scene to size sprites proportionally
+  const scene=document.getElementById('bt-scene');
+  const sceneH=Math.max(scene.clientHeight||280, 200);
   alive.forEach(e=>{
     const edef=ENEMIES[e.id];
+    const sz=edef.isBoss ? Math.floor(sceneH*0.62) : Math.floor(sceneH*0.44);
     const div=document.createElement('div');div.className='bt-econt';div.id=`be-${e.idx}`;
-    const can=mkCanvas(edef.isBoss?80:56,edef.isBoss?80:56);
+    const can=mkCanvas(sz,sz);
     drawEnemySprite(e.id,can);
+    const hpPct=e.hp/e.maxHp*100;
     div.innerHTML=`<div class="bt-esprite" id="bes-${e.idx}"></div>
       <div class="bt-ename">${e.name}</div>
-      <div class="bt-ehpbar"><div class="bt-ehpfill" id="behp-${e.idx}" style="width:${e.hp/e.maxHp*100}%"></div></div>`;
+      <div class="bt-ehpbar" style="width:${Math.max(sz*0.7,80)}px"><div class="bt-ehpfill" id="behp-${e.idx}" style="width:${hpPct}%"></div></div>`;
     div.querySelector('.bt-esprite').appendChild(can);
     cont.appendChild(div);
   });
@@ -1806,71 +2500,292 @@ function renderBattleEnemies(){
 function drawEnemySprite(id,canvas){
   const c=ctx(canvas);
   const W=canvas.width,H=canvas.height;
-  c.fillStyle='#040408';c.fillRect(0,0,W,H);
+  c.clearRect(0,0,W,H);
+  // transparent background - battle bg shows through
 
   const sprites={
     sandworm(){
-      c.fillStyle=P.sand1;c.fillRect(W*.1,H*.35,W*.8,H*.45);
-      c.fillStyle=P.sand2;c.fillRect(W*.15,H*.2,W*.7,H*.35);
-      c.fillStyle='#e0b030';c.fillRect(W*.2,H*.1,W*.6,H*.25);
-      c.fillStyle='#0a0400';c.fillRect(W*.3,H*.13,W*.12,H*.1);c.fillRect(W*.58,H*.13,W*.12,H*.1);
-      c.fillStyle='#cc2200';c.fillRect(W*.32,H*.14,W*.08,H*.07);c.fillRect(W*.60,H*.14,W*.08,H*.07);
-      c.fillStyle=P.sand3;c.fillRect(W*.1,H*.6,W*.2,H*.15);c.fillRect(W*.7,H*.6,W*.2,H*.15);
+      // Multi-segment desert worm, PSIV style
+      // Body segments stacked
+      for(let i=0;i<4;i++){
+        const bx=W*(0.08+i*0.06), by=H*(0.45+i*0.1), bw=W*(0.84-i*0.12), bh=H*0.12;
+        c.fillStyle=['#d4a840','#c89030','#bc8020','#a87010'][i];
+        c.fillRect(bx,by,bw,bh);
+        // Segment ridge
+        c.fillStyle=['#e0b850','#d4a040','#c89030','#b88020'][i];
+        c.fillRect(bx,by,bw,H*0.03);
+        // Segment shadow
+        c.fillStyle='rgba(0,0,0,.2)';c.fillRect(bx,by+bh-H*0.02,bw,H*0.02);
+      }
+      // Main head
+      c.fillStyle='#d4a840'; c.fillRect(W*.1,H*.2,W*.8,H*.3);
+      // Head ridge
+      c.fillStyle='#e8c060'; c.fillRect(W*.1,H*.2,W*.8,H*.06);
+      // Beak / mandibles
+      c.fillStyle='#8a6010'; c.fillRect(W*.15,H*.46,W*.15,H*.1);
+      c.fillStyle='#8a6010'; c.fillRect(W*.7,H*.46,W*.15,H*.1);
+      c.fillStyle='#c09020'; c.fillRect(W*.17,H*.47,W*.11,H*.08);
+      c.fillStyle='#c09020'; c.fillRect(W*.72,H*.47,W*.11,H*.08);
+      // Eyes - red glowing
+      c.fillStyle='#0a0500'; c.fillRect(W*.28,H*.25,W*.14,H*.12);
+      c.fillStyle='#0a0500'; c.fillRect(W*.58,H*.25,W*.14,H*.12);
+      c.fillStyle='#cc2000'; c.fillRect(W*.3,H*.27,W*.1,H*.08);
+      c.fillStyle='#cc2000'; c.fillRect(W*.6,H*.27,W*.1,H*.08);
+      c.fillStyle='#ff4020'; c.fillRect(W*.31,H*.28,W*.08,H*.04);
+      c.fillStyle='#ff4020'; c.fillRect(W*.61,H*.28,W*.08,H*.04);
+      // Sand frills
+      for(let i=0;i<6;i++){
+        c.fillStyle='#a07820'; c.fillRect(W*(0.1+i*0.13),H*.16,W*.06,H*.08);
+        c.fillStyle='#b88028'; c.fillRect(W*(0.11+i*0.13),H*.15,W*.04,H*.06);
+      }
+      // Texture detail
+      for(let i=0;i<8;i++){ c.fillStyle='rgba(0,0,0,.1)'; c.fillRect(W*(0.12+i*0.1),H*.3,W*.06,H*.14); }
     },
     luminant_drone(){
-      c.strokeStyle='#3060a0';c.lineWidth=1.5;
-      c.beginPath();for(let i=0;i<6;i++){const a=i*Math.PI/3;c.lineTo(W*.5+Math.cos(a)*W*.4,H*.5+Math.sin(a)*H*.4);}c.closePath();c.stroke();
-      c.fillStyle='#0a1828';c.fill();
-      c.fillStyle='#1040a0';c.beginPath();c.arc(W*.5,H*.5,W*.2,0,Math.PI*2);c.fill();
-      c.fillStyle='#4080ff';c.beginPath();c.arc(W*.5,H*.5,W*.1,0,Math.PI*2);c.fill();
-      c.fillStyle='#ffffff';c.beginPath();c.arc(W*.5,H*.5,W*.04,0,Math.PI*2);c.fill();
+      // Elegant hexagonal drone with inner glow
+      const cx2=W*.5,cy2=H*.5;
+      // Outer glow
+      const grd=c.createRadialGradient(cx2,cy2,W*.05,cx2,cy2,W*.48);
+      grd.addColorStop(0,'rgba(60,120,220,.4)'); grd.addColorStop(1,'rgba(0,0,0,0)');
+      c.fillStyle=grd; c.fillRect(0,0,W,H);
+      // Hexagonal body
+      c.strokeStyle='#2050a0'; c.lineWidth=W*.025; c.fillStyle='#04080e';
+      c.beginPath();
+      for(let i=0;i<6;i++){const a=i*Math.PI/3-Math.PI/6;c.lineTo(cx2+Math.cos(a)*W*.43,cy2+Math.sin(a)*H*.43);}
+      c.closePath(); c.fill(); c.stroke();
+      // Inner hex
+      c.strokeStyle='#3060c0'; c.lineWidth=W*.015;
+      c.beginPath();
+      for(let i=0;i<6;i++){const a=i*Math.PI/3-Math.PI/6;c.lineTo(cx2+Math.cos(a)*W*.3,cy2+Math.sin(a)*H*.3);}
+      c.closePath(); c.stroke();
+      // Central orb
+      const cg=c.createRadialGradient(cx2,cy2,0,cx2,cy2,W*.18);
+      cg.addColorStop(0,'#ffffff'); cg.addColorStop(.3,'#80c0ff'); cg.addColorStop(1,'#1040a0');
+      c.fillStyle=cg; c.beginPath(); c.arc(cx2,cy2,W*.18,0,Math.PI*2); c.fill();
+      // Orbiting lights
+      for(let i=0;i<3;i++){
+        const a=i*(Math.PI*2/3); const ox=cx2+Math.cos(a)*W*.34; const oy=cy2+Math.sin(a)*H*.34;
+        c.fillStyle='#4090ff'; c.beginPath(); c.arc(ox,oy,W*.04,0,Math.PI*2); c.fill();
+        c.fillStyle='#80c0ff'; c.beginPath(); c.arc(ox,oy,W*.02,0,Math.PI*2); c.fill();
+      }
+      // Light beam emitters
+      for(let i=0;i<6;i++){
+        const a=i*Math.PI/3; const bx=cx2+Math.cos(a)*W*.3; const by=cy2+Math.sin(a)*H*.3;
+        c.fillStyle='#2060c0'; c.beginPath(); c.arc(bx,by,W*.03,0,Math.PI*2); c.fill();
+      }
     },
     purified_beast(){
-      c.fillStyle='#d8c0f0';c.fillRect(W*.1,H*.4,W*.8,H*.4);
-      c.fillStyle='#e8d0ff';c.fillRect(W*.15,H*.2,W*.7,H*.4);
-      c.fillStyle='#f0e0ff';c.fillRect(W*.2,H*.05,W*.6,H*.3);
-      c.fillStyle='#1a0028';c.fillRect(W*.3,H*.15,W*.1,H*.1);c.fillRect(W*.6,H*.15,W*.1,H*.1);
-      c.fillStyle='#f0e0ff';c.fillRect(W*.2,H*.04,W*.15,H*.15);c.fillRect(W*.65,H*.04,W*.15,H*.15);
+      // A corrupted four-legged creature encased in crystalline light
+      // Shadow
+      c.fillStyle='rgba(200,180,255,.2)'; c.fillRect(W*.1,H*.8,W*.8,H*.08);
+      // Body
+      c.fillStyle='#c8a8e8'; c.fillRect(W*.15,H*.35,W*.7,H*.35);
+      c.fillStyle='#d8b8f8'; c.fillRect(W*.2,H*.3,W*.6,H*.35);
+      // Belly
+      c.fillStyle='#e8d0ff'; c.fillRect(W*.25,H*.5,W*.5,H*.15);
+      // Head
+      c.fillStyle='#d8b8f8'; c.fillRect(W*.2,H*.1,W*.6,H*.3);
+      c.fillStyle='#c8a8e8'; c.fillRect(W*.15,H*.14,W*.65,H*.25);
+      // Snout
+      c.fillStyle='#e8d0ff'; c.fillRect(W*.28,H*.3,W*.44,H*.12);
+      c.fillStyle='#b090d0'; c.fillRect(W*.32,H*.34,W*.12,H*.06); c.fillRect(W*.56,H*.34,W*.12,H*.06); // nostrils
+      // Eyes - dead white with small dark pupil
+      c.fillStyle='#f4eeff'; c.fillRect(W*.26,H*.17,W*.14,H*.1);
+      c.fillStyle='#f4eeff'; c.fillRect(W*.6,H*.17,W*.14,H*.1);
+      c.fillStyle='#100018'; c.fillRect(W*.31,H*.19,W*.04,H*.06);
+      c.fillStyle='#100018'; c.fillRect(W*.65,H*.19,W*.04,H*.06);
+      // Crystalline growths on back
+      for(let i=0;i<5;i++){
+        c.fillStyle=`rgba(200,160,255,${0.5+i*.08})`;
+        c.beginPath();c.moveTo(W*(0.2+i*.14),H*.35);c.lineTo(W*(0.23+i*.14),H*(0.12+i*.04));c.lineTo(W*(0.26+i*.14),H*.35);c.closePath();c.fill();
+        c.fillStyle='rgba(240,220,255,.6)';
+        c.beginPath();c.moveTo(W*(0.22+i*.14),H*.35);c.lineTo(W*(0.23+i*.14),H*(0.14+i*.04));c.lineTo(W*(0.24+i*.14),H*.35);c.closePath();c.fill();
+      }
+      // Legs
+      c.fillStyle='#b898d8'; c.fillRect(W*.18,H*.65,W*.15,H*.2); c.fillRect(W*.38,H*.65,W*.12,H*.2);
+      c.fillRect(W*.5,H*.65,W*.12,H*.2); c.fillRect(W*.67,H*.65,W*.15,H*.2);
+      c.fillStyle='#a888c8'; c.fillRect(W*.18,H*.78,W*.15,H*.07); c.fillRect(W*.38,H*.78,W*.12,H*.07);
+      c.fillRect(W*.5,H*.78,W*.12,H*.07); c.fillRect(W*.67,H*.78,W*.15,H*.07);
+      // Tail
+      c.fillStyle='#c8a8e8'; c.fillRect(W*.75,H*.4,W*.18,H*.08); c.fillRect(W*.85,H*.34,W*.1,H*.08);
+      // Light aura fringe
+      for(let i=0;i<8;i++){
+        c.fillStyle=`rgba(220,190,255,${0.15+i*.03})`;
+        c.fillRect(W*(0.08+i*0.11),H*.08,W*.05,H*(0.8-i*.06));
+      }
     },
     creed_soldier(){
-      c.fillStyle='#c8a860';c.fillRect(W*.25,H*.35,W*.5,H*.5);
-      c.fillStyle='#d8b860';c.fillRect(W*.3,H*.1,W*.4,H*.3);
-      c.fillStyle='#e8c870';c.fillRect(W*.32,H*.12,W*.36,H*.25);
-      c.fillStyle='#0a0808';c.fillRect(W*.38,H*.18,W*.08,H*.07);c.fillRect(W*.54,H*.18,W*.08,H*.07);
-      c.fillStyle='#908050';c.fillRect(W*.55,H*.5,W*.35,H*.1);
-      c.fillStyle='#606060';c.fillRect(W*.7,H*.47,W*.25,H*.07);
+      // Armored fanatic - white/gold armor with Luminant symbol
+      // Shadow
+      c.fillStyle='rgba(0,0,0,.25)'; c.fillRect(W*.2,H*.88,W*.6,H*.06);
+      // Boots
+      c.fillStyle='#504020'; c.fillRect(W*.25,H*.72,W*.2,H*.16); c.fillRect(W*.55,H*.72,W*.2,H*.16);
+      c.fillStyle='#706030'; c.fillRect(W*.23,H*.74,W*.18,H*.12); c.fillRect(W*.59,H*.74,W*.18,H*.12);
+      // Leg armor
+      c.fillStyle='#d8c888'; c.fillRect(W*.24,H*.55,W*.2,H*.18); c.fillRect(W*.56,H*.55,W*.2,H*.18);
+      c.fillStyle='#c0b070'; c.fillRect(W*.24,H*.55,W*.2,H*.04); c.fillRect(W*.56,H*.55,W*.2,H*.04);
+      // Hip armor
+      c.fillStyle='#d0c080'; c.fillRect(W*.2,H*.5,W*.6,H*.07);
+      c.fillStyle='#e0d090'; c.fillRect(W*.22,H*.5,W*.56,H*.04);
+      // Chest armor - breastplate
+      c.fillStyle='#e0d090'; c.fillRect(W*.2,H*.24,W*.6,H*.28);
+      c.fillStyle='#f0e0a0'; c.fillRect(W*.24,H*.24,W*.52,H*.05); // top edge highlight
+      c.fillStyle='#c0b060'; c.fillRect(W*.2,H*.5,W*.6,H*.03); // bottom edge
+      // Breastplate center symbol (sun/light symbol)
+      c.fillStyle='#c8a020'; c.fillRect(W*.42,H*.28,W*.16,H*.16);
+      c.fillStyle='#d4b030'; c.fillRect(W*.44,H*.26,W*.12,H*.2); // cross vertical
+      c.fillStyle='#d4b030'; c.fillRect(W*.38,H*.32,W*.24,H*.08); // cross horizontal
+      c.fillStyle='#f0d040'; c.fillRect(W*.46,H*.3,W*.08,H*.12); // center
+      // Shoulder armor
+      c.fillStyle='#d0c080'; c.fillRect(W*.1,H*.22,W*.14,H*.18); c.fillRect(W*.76,H*.22,W*.14,H*.18);
+      c.fillStyle='#e0d090'; c.fillRect(W*.1,H*.22,W*.14,H*.04); c.fillRect(W*.76,H*.22,W*.14,H*.04);
+      // Arms
+      c.fillStyle='#c8b878'; c.fillRect(W*.1,H*.38,W*.12,H*.18); c.fillRect(W*.78,H*.38,W*.12,H*.18);
+      // Gauntlets
+      c.fillStyle='#a89848'; c.fillRect(W*.1,H*.52,W*.12,H*.08); c.fillRect(W*.78,H*.52,W*.12,H*.08);
+      // Weapon - light lance/spear
+      c.fillStyle='#707060'; c.fillRect(W*.78,H*.06,W*.06,H*.7);
+      c.fillStyle='#e0d090'; c.fillRect(W*.76,H*.06,W*.1,H*.04);
+      c.fillStyle='rgba(255,240,180,.6)'; c.fillRect(W*.8,H*.02,W*.02,H*.06); // glowing tip
+      // Neck
+      c.fillStyle='#d0b888'; c.fillRect(W*.38,H*.18,W*.24,H*.07);
+      // Head - helmeted
+      c.fillStyle='#d8c880'; c.fillRect(W*.26,H*.04,W*.48,H*.2);
+      c.fillStyle='#e8d890'; c.fillRect(W*.28,H*.04,W*.44,H*.06); // helmet highlight
+      // Visor
+      c.fillStyle='#101008'; c.fillRect(W*.3,H*.12,W*.4,H*.08);
+      c.fillStyle='rgba(255,240,150,.3)'; c.fillRect(W*.32,H*.13,W*.36,H*.05); // glow in visor
+      // Helmet crest
+      c.fillStyle='#c8a020'; c.fillRect(W*.44,H*.0,W*.12,H*.05);
+      c.fillStyle=P.gold2; c.fillRect(W*.46,H*.0,W*.08,H*.03);
     },
     rykros_echo(){
-      for(let i=6;i>0;i--){
-        c.strokeStyle=`rgba(60,60,180,${i*.1})`;c.lineWidth=i;
-        c.beginPath();c.arc(W*.5,H*.5,W*.1*i,0,Math.PI*2);c.stroke();
+      // Ghostly memory-fragment — layered translucent rings with humanoid silhouette
+      for(let layer=5;layer>0;layer--){
+        const a=layer*.06; const r=W*(0.12+layer*0.08);
+        c.strokeStyle=`rgba(80,80,200,${a})`; c.lineWidth=W*.04*layer;
+        c.beginPath(); c.arc(W*.5,H*.5,r,0,Math.PI*2); c.stroke();
       }
-      c.fillStyle='#1010a0';c.beginPath();c.arc(W*.5,H*.5,W*.18,0,Math.PI*2);c.fill();
-      c.fillStyle='#6060ff';c.beginPath();c.arc(W*.5,H*.5,W*.09,0,Math.PI*2);c.fill();
-      c.fillStyle='#c0c0ff';c.beginPath();c.arc(W*.5,H*.5,W*.04,0,Math.PI*2);c.fill();
+      // Ghostly humanoid shape - translucent
+      c.globalAlpha=0.55;
+      // Body
+      c.fillStyle='#3030c0'; c.fillRect(W*.36,H*.4,W*.28,H*.32);
+      // Legs
+      c.fillStyle='#2828a0'; c.fillRect(W*.37,H*.7,W*.1,H*.2); c.fillRect(W*.53,H*.7,W*.1,H*.2);
+      // Arms
+      c.fillStyle='#2828a0'; c.fillRect(W*.24,H*.42,W*.12,H*.2); c.fillRect(W*.64,H*.42,W*.12,H*.2);
+      // Head
+      c.fillStyle='#4040d0'; c.fillRect(W*.38,H*.2,W*.24,H*.22);
+      // Memory fracture lines
+      c.strokeStyle='rgba(200,200,255,.6)'; c.lineWidth=W*.012;
+      for(let i=0;i<4;i++){
+        c.beginPath();c.moveTo(W*(0.3+i*.12),H*.1);c.lineTo(W*(0.2+i*.2),H*.9);c.stroke();
+      }
+      c.globalAlpha=1.0;
+      // Bright core
+      const cg=c.createRadialGradient(W*.5,H*.5,0,W*.5,H*.5,W*.12);
+      cg.addColorStop(0,'rgba(200,200,255,1)'); cg.addColorStop(1,'rgba(80,80,200,0)');
+      c.fillStyle=cg; c.beginPath(); c.arc(W*.5,H*.5,W*.12,0,Math.PI*2); c.fill();
     },
     iglanova(){
-      // Big boss worm
-      c.fillStyle='#c08020';c.fillRect(W*.05,H*.5,W*.9,H*.35);
-      c.fillStyle='#d09030';c.fillRect(W*.1,H*.35,W*.8,H*.35);
-      c.fillStyle='#e0a040';c.fillRect(W*.15,H*.15,W*.7,H*.3);
-      c.fillStyle='#f0b030';c.fillRect(W*.2,H*.05,W*.6,H*.22);
-      c.fillStyle='#100800';c.fillRect(W*.3,H*.1,W*.14,H*.12);c.fillRect(W*.56,H*.1,W*.14,H*.12);
-      c.fillStyle='#dd2200';c.fillRect(W*.32,H*.11,W*.1,H*.09);c.fillRect(W*.58,H*.11,W*.1,H*.09);
-      c.fillStyle='#a07020';c.fillRect(0,H*.7,W*.15,H*.2);c.fillRect(W*.85,H*.7,W*.15,H*.2);
+      // Massive alpha-worm boss — full canvas, multiple head segments visible
+      // Rear tail segments
+      for(let i=3;i>=0;i--){
+        const bx=W*(0.02+i*0.04), by=H*(0.62+i*0.04), bw=W*(0.96-i*0.08), bh=H*0.1;
+        c.fillStyle=['#c89030','#d4a040','#c08020','#b87020'][i];
+        c.fillRect(bx,by,bw,bh);
+        // Segment ridge
+        c.fillStyle=['#e0b850','#e8c060','#d09030','#c08020'][i];
+        c.fillRect(bx,by,bw,H*0.025);
+      }
+      // Main body
+      c.fillStyle='#e0a830'; c.fillRect(W*.06,H*.38,W*.88,H*.28);
+      c.fillStyle='#f0c040'; c.fillRect(W*.06,H*.38,W*.88,H*.06); // top highlight
+      c.fillStyle='#c88020'; c.fillRect(W*.06,H*.62,W*.88,H*.04); // bottom shadow
+      // Armored plates on body
+      for(let i=0;i<6;i++){
+        c.fillStyle='#c09020'; c.fillRect(W*(0.08+i*0.15),H*.42,W*.1,H*.18);
+        c.fillStyle='#d4a030'; c.fillRect(W*(0.09+i*0.15),H*.42,W*.08,H*.03);
+      }
+      // Head - massive
+      c.fillStyle='#d4a030'; c.fillRect(W*.08,H*.08,W*.84,H*.35);
+      c.fillStyle='#f0c040'; c.fillRect(W*.08,H*.08,W*.84,H*.06);
+      // Frills / spines around head
+      for(let i=0;i<8;i++){
+        c.fillStyle='#c08010'; c.fillRect(W*(0.1+i*0.1),H*.0,W*.05,H*.12);
+        c.fillStyle='#e0a020'; c.fillRect(W*(0.11+i*0.1),H*.01,W*.03,H*.08);
+      }
+      // Boss eyes - large red
+      c.fillStyle='#050200'; c.fillRect(W*.16,H*.13,W*.22,H*.16); c.fillRect(W*.62,H*.13,W*.22,H*.16);
+      c.fillStyle='#aa1800'; c.fillRect(W*.18,H*.15,W*.18,H*.12); c.fillRect(W*.64,H*.15,W*.18,H*.12);
+      c.fillStyle='#ff3010'; c.fillRect(W*.2,H*.16,W*.14,H*.08); c.fillRect(W*.66,H*.16,W*.14,H*.08);
+      c.fillStyle='rgba(255,80,20,.6)'; c.fillRect(W*.22,H*.17,W*.1,H*.04); c.fillRect(W*.68,H*.17,W*.1,H*.04); // glow
+      // Maw/teeth
+      c.fillStyle='#0a0400'; c.fillRect(W*.2,H*.32,W*.6,H*.12);
+      c.fillStyle='#f0e0b0'; // teeth
+      for(let i=0;i<8;i++){
+        c.fillRect(W*(0.22+i*0.07),H*.32,W*.04,H*.06); // top teeth
+        c.fillRect(W*(0.24+i*0.07),H*.38,W*.04,H*.06); // bottom teeth
+      }
+      // Saliva/bile
+      c.fillStyle='rgba(100,200,20,.4)'; c.fillRect(W*.3,H*.36,W*.4,H*.04);
     },
     seraphel_final(){
-      // Winged figure in radiant light
-      c.fillStyle='#f8f0e0';c.fillRect(W*.3,H*.35,W*.4,H*.55);
-      c.fillStyle='#f0e8d0';c.fillRect(W*.35,H*.1,W*.3,H*.28);
-      c.fillStyle='#c8b860';c.fillRect(W*.33,H*.12,W*.34,H*.05);
-      c.fillStyle='#1a1408';c.fillRect(W*.4,H*.2,W*.07,H*.06);c.fillRect(W*.53,H*.2,W*.07,H*.06);
-      // Wings
-      c.fillStyle='rgba(255,255,200,.7)';
-      c.beginPath();c.moveTo(W*.3,H*.4);c.lineTo(W*.0,H*.1);c.lineTo(W*.25,H*.45);c.closePath();c.fill();
-      c.beginPath();c.moveTo(W*.7,H*.4);c.lineTo(W*1.0,H*.1);c.lineTo(W*.75,H*.45);c.closePath();c.fill();
-      // Halo
-      c.strokeStyle='#f0d050';c.lineWidth=2;c.beginPath();c.arc(W*.5,H*.15,W*.18,0,Math.PI*2);c.stroke();
+      // Merged divine being - Seraphel fused with Great Light avatar
+      // Radiant background glow
+      const grd=c.createRadialGradient(W*.5,H*.4,0,W*.5,H*.4,W*.6);
+      grd.addColorStop(0,'rgba(255,255,200,.35)'); grd.addColorStop(.5,'rgba(255,220,100,.15)'); grd.addColorStop(1,'rgba(0,0,0,0)');
+      c.fillStyle=grd; c.fillRect(0,0,W,H);
+      // Massive divine wings (behind body)
+      c.fillStyle='rgba(255,255,210,.5)';
+      // Left wing
+      c.beginPath();c.moveTo(W*.3,H*.35);c.lineTo(W*.0,H*.05);c.lineTo(W*.12,H*.4);c.lineTo(W*.0,H*.5);c.lineTo(W*.2,H*.5);c.closePath();c.fill();
+      // Right wing
+      c.beginPath();c.moveTo(W*.7,H*.35);c.lineTo(W*1.0,H*.05);c.lineTo(W*.88,H*.4);c.lineTo(W*1.0,H*.5);c.lineTo(W*.8,H*.5);c.closePath();c.fill();
+      // Wing detail lines
+      c.strokeStyle='rgba(220,200,100,.5)'; c.lineWidth=W*.012;
+      for(let i=0;i<5;i++){
+        c.beginPath();c.moveTo(W*.3,H*.35);c.lineTo(W*(0.0+i*.05),H*(0.08+i*.06));c.stroke();
+        c.beginPath();c.moveTo(W*.7,H*.35);c.lineTo(W*(1.0-i*.05),H*(0.08+i*.06));c.stroke();
+      }
+      // Robes - ethereal white
+      c.fillStyle='#f4eee0'; c.fillRect(W*.26,H*.36,W*.48,H*.52);
+      c.fillStyle='#e8e0d0'; c.fillRect(W*.22,H*.4,W*.1,H*.4); c.fillRect(W*.68,H*.4,W*.1,H*.4);
+      // Robe gold trim
+      c.fillStyle='#d4b020'; c.fillRect(W*.26,H*.35,W*.48,H*.03);
+      c.fillStyle='#c0a018'; c.fillRect(W*.26,H*.86,W*.48,H*.03);
+      c.fillStyle=P.gold2; c.fillRect(W*.48,H*.36,W*.04,H*.5); // center line
+      // Glowing chest symbol
+      c.fillStyle='rgba(255,240,150,.7)'; c.fillRect(W*.4,H*.45,W*.2,H*.16);
+      c.fillStyle='rgba(255,255,200,.9)'; c.fillRect(W*.44,H*.43,W*.12,H*.2); c.fillRect(W*.38,H*.49,W*.24,H*.08);
+      // Arms with divine light
+      c.fillStyle='#e8d8c0'; c.fillRect(W*.22,H*.42,W*.08,H*.24); c.fillRect(W*.7,H*.42,W*.08,H*.24);
+      const ag=c.createRadialGradient(W*.22,H*.54,0,W*.22,H*.54,W*.1);
+      ag.addColorStop(0,'rgba(255,255,200,.8)'); ag.addColorStop(1,'rgba(0,0,0,0)');
+      c.fillStyle=ag; c.fillRect(W*.1,H*.44,W*.24,H*.24); // left hand glow
+      const ag2=c.createRadialGradient(W*.78,H*.54,0,W*.78,H*.54,W*.1);
+      ag2.addColorStop(0,'rgba(255,255,200,.8)'); ag2.addColorStop(1,'rgba(0,0,0,0)');
+      c.fillStyle=ag2; c.fillRect(W*.66,H*.44,W*.24,H*.24); // right hand glow
+      // Neck
+      c.fillStyle='#ead8c0'; c.fillRect(W*.4,H*.28,W*.2,H*.1);
+      // Head - still human but partially divine
+      c.fillStyle='#ead8c0'; c.fillRect(W*.3,H*.1,W*.4,H*.2);
+      c.fillStyle='#e0c8b0'; c.fillRect(W*.28,H*.24,W*.44,H*.04);
+      // Hair
+      c.fillStyle='#d4b030'; c.fillRect(W*.28,H*.08,W*.44,H*.06);
+      c.fillStyle=P.gold2; c.fillRect(W*.3,H*.08,W*.4,H*.03);
+      // Eyes - half human, half divine light
+      c.fillStyle='#080400'; c.fillRect(W*.36,H*.16,W*.1,H*.08);
+      c.fillStyle='#080400'; c.fillRect(W*.54,H*.16,W*.1,H*.08);
+      c.fillStyle='#4080c0'; c.fillRect(W*.37,H*.17,W*.08,H*.06); // left eye
+      c.fillStyle='rgba(255,240,120,.9)'; c.fillRect(W*.55,H*.17,W*.08,H*.06); // right eye - pure light
+      // Triple halo
+      c.strokeStyle='rgba(220,200,80,.7)'; c.lineWidth=W*.025;
+      c.beginPath(); c.arc(W*.5,H*.1,W*.22,0,Math.PI*2); c.stroke();
+      c.strokeStyle='rgba(240,220,100,.4)'; c.lineWidth=W*.04;
+      c.beginPath(); c.arc(W*.5,H*.1,W*.3,0,Math.PI*2); c.stroke();
+      c.strokeStyle='rgba(255,240,140,.2)'; c.lineWidth=W*.06;
+      c.beginPath(); c.arc(W*.5,H*.1,W*.38,0,Math.PI*2); c.stroke();
     },
   };
   (sprites[id]||sprites.sandworm)();
@@ -1878,20 +2793,32 @@ function drawEnemySprite(id,canvas){
 
 function renderBattleParty(){
   const row=document.getElementById('bt-party-row');
+  // Build cards HTML — portrait canvas placeholder, then name, then bars
   row.innerHTML=GS.party.map((ch,i)=>{
     const hp=Math.max(0,ch.hp/ch.maxHp*100);
     const tp=ch.maxTp>0?Math.max(0,ch.tp/ch.maxTp*100):0;
     const hcol=hp<25?P.red:hp<50?P.orange:P.hp;
-    return `<div class="bt-pcard" id="bpc-${ch.id}">
-      <div class="bt-pname${i===BT.charIdx?' active':''}" style="color:${ch.color}">${ch.name}${ch.hp<=0?' ✝':''}</div>
-      <div class="bt-hprow"><span class="bt-hlabel" style="color:${hcol}">HP</span>
-        <div class="bt-htrack"><div class="bt-hfill" style="width:${hp}%;background:${hcol}"></div></div>
-        <span class="bt-hnums">${ch.hp}/${ch.maxHp}</span></div>
-      ${ch.maxTp>0?`<div class="bt-hprow"><span class="bt-hlabel">TP</span>
-        <div class="bt-htrack"><div class="bt-hfill" style="width:${tp}%;background:${P.tp}"></div></div>
-        <span class="bt-hnums">${ch.tp}/${ch.maxTp}</span></div>`:''}
+    const isActive=(i===BT.charIdx && BT.phase==='command');
+    return `<div class="bt-pcard${ch.hp<=0?' bt-pcard-dead':''}" id="bpc-${ch.id}" style="${isActive?'border-color:'+P.gold+';':''}" >
+      <canvas class="bt-pportrait" id="bpp-${ch.id}" width="44" height="44"></canvas>
+      <div class="bt-pname${isActive?' active':''}" style="color:${ch.color}">${ch.name}${ch.hp<=0?' ✝':''}</div>
+      <div class="bt-hprow">
+        <span class="bt-hlabel" style="color:${hcol}">HP</span>
+        <div class="bt-htrack"><div class="bt-hfill" style="width:${hp}%;min-width:${hp>0?2:0}px;background:${hcol}"></div></div>
+        <span class="bt-hnums">${ch.hp}/${ch.maxHp}</span>
+      </div>
+      ${ch.maxTp>0?`<div class="bt-hprow">
+        <span class="bt-hlabel" style="color:${P.blue2}">TP</span>
+        <div class="bt-htrack"><div class="bt-hfill" style="width:${tp}%;min-width:${tp>0?2:0}px;background:${P.blue2}"></div></div>
+        <span class="bt-hnums">${ch.tp}/${ch.maxTp}</span>
+      </div>`:''}
     </div>`;
   }).join('');
+  // Now draw portraits into the canvases
+  GS.party.forEach(ch=>{
+    const can=document.getElementById(`bpp-${ch.id}`);
+    if(can) drawCharPortrait(ch.id,can);
+  });
 }
 
 function btLog(msg,col=P.white){
@@ -1906,24 +2833,22 @@ function startCommandPhase(){
 }
 
 function promptChar(char){
-  // Highlight
-  GS.party.forEach((c,i)=>{
-    const el=document.getElementById(`bpc-${c.id}`);
-    if(el)el.querySelector('.bt-pname').className='bt-pname'+(c.id===char.id?' active':'');
-  });
+  renderBattleParty(); // re-render so active highlight and portraits update
   renderCommandBar(char);
 }
 
 function renderCommandBar(char){
   const bar=document.getElementById('bt-cmdbar');
-  bar.style.display='flex';
+  bar.innerHTML=''; // clear first
   document.getElementById('bt-submenu').style.display='none';
   const hasE=BT.enemies.some(e=>e.hp>0);
   const canCombo=COMBOS.some(co=>co.chars.includes(char.id)&&co.chars.every(id=>GS.party.find(p=>p.id===id&&p.hp>0)));
+  const hasItems=Object.values(GS.inventory).some(v=>v>0);
   bar.innerHTML=`
     <button class="bt-cmd" onclick="queueAtk('${char.id}')" ${!hasE?'disabled':''}>⚔ATTACK</button>
     <button class="bt-cmd" onclick="showSkills('${char.id}')" ${!char.skills.length?'disabled':''}>★SKILL</button>
     <button class="bt-cmd" onclick="showTechs('${char.id}')" ${!char.techs||!char.techs.length?'disabled':''}>✦TECH</button>
+    <button class="bt-cmd" onclick="showItems('${char.id}')" ${!hasItems?'disabled':''}>✚ITEM</button>
     <button class="bt-cmd" onclick="queueGuard('${char.id}')">◉GUARD</button>
     ${canCombo?`<button class="bt-cmd combo" onclick="showCombos('${char.id}')">⚡COMBO</button>`:''}
   `;
@@ -1932,9 +2857,8 @@ function renderCommandBar(char){
 function showSkills(cid){
   const char=GS.party.find(c=>c.id===cid);
   const sub=document.getElementById('bt-submenu');
-  document.getElementById('bt-cmdbar').style.display='none';
   sub.style.display='block';
-  sub.innerHTML=`<div class="bt-subitem" onclick="renderCommandBar(GS.party.find(c=>c.id==='${cid}'));document.getElementById('bt-cmdbar').style.display='flex';this.parentElement.style.display='none'">◀ BACK</div>`+
+  sub.innerHTML=`<div class="bt-subitem" onclick="closeSubmenus();renderCommandBar(GS.party.find(c=>c.id==='${cid}'))">◀ BACK</div>`+
     char.skills.map(s=>`<div class="bt-subitem" onclick="queueSkill('${cid}','${s.id}')">
       <span style="color:${P.gold}">${s.name}</span>
       <span class="si-cost">${s.uses}/${s.maxUses}</span>
@@ -1945,9 +2869,8 @@ function showSkills(cid){
 function showTechs(cid){
   const char=GS.party.find(c=>c.id===cid);
   const sub=document.getElementById('bt-submenu');
-  document.getElementById('bt-cmdbar').style.display='none';
   sub.style.display='block';
-  sub.innerHTML=`<div class="bt-subitem" onclick="renderCommandBar(GS.party.find(c=>c.id==='${cid}'));document.getElementById('bt-cmdbar').style.display='flex';this.parentElement.style.display='none'">◀ BACK</div>`+
+  sub.innerHTML=`<div class="bt-subitem" onclick="closeSubmenus();renderCommandBar(GS.party.find(c=>c.id==='${cid}'))">◀ BACK</div>`+
     (char.techs||[]).map(t=>{
       const ok=char.tp>=t.tp;
       return `<div class="bt-subitem${ok?'':'" style="opacity:.35'}" onclick="${ok?`queueTech('${cid}','${t.id}')`:''}">
@@ -1959,22 +2882,57 @@ function showTechs(cid){
 }
 
 function showCombos(cid){
-  const char=GS.party.find(c=>c.id===cid);
   const avail=COMBOS.filter(co=>co.chars.includes(cid)&&co.chars.every(id=>GS.party.find(p=>p.id===id&&p.hp>0)));
   const sub=document.getElementById('bt-submenu');
-  document.getElementById('bt-cmdbar').style.display='none';
   sub.style.display='block';
-  sub.innerHTML=`<div class="bt-subitem" onclick="renderCommandBar(GS.party.find(c=>c.id==='${cid}'));document.getElementById('bt-cmdbar').style.display='flex';this.parentElement.style.display='none'">◀ BACK</div>`+
+  sub.innerHTML=`<div class="bt-subitem" onclick="closeSubmenus();renderCommandBar(GS.party.find(c=>c.id==='${cid}'))">◀ BACK</div>`+
     avail.map(co=>`<div class="bt-subitem" onclick="queueCombo('${co.name}','${cid}')">
       <span style="color:${P.gold2}">⚡${co.name}</span>
       <span class="si-desc">${co.desc}</span>
     </div>`).join('');
 }
 
-function queueAtk(cid){pushQueue({type:'attack',cid});advanceInput();}
-function queueGuard(cid){pushQueue({type:'guard',cid});advanceInput();}
-function queueSkill(cid,sid){pushQueue({type:'skill',cid,sid});advanceInput();}
-function queueTech(cid,tid){pushQueue({type:'tech',cid,tid});advanceInput();}
+function showItems(cid){
+  const sub=document.getElementById('bt-submenu');
+  sub.style.display='block';
+  const itemDefs={
+    solDew:{name:'SOL DEW',desc:'Heal 60 HP (1 ally)',action:(c)=>{c.hp=Math.min(c.maxHp,c.hp+60);btLog(`${c.name} used Sol Dew! +60 HP!`,P.green);renderBattleParty();}},
+    moon_dew:{name:'MOON DEW',desc:'Full HP (1 ally)',action:(c)=>{c.hp=c.maxHp;btLog(`${c.name} used Moon Dew! Full HP!`,P.green);renderBattleParty();}},
+    antidote:{name:'ANTIDOTE',desc:'Cure poison',action:(c)=>{c.statusEffects=c.statusEffects.filter(s=>s!=='POISON');btLog(`${c.name} used Antidote!`,P.teal);renderBattleParty();}},
+    trimate:{name:'TRIMATE',desc:'Heal 120 HP all party',action:()=>{GS.party.filter(c=>c.hp>0).forEach(c=>{c.hp=Math.min(c.maxHp,c.hp+120);});btLog('TRIMATE! Party heals 120 HP!',P.green);renderBattleParty();}},
+  };
+  const items=Object.entries(GS.inventory).filter(([k,v])=>v>0&&itemDefs[k]);
+  sub.innerHTML=`<div class="bt-subitem" onclick="closeSubmenus();renderCommandBar(GS.party.find(c=>c.id==='${cid}'))">◀ BACK</div>`+
+    (items.length ? items.map(([k,qty])=>{
+      const d=itemDefs[k];
+      return `<div class="bt-subitem" onclick="useItem('${cid}','${k}')">
+        <span style="color:${P.green}">${d.name}</span>
+        <span class="si-cost">×${qty}</span>
+        <span class="si-desc">${d.desc}</span>
+      </div>`;
+    }).join('') : '<div class="bt-subitem" style="opacity:.4">No usable items</div>');
+}
+function useItem(cid,itemId){
+  const itemDefs={
+    solDew:{action:(c)=>{c.hp=Math.min(c.maxHp,c.hp+60);btLog(`${c.name} used Sol Dew! +60 HP!`,P.green);renderBattleParty();}},
+    moon_dew:{action:(c)=>{c.hp=c.maxHp;btLog(`${c.name} used Moon Dew! Full HP!`,P.green);renderBattleParty();}},
+    antidote:{action:(c)=>{c.statusEffects=c.statusEffects.filter(s=>s!=='POISON');btLog(`Used Antidote!`,P.teal);renderBattleParty();}},
+    trimate:{action:()=>{GS.party.filter(c=>c.hp>0).forEach(c=>{c.hp=Math.min(c.maxHp,c.hp+120);});btLog('TRIMATE! Party heals 120 HP!',P.green);renderBattleParty();}},
+  };
+  const def=itemDefs[itemId];
+  if(!def||!GS.inventory[itemId])return;
+  GS.inventory[itemId]--;
+  const char=GS.party.find(c=>c.id===cid);
+  def.action(char);
+  audioSfx('heal');
+  closeSubmenus();
+  pushQueue({type:'guard',cid});
+  advanceInput();
+}
+function queueAtk(cid){closeSubmenus();pushQueue({type:'attack',cid});advanceInput();}
+function queueGuard(cid){closeSubmenus();pushQueue({type:'guard',cid});advanceInput();}
+function queueSkill(cid,sid){closeSubmenus();pushQueue({type:'skill',cid,sid});advanceInput();}
+function queueTech(cid,tid){closeSubmenus();pushQueue({type:'tech',cid,tid});advanceInput();}
 function queueCombo(cname,cid){
   const combo=COMBOS.find(c=>c.name===cname);
   combo.chars.forEach(id=>pushQueue({type:'combo',cid:id,cname}));
@@ -1986,8 +2944,8 @@ function queueCombo(cname,cid){
 function pushQueue(action){BT.queue.push(action);}
 
 function closeSubmenus(){
-  document.getElementById('bt-cmdbar').style.display='none';
   document.getElementById('bt-submenu').style.display='none';
+  document.getElementById('bt-submenu').innerHTML='';
 }
 
 function advanceInput(){
@@ -2050,9 +3008,15 @@ async function doAction(action){
   const firstE=BT.enemies.find(e=>e.hp>0);
 
   if(action.type==='attack'){
-    const dmg=calcDmg(char.str,1.5,firstE.def,firstE);
-    btLog(`${char.name} attacks ${firstE.name}! ${dmg} damage!`,char.color);
-    hitEnemy(firstE,dmg);
+    if(!calcHit(char, firstE, false)){
+      btLog(`${char.name} attacks ${firstE.name}... MISS!`, P.gray);
+      return;
+    }
+    // Critical hit: 8% chance for 1.5× damage
+    const isCrit = Math.random() < 0.08;
+    const dmg = calcDmg(char.str, isCrit ? 2.25 : 1.5, firstE.def, firstE);
+    btLog(`${char.name} attacks ${firstE.name}!${isCrit?' CRITICAL!':''} ${dmg} damage!`, isCrit ? P.gold2 : char.color);
+    hitEnemy(firstE, dmg);
   }else if(action.type==='guard'){
     char.statusEffects.push('GUARD');
     btLog(`${char.name} guards!`,P.teal);
@@ -2084,23 +3048,37 @@ async function doAbility(char,ab){
     btLog(`${char.name} uses ${ab.name}! Party recovers HP!`,P.green);
     renderBattleParty();
   }else if(ab.power){
-    const isMen=ab.type==='tech'||ab.elem;
-    const stat=isMen?char.men:char.str;
+    const isTech = !!(ab.elem || ab.tp !== undefined);
+    const stat = isTech ? char.men : char.str;
     if(ab.target==='all_e'){
-      btLog(`${char.name} → ${ab.name}! Hits all!`,elemCol);
+      btLog(`${char.name} → ${ab.name}! Hits all!`, elemCol);
       for(const e of BT.enemies.filter(e=>e.hp>0)){
+        if(!calcHit(char, e, isTech)){ btLog(`${e.name} evades!`, P.gray); await sleep(80); continue; }
         const dmg=calcDmg(stat,ab.power,e.def,e,ab.elem);
-        hitEnemy(e,dmg);await sleep(120);
+        hitEnemy(e,dmg); await sleep(120);
       }
     }else{
       const e=BT.enemies.find(e=>e.hp>0);
       if(!e)return;
+      if(!calcHit(char, e, isTech)){
+        btLog(`${char.name} → ${ab.name}... MISS!`, P.gray);
+        return;
+      }
       const dmg=calcDmg(stat,ab.power,e.def,e,ab.elem);
-      btLog(`${char.name} → ${ab.name}!${e.weak&&e.weak.includes(ab.elem)?' WEAKNESS!':''} ${dmg}!`,elemCol);
+      btLog(`${char.name} → ${ab.name}!${e.weak&&e.weak.includes(ab.elem)?' WEAKNESS!':''} ${dmg}!`, elemCol);
       hitEnemy(e,dmg);
     }
   }else if(ab.effect){
     if(ab.effect==='def+'){GS.party.filter(c=>c.hp>0).forEach(c=>c.statusEffects.push('DEF+'));btLog(`${char.name} → ${ab.name}! Defense up!`,P.teal);}
+    else if(ab.effect==='evade+'){GS.party.filter(c=>c.hp>0).forEach(c=>c.statusEffects.push('EVADE+'));btLog(`${char.name} → ${ab.name}! Evasion up!`,P.teal);}
+    else if(ab.effect==='seal'){const e=BT.enemies.find(e=>e.hp>0);if(e){e.sealed=true;btLog(`${char.name} → ${ab.name}! ${e.name} techniques sealed!`,P.teal);}    }
+    else if(ab.effect==='scan'){
+      const e=BT.enemies.find(en=>en.hp>0);
+      if(e){
+        const weak=e.weak&&e.weak.length?e.weak.join(', '):'none known';
+        btLog(`SCAN: ${e.name} | HP ${e.hp}/${e.maxHp} | STR ${e.str} DEF ${e.def} | WEAK: ${weak}`,P.teal);
+      }
+    }
     else btLog(`${char.name} → ${ab.name}!`,P.teal);
     renderBattleParty();
   }
@@ -2128,10 +3106,23 @@ async function doCombo(combo){
   }
 }
 
-function calcDmg(stat,power,eDef,enemy,elem,comboMul=1){
-  const weak=elem&&enemy.weak&&enemy.weak.includes(elem)?1.5:1;
-  const base=Math.floor(stat*power*weak*comboMul - eDef*0.4 + (Math.random()-.5)*12);
-  return Math.max(1,base);
+function calcHit(attacker, defender, isTech=false){
+  // PS4-style hit rate: base 85% + attacker AGI advantage
+  const atkAgi = attacker.agi || 10;
+  const defAgi = defender.agi || 10;
+  const agiBonus = Math.floor((atkAgi - defAgi) * 0.8);
+  const hitRate = Math.min(99, Math.max(40, 85 + agiBonus));
+  // Techs have 95% base accuracy (hard to dodge a magic attack)
+  const finalRate = isTech ? Math.min(99, hitRate + 10) : hitRate;
+  return Math.random() * 100 < finalRate;
+}
+
+function calcDmg(stat, power, eDef, enemy, elem, comboMul=1){
+  const weak = elem && enemy.weak && enemy.weak.includes(elem) ? 1.5 : 1;
+  // Add meaningful variance: ±20% random swing, like PSIV
+  const variance = 0.8 + Math.random() * 0.4;
+  const base = Math.floor(stat * power * weak * comboMul * variance - eDef * 0.5);
+  return Math.max(1, base);
 }
 
 function hitEnemy(e,dmg){
@@ -2142,16 +3133,32 @@ function hitEnemy(e,dmg){
   const cont=document.getElementById(`be-${e.idx}`);
   if(cont){
     cont.style.filter='brightness(3)';
-    setTimeout(()=>{if(cont)cont.style.filter='';},250);
+    // Shake the enemy container
+    cont.style.transform='translateX(-4px)';
+    setTimeout(()=>{if(cont){cont.style.filter='brightness(1.5)';cont.style.transform='translateX(4px)';}},80);
+    setTimeout(()=>{if(cont){cont.style.filter='';cont.style.transform='';}},200);
   }
-  // Float damage
-  const fl=document.createElement('div');fl.className='dmg-float';fl.style.color=P.red2;
-  fl.textContent=`-${dmg}`;fl.style.left='50%';fl.style.top='40%';
+  // Flash overlay on boss hits
+  if(BT.isBoss){
+    const scene=document.getElementById('bt-scene');
+    scene.style.background='rgba(255,200,50,.12)';
+    setTimeout(()=>{scene.style.background='';},160);
+  }
+  // Float damage number
+  const fl=document.createElement('div');fl.className='dmg-float';
+  fl.style.color=dmg>80?P.gold2:P.red2;
+  fl.style.fontSize=dmg>60?'12px':'9px';
+  fl.textContent=`-${dmg}`;fl.style.left='50%';fl.style.top='35%';
   document.body.appendChild(fl);setTimeout(()=>fl.remove(),1000);
 
   if(e.hp<=0){
     btLog(`${e.name} defeated!`,P.gold);
-    if(cont)cont.style.opacity='.2';
+    // Defeat: fade and shrink
+    if(cont){
+      cont.style.transition='opacity 0.5s, transform 0.5s';
+      cont.style.opacity='0';
+      cont.style.transform='scale(0.5)';
+    }
   }
 }
 
@@ -2162,13 +3169,34 @@ async function doEnemyTurns(){
     await sleep(320);
     const target=alive[Math.floor(Math.random()*alive.length)];
     const atkName=e.atks[Math.floor(Math.random()*e.atks.length)];
-    let dmg=Math.max(1,Math.floor(e.str*1.2-target.def*(target.statusEffects.includes('GUARD')?.9:.4)+(Math.random()-.3)*8));
-    if(target.statusEffects.includes('GUARD'))dmg=Math.floor(dmg*.55);
+
+    // Enemy hit check — enemies use their agi vs party member agi
+    const eAsAttacker = {agi: e.agi || 10};
+    const tAsDefender = {agi: target.agi || 10};
+    if(!calcHit(eAsAttacker, tAsDefender, false)){
+      btLog(`${e.name} → ${atkName}... ${target.name} evades!`, P.gray);
+      renderBattleParty();
+      await sleep(200);
+      continue;
+    }
+
+    const defBonus = target.statusEffects.includes('GUARD') ? 0.9 : target.statusEffects.includes('DEF+') ? 0.75 : 0.5;
+    let dmg = Math.max(1, Math.floor(e.str * (0.9 + Math.random()*0.3) - target.def * defBonus));
+    if(target.statusEffects.includes('GUARD')) dmg = Math.floor(dmg * 0.55);
+
     audioSfx('hit');
-    target.hp=Math.max(0,target.hp-dmg);
-    btLog(`${e.name} → ${atkName}! ${target.name} takes ${dmg}!`,P.red);
+    target.hp = Math.max(0, target.hp - dmg);
+    btLog(`${e.name} → ${atkName}! ${target.name} takes ${dmg}!`, P.red);
+    // Flash the party card
+    const card=document.getElementById(`bpc-${target.id}`);
+    if(card){
+      card.style.background='rgba(200,50,50,.35)';
+      card.style.borderColor=P.red;
+      setTimeout(()=>{if(card){card.style.background='';card.style.borderColor='';}},400);
+    }
     const fl=document.createElement('div');fl.className='dmg-float';fl.style.color=P.red;
-    fl.textContent=`-${dmg}`;fl.style.left='30%';fl.style.top='60%';
+    fl.style.fontSize='10px';
+    fl.textContent=`-${dmg}`;fl.style.left='20%';fl.style.top='55%';
     document.body.appendChild(fl);setTimeout(()=>fl.remove(),1000);
     renderBattleParty();
     await sleep(250);
@@ -2223,29 +3251,55 @@ function openStatus(){
   GS._prevScreen=GS.screen;
   showScreen('statusmenu');
   const cards=document.getElementById('sm-cards');
-  cards.innerHTML=GS.party.map(ch=>{
-    const port=mkCanvas(44,44);drawCharPortrait(ch.id,port);
+
+  const invItems=Object.entries(GS.inventory).filter(([k,v])=>v>0);
+  // Item use buttons for field use
+  const fieldItems={
+    solDew:{label:'SOL DEW',use:()=>{const t=GS.party.find(c=>c.hp<c.maxHp&&c.hp>0)||GS.party[0];if(t){t.hp=Math.min(t.maxHp,t.hp+60);return `${t.name} recovered 60 HP.`;}return 'No one needs healing.';}},
+    moon_dew:{label:'MOON DEW',use:()=>{const t=GS.party.find(c=>c.hp<c.maxHp&&c.hp>0)||GS.party[0];if(t){t.hp=t.maxHp;return `${t.name} fully recovered!`;}return 'No one needs healing.';}},
+    trimate:{label:'TRIMATE',use:()=>{GS.party.forEach(c=>{if(c.hp>0)c.hp=Math.min(c.maxHp,c.hp+120);});return 'Party healed 120 HP!';}},
+    antidote:{label:'ANTIDOTE',use:()=>{GS.party.forEach(c=>c.statusEffects=c.statusEffects.filter(s=>s!=='POISON'));return 'Antidote used.';}},
+    telepipe:{label:'TELEPIPE',use:()=>{warpToMap('aiedo',10,8);return null;}},
+    escapipe:{label:'ESCAPIPE',use:()=>{warpToMap('motavia_ow',5,18);return null;}},
+  };
+  const useButtons=invItems.filter(([k])=>fieldItems[k]).map(([k,v])=>`<button onclick="useFieldItem('${k}')" style="font-family:'Press Start 2P',monospace;font-size:5px;background:var(--panel2);border:1px solid var(--border);color:var(--white);padding:3px 6px;cursor:pointer;margin:1px;" onmouseover="this.style.color='${P.gold}'" onmouseout="this.style.color='var(--white)'">${fieldItems[k].label}×${v}</button>`).join('');
+  const invHtml=`<div class="sm-card" style="grid-template-columns:1fr;gap:4px;">
+    <div style="color:${P.gold};font-size:7px;margin-bottom:4px;">— OBJECTIVE —</div>
+    <div style="font-size:6px;color:${P.teal};margin-bottom:6px;line-height:2;">${GS.objective||'No active objective.'}</div>
+    <div style="color:${P.gold};font-size:7px;margin-bottom:4px;">— ITEMS —</div>
+    <div style="font-size:6px;color:${P.gold2};">MST: ${GS.meseta}</div>
+    ${invItems.length ? invItems.map(([k,v])=>`<div style="font-size:6px;"><span style="color:${P.green}">✚</span> ${k.replace(/_/g,' ').toUpperCase()} ×${v}</div>`).join('')
+    : '<div style="font-size:6px;color:'+P.gray+';">No items.</div>'}
+    ${useButtons?`<div style="margin-top:6px;font-size:5px;color:${P.gray};margin-bottom:2px;">USE IN FIELD:</div>${useButtons}`:''}
+  </div>`;
+
+  cards.innerHTML=invHtml+GS.party.map(ch=>{
+    const port=mkCanvas(60,60);drawCharPortrait(ch.id,port);
     return `<div class="sm-card">
       <div class="sm-portrait">${port.outerHTML}</div>
       <div class="sm-stats">
         <div class="sm-charname" style="color:${ch.color}">${ch.name}</div>
         <div><span class="sl">CLASS </span>${ch.cls}</div>
         <div><span class="sl">LV </span>${ch.level}&nbsp;&nbsp;<span class="sl">EXP </span>${ch.exp}/${ch.nextExp}</div>
-        <div><span class="sl">HP </span><span style="color:${P.hp}">${ch.hp}/${ch.maxHp}</span></div>
-        <div><span class="sl">TP </span><span style="color:${P.tp}">${ch.tp}/${ch.maxTp}</span></div>
+        <div><span class="sl">HP </span><span style="color:${P.green}">${ch.hp}/${ch.maxHp}</span></div>
+        <div><span class="sl">TP </span><span style="color:${P.blue2}">${ch.tp}/${ch.maxTp}</span></div>
         <div><span class="sl">STR </span>${ch.str}&nbsp;<span class="sl">MEN </span>${ch.men}</div>
         <div><span class="sl">AGI </span>${ch.agi}&nbsp;<span class="sl">DEF </span>${ch.def}</div>
       </div>
       <div class="sm-skills">
-        ${ch.skills.map(s=>`<div class="sm-skill">★${s.name}(${s.uses})</div>`).join('')}
-        ${(ch.techs||[]).map(t=>`<div class="sm-tech">✦${t.name}(${t.tp}TP)</div>`).join('')}
+        <div style="color:${P.gold};font-size:5px;margin-bottom:2px;">SKILLS / TECHS</div>
+        ${ch.skills.map(s=>`<div class="sm-skill">★${s.name} (${s.uses}/${s.maxUses})</div>`).join('')}
+        ${(ch.techs||[]).map(t=>`<div class="sm-tech">✦${t.name} (${t.tp}TP)</div>`).join('')}
       </div>
     </div>`;
   }).join('');
   // replace canvas outerHTML with actual canvas
   document.querySelectorAll('#sm-cards canvas').forEach(can=>{
-    const id=can.parentElement.parentElement.querySelector('.sm-charname').textContent.toLowerCase();
-    const ch=GS.party.find(c=>c.name.toLowerCase()===id.toLowerCase());
+    const card=can.closest('.sm-card');
+    if(!card)return;
+    const nameEl=card.querySelector('.sm-charname');
+    if(!nameEl)return;
+    const ch=GS.party.find(c=>c.name.toLowerCase()===nameEl.textContent.toLowerCase());
     if(ch)drawCharPortrait(ch.id,can);
   });
 }
@@ -2254,14 +3308,41 @@ function closeStatus(){
   showScreen(GS._prevScreen||'overworld');
 }
 
+function useFieldItem(id){
+  if(!GS.inventory[id]||GS.inventory[id]<=0)return;
+  const fieldItems={
+    solDew:{use:()=>{const t=GS.party.find(c=>c.hp<c.maxHp&&c.hp>0)||GS.party[0];if(t){t.hp=Math.min(t.maxHp,t.hp+60);return `${t.name} recovered 60 HP.`;}return 'No one needs healing.';}},
+    moon_dew:{use:()=>{const t=GS.party.find(c=>c.hp<c.maxHp&&c.hp>0)||GS.party[0];if(t){t.hp=t.maxHp;return `${t.name} fully recovered!`;}return 'No one needs healing.';}},
+    trimate:{use:()=>{GS.party.forEach(c=>{if(c.hp>0)c.hp=Math.min(c.maxHp,c.hp+120);});return 'Party healed 120 HP!';}},
+    antidote:{use:()=>{GS.party.forEach(c=>c.statusEffects=c.statusEffects.filter(s=>s!=='POISON'));return 'Antidote used.';}},
+    telepipe:{use:()=>{closeStatus();warpToMap('aiedo',10,8);return null;}},
+    escapipe:{use:()=>{closeStatus();warpToMap('motavia_ow',5,18);return null;}},
+  };
+  const def=fieldItems[id];
+  if(!def)return;
+  GS.inventory[id]--;
+  const msg=def.use();
+  audioSfx('heal');
+  // Refresh status screen to show updated counts
+  openStatus();
+  if(msg) showOwMsg(msg);
+}
+
 function drawCharPortrait(id,canvas){
   const c=ctx(canvas);const W=canvas.width,H=canvas.height;
-  const bgs={aren:[P.sky1,P.sand2],lyra:['#304880','#e0d0a0'],tarin:['#201040','#402080'],
-    mira:['#203010','#406020'],seth9:['#101828','#204040'],neysa:['#100820','#400860']};
+  c.clearRect(0,0,W,H);
+  const bgs={
+    aren:[P.sky1,P.sand2],lyra:['#1c3060','#304870'],tarin:['#180c30','#2c1848'],
+    mira:['#182008','#303820'],seth9:['#0c1c28','#182838'],neysa:['#0c0418','#200830']
+  };
   const bg=bgs[id]||['#101828','#0c1220'];
-  const grd=c.createLinearGradient(0,0,W,H);grd.addColorStop(0,bg[0]);grd.addColorStop(1,bg[1]);
+  const grd=c.createLinearGradient(0,0,0,H);grd.addColorStop(0,bg[0]);grd.addColorStop(1,bg[1]);
   c.fillStyle=grd;c.fillRect(0,0,W,H);
-  drawCharSprite(id,c,W*.1,H*.05,W*.8,H*.9);
+  // Border frame
+  c.strokeStyle=P.panelborder; c.lineWidth=1; c.strokeRect(0,0,W,H);
+  // Draw the actual character sprite centered in the portrait
+  const margin=Math.floor(W*0.08);
+  drawCharSprite(id,c,margin,Math.floor(H*0.02),W-margin*2,H-Math.floor(H*0.04));
 }
 
 // ── PARTY MANAGEMENT ──
@@ -2348,23 +3429,100 @@ function playTone(freq,start,dur,type='square',vol=.03){
   o.type=type; o.frequency.setValueAtTime(freq,start);
   g.gain.setValueAtTime(0,start);
   g.gain.linearRampToValueAtTime(vol,start+.01);
-  g.gain.linearRampToValueAtTime(0.0001,start+dur);
+  g.gain.linearRampToValueAtTime(0.0001,start+dur*.95);
   o.connect(g); g.connect(ACTX.destination);
   o.start(start); o.stop(start+dur+.02);
 }
 function noteFreq(n){
+  if(!n)return 0;
   const map={'C':0,'C#':1,'D':2,'D#':3,'E':4,'F':5,'F#':6,'G':7,'G#':8,'A':9,'A#':10,'B':11};
   const m=n.match(/^([A-G]#?)(\d)$/); if(!m)return 440;
   const semi=map[m[1]] + (parseInt(m[2])+1)*12;
   return 440*Math.pow(2,(semi-69)/12);
 }
+
+// PS4-inspired melodies — each track has lead (melody), harmony (counter-melody), bass, and percussion
+// Tempo in seconds per 16th note. Null = rest.
 const MUSIC={
-  title:{tempo:.22,lead:['E5','B4','G4','B4','E5','B4','G4','D5'],bass:['E2',null,'C2',null,'A2',null,'B1',null]},
-  field:{tempo:.2,lead:['E4','G4','A4','G4','E4','D4','E4','B3'],bass:['E2',null,'A2',null,'D2',null,'B1',null]},
-  town:{tempo:.19,lead:['G4','A4','B4','A4','G4','E4','D4','E4'],bass:['G2',null,'E2',null,'C2',null,'D2',null]},
-  dungeon:{tempo:.18,lead:['E4',null,'F4',null,'G4',null,'C4',null],bass:['E2',null,'F2',null,'G2',null,'C2',null]},
-  boss:{tempo:.16,lead:['E4','F4','G4','A4','G4','F4','E4','D4'],bass:['E2','E2','F2','F2','G2','G2','D2','D2']},
+  // ── TITLE: "End of an Age" — sweeping, bittersweet, E minor feel
+  title:{
+    tempo:.16,
+    lead:  ['E5','D5','C5','B4', 'A4','B4','C5','E5', 'D5','C5','B4','A4', 'G4','A4','B4','D5',
+            'E5',null,'E5','D5', 'C5','B4','A4','G4', 'A4','B4','C5','E5', 'D5','C5','B4',null],
+    harm:  ['G4','F#4','E4','D#4','C4','D#4','E4','G4','F#4','E4','D#4','C4','B3','C4','D#4','F#4',
+            'G4',null,'G4','F#4','E4','D#4','C4','B3','C4','D#4','E4','G4','F#4','E4','D#4',null],
+    bass:  ['E2',null,'E2',null, 'A2',null,'A2',null, 'C2',null,'C2',null, 'G2',null,'G2',null,
+            'E2',null,'E2',null, 'A2',null,'A2',null, 'C2',null,'C2',null, 'B1',null,'B1',null],
+    perc:  [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,1,0],
+  },
+  // ── FIELD (MOTAVIA): "Sandrunner" — upbeat adventure, A minor with major lift
+  field:{
+    tempo:.13,
+    lead:  ['A4','C5','E5','G5', 'E5','D5','C5','A4', 'B4','D5','F5','A5', 'G5','E5','D5','C5',
+            'A4','C5','E5','A5', 'G5','F5','E5','D5', 'C5','E5','G5','C6', 'B5','A5','G5',null],
+    harm:  ['E4','G4','B4','E5', 'C5','B4','A4','E4', 'F4','A4','C5','F5', 'E5','C5','B4','A4',
+            'E4','G4','B4','E5', 'D5','C5','B4','A4', 'G4','B4','E5','G5', 'F5','E5','D5',null],
+    bass:  ['A2',null,'A2','E2','A2',null,'A2',null, 'D2',null,'D2','A2','D2',null,'G2',null,
+            'A2',null,'A2','E2','A2',null,'F2',null,  'C2',null,'C2','G2','G2',null,'G2',null],
+    perc:  [1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0, 1,0,1,0],
+  },
+  // ── TOWN (AIEDO): "Refuge" — warm, slightly melancholy, D major
+  town:{
+    tempo:.14,
+    lead:  ['D5','E5','F#5','A5','G5','F#5','E5','D5','E5','F#5','G5','A5','B5','A5','G5','F#5',
+            'D5','F#5','A5','D6','C#6','B5','A5','G5','F#5','A5','D6',null,'A5','G5','F#5',null],
+    harm:  ['F#4','G4','A4','C#5','B4','A4','G4','F#4','G4','A4','B4','C#5','D5','C#5','B4','A4',
+            'F#4','A4','C#5','F#5','E5','D5','C#5','B4','A4','C#5','F#5',null,'E5','D5','C#5',null],
+    bass:  ['D2',null,'D2',null, 'G2',null,'G2',null, 'E2',null,'A2',null, 'A2',null,'D2',null,
+            'D2',null,'D2',null, 'G2',null,'G2',null, 'F#2',null,'F#2',null,'E2',null,'A2',null],
+    perc:  [1,0,0,1, 0,0,1,0, 1,0,0,1, 0,0,1,0, 1,0,0,1, 0,0,1,0, 1,0,0,1, 0,0,1,0],
+  },
+  // ── SNOW (DEZOLIS): "Frozen Archives" — mysterious, sparse, E phrygian
+  snow:{
+    tempo:.15,
+    lead:  ['E4',null,'F4','E4', null,'G4','F4','E4', 'D4',null,'E4','F4', 'G4',null,'F4',null,
+            'E4',null,'G4','A4', 'G4','F4','E4',null, 'D4','E4','F4','G4', 'E4',null,null,null],
+    harm:  [null,null,'C4',null, null,'E4',null,'C4', 'B3',null,'C4',null, 'E4',null,'C4',null,
+            null,null,'E4','F4', 'E4',null,'C4',null, 'B3','C4',null,'E4', 'C4',null,null,null],
+    bass:  ['E2',null,null,null, 'E2',null,null,null, 'A1',null,'A1',null, 'B1',null,'B1',null,
+            'E2',null,null,null, 'C2',null,null,null, 'G1',null,'G1',null, 'E2',null,null,null],
+    perc:  [1,0,0,0, 0,0,1,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,1,0, 1,0,0,0, 0,0,0,0],
+  },
+  // ── DUNGEON (ELYON ARK): "Orbital Sanctum" — tense, mechanical, minor
+  dungeon:{
+    tempo:.12,
+    lead:  ['A4','A4',null,'G4', 'F4','E4',null,'F4', 'G4','G4',null,'F4', 'E4','D4',null,'E4',
+            'F4','G4','A4','C5', 'B4','A4','G4','F4', 'E4','F4','G4','A4', 'B4',null,null,null],
+    harm:  ['C4','C4',null,'B3', 'A3','G#3',null,'A3','B3','B3',null,'A3', 'G#3','F#3',null,'G#3',
+            'A3','B3','C4','E4', 'D4','C4','B3','A3', 'G#3','A3','B3','C4','D4',null,null,null],
+    bass:  ['A2','A2',null,'A2', 'A2','A2',null,'A2', 'G2','G2',null,'G2', 'G2','G2',null,'G2',
+            'F2','F2','F2','F2', 'E2','E2','E2','E2', 'A2','A2','A2','A2', 'E2',null,null,null],
+    perc:  [1,0,1,0, 1,0,1,1, 1,0,1,0, 1,0,1,1, 1,0,1,0, 1,0,1,0, 1,1,0,1, 1,0,0,0],
+  },
+  // ── VOID (RYKROS): "Memory Fracture" — eerie, dissonant, unstable
+  boss_field:{
+    tempo:.14,
+    lead:  ['E5',null,'D#5',null,'D5',null,'C#5',null,'C5',null,'B4',null,'A#4',null,'A4',null,
+            'G#4','A4','A#4','B4','C5','C#5','D5','D#5','E5',null,null,null,'B4',null,'E5',null],
+    harm:  [null,null,'B4',null, null,null,'A4',null, null,null,'G4',null, null,null,'F4',null,
+            'E4',null,'F4',null, 'G4',null,'A4',null, 'B4',null,null,null,'G4',null,'B4',null],
+    bass:  ['E2',null,'E2',null, 'E2',null,'E2',null, 'E2',null,'E2',null, 'E2',null,'E2',null,
+            'A1',null,'A1',null, 'D2',null,'D2',null, 'E2',null,'E2',null, 'B1',null,'B1',null],
+    perc:  [1,0,0,0, 0,1,0,0, 1,0,0,0, 0,1,0,0, 1,0,0,0, 0,1,0,0, 1,0,0,0, 0,1,0,0],
+  },
+  // ── BOSS BATTLE: "Convergence" — urgent, driving, dark
+  boss:{
+    tempo:.10,
+    lead:  ['E4','F4','G4','A4', 'G4','F4','E4','D4', 'E4','G4','B4','E5', 'D5','C5','B4','A4',
+            'G4','A4','B4','C5', 'B4','A4','G4','F4', 'E4','F4','G4','A4', 'B4',null,'E4',null],
+    harm:  ['C4','D4','E4','F4', 'E4','D4','C4','B3', 'C4','E4','G4','C5', 'B4','A4','G4','F4',
+            'E4','F4','G4','A4', 'G4','F4','E4','D4', 'C4','D4','E4','F4', 'G4',null,'C4',null],
+    bass:  ['E2','E2','E2','E2', 'A1','A1','A1','A1', 'E2','E2','E2','E2', 'D2','D2','D2','D2',
+            'G2','G2','G2','G2', 'C2','C2','C2','C2', 'A1','A1','A1','A1', 'B1','B1','E2','E2'],
+    perc:  [1,0,1,0, 1,1,0,1, 1,0,1,0, 1,1,0,1, 1,0,1,0, 1,1,0,1, 1,0,1,0, 1,1,1,1],
+  },
 };
+
 function startMusic(kind){
   ensureAudio();
   if(!ACTX||currentMusic===kind)return;
@@ -2372,24 +3530,42 @@ function startMusic(kind){
   currentMusic=kind;
   const seq=MUSIC[kind]||MUSIC.field;
   const step=seq.tempo;
-  musicStamp=ACTX.currentTime+0.02;
+  let pos=0;
+  musicStamp=ACTX.currentTime+0.05;
+
   musicTimer=setInterval(()=>{
     if(!ACTX)return;
-    while(musicStamp < ACTX.currentTime+0.7){
-      const pos=Math.floor((musicStamp-(ACTX.currentTime+0.02))/step);
-      const lead=seq.lead[((pos%seq.lead.length)+seq.lead.length)%seq.lead.length];
-      const bass=seq.bass[((pos%seq.bass.length)+seq.bass.length)%seq.bass.length];
-      if(lead) playTone(noteFreq(lead),musicStamp,step*.9,'square',.028);
-      if(bass) playTone(noteFreq(bass),musicStamp,step*.9,'triangle',.02);
+    const horizon=ACTX.currentTime+0.8;
+    while(musicStamp<horizon){
+      const i=pos%seq.lead.length;
+      const lead=seq.lead[i];
+      const harm=seq.harm?seq.harm[i]:null;
+      const bass=seq.bass[i];
+      const perc=seq.perc?seq.perc[i]:0;
+
+      if(lead) playTone(noteFreq(lead),musicStamp,step*.88,'square',.022);
+      if(harm) playTone(noteFreq(harm),musicStamp,step*.85,'square',.014);
+      if(bass) playTone(noteFreq(bass),musicStamp,step*.92,'triangle',.018);
+      if(perc){
+        // Hi-hat style percussive click using sawtooth noise burst
+        playTone(180+Math.random()*40,musicStamp,step*.08,'sawtooth',.008);
+        if(perc>1||i%(seq.lead.length/4)===0)
+          playTone(80+Math.random()*20,musicStamp,step*.12,'sawtooth',.012);
+      }
       musicStamp+=step;
+      pos++;
     }
-  },120);
+  },100);
 }
 function stopMusic(){ if(musicTimer){ clearInterval(musicTimer); musicTimer=null; } currentMusic=''; }
 function syncMusicToState(){
   if(GS.screen==='title') return startMusic('title');
   if(GS.screen==='battle') return startMusic(BT&&BT.isBoss?'boss':'dungeon');
-  if(GS.screen==='overworld'){ const hint=(WORLDS[GS.currentMap]||{}).musicHint||'field'; return startMusic(hint==='boss'?'boss':hint); }
+  if(GS.screen==='overworld'){
+    const hint=(WORLDS[GS.currentMap]||{}).musicHint||'field';
+    const map={'field':'field','town':'town','dungeon':'dungeon','boss':'boss','snow':'snow','void':'boss_field'};
+    return startMusic(map[hint]||'field');
+  }
 }
 function audioSfx(kind){
   ensureAudio(); if(!ACTX)return;
